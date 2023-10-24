@@ -16,6 +16,8 @@ async function bootstrap() {
 
   app.enableShutdownHooks();
 
+  app.enableCors();
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
