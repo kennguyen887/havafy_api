@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Headers,
   Get,
   Post,
   UseGuards,
@@ -13,6 +14,8 @@ import { UserService } from './services/user/user.service';
 import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CacheInterceptor } from '@nestjs/cache-manager';
+import { GetUserMeResDto } from './services/auth/dto';
+import { plainToClass } from 'class-transformer';
 
 @ApiTags('user')
 @Controller('user')
@@ -43,6 +46,19 @@ export class UserController {
       message: 'Login successful',
       token,
     };
+  }
+
+  @Get('me')
+  async me(
+    @Headers('authorization') authorizationHeader: string,
+  ): Promise<GetUserMeResDto> {
+    // Parse the Bearer token from the header
+    const token = authorizationHeader.split(' ')[1]; // Extract the token part after 'Bearer '
+
+    return plainToClass(
+      GetUserMeResDto,
+      this.authService.getUserByToken(token),
+    );
   }
 
   @ApiBearerAuth()

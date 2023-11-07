@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from './user.controller';
 import { AuthService } from './services/auth/auth.service';
-import { UserService } from './services/user/user.service';
+import { UserService } from './services/password/user.service';
 import { PasswordService } from './services/password/password.service';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from './services/jwt/jwt.service';
@@ -60,6 +60,7 @@ describe('UserController', () => {
           lastName: 'lastName',
           email: 'email',
           password: 'p',
+          token: 'token',
         }),
       ).toStrictEqual({
         message: 'User created',

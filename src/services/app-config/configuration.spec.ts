@@ -45,6 +45,9 @@ describe('config helper', () => {
           port: 1025,
         },
       },
+      recaptcha: {
+        secret_key: 'LcUOr8oAAAAAKa8bYrXtXF',
+      },
     });
   });
 });

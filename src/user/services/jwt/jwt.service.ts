@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { sign } from 'jsonwebtoken';
+import { sign, verify, JwtPayload } from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
@@ -10,5 +10,13 @@ export class JwtService {
     return sign(payload, this.configService.get('jwtSecret') as string, {
       expiresIn: '2h',
     });
+  }
+
+  getPayload(token: string): JwtPayload | string | null {
+    try {
+      return verify(token, this.configService.get('jwtSecret') as string);
+    } catch (error) {
+      return null;
+    }
   }
 }

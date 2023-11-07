@@ -23,6 +23,14 @@ export class UserService {
     });
   }
 
+  async getUserById(id: number): Promise<UserEntity | null> {
+    return this.usersRepository.findOne({
+      where: {
+        id,
+      },
+    });
+  }
+
   async createUser(userDto: CreateUserDto): Promise<UserEntity> {
     const userPayload = {
       email: userDto.email.toLowerCase(),

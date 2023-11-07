@@ -26,6 +26,9 @@ export const getConfig = (): AppConfig => {
         },
       },
     },
+    recaptcha: {
+      secret_key: process.env.RECAPTHA_SECRET_KEY as string,
+    },
   };
 };
 
@@ -36,6 +39,7 @@ export interface AppConfig {
   database: DbConfig;
   cache: CacheConfig;
   mail: MailConfig;
+  recaptcha: ReCaptcha;
 }
 
 export interface DbConfig {
@@ -62,4 +66,8 @@ export interface MailConfig {
       pass: string;
     };
   };
+}
+
+export interface ReCaptcha {
+  secret_key: string;
 }

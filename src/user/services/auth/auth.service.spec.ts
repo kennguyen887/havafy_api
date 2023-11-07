@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
-import { UserService } from '../user/user.service';
+import { UserService } from '../password/user.service';
 import { PasswordService } from '../password/password.service';
 import { JwtService } from '../jwt/jwt.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
@@ -50,6 +50,7 @@ describe('AuthService', () => {
           password: 'password',
           lastName: 'lName',
           firstName: 'fName',
+          token: 'token',
         });
       } catch (e) {
         expect(e.message).toBe('User already exists');
@@ -71,6 +72,7 @@ describe('AuthService', () => {
         password: 'password',
         lastName: 'lName',
         firstName: 'fName',
+        token: 'token',
       });
 
       expect(newUser).toBeInstanceOf(UserEntity);

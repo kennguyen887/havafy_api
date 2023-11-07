@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserService } from './user.service';
+import { UserService } from '../password/user.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { UserEntity } from '../../entities/user.entity';
 import { PasswordService } from '../password/password.service';
@@ -69,6 +69,7 @@ describe('UserService', () => {
       firstName: 'fName',
       lastName: 'lName',
       password: 'password',
+      token: 'token',
     });
 
     expect(newUser).toStrictEqual(mockUserEntity);
