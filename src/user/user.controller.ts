@@ -6,6 +6,9 @@ import {
   Post,
   UseGuards,
   UseInterceptors,
+  Request,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { AuthService } from './services/auth/auth.service';
@@ -49,15 +52,16 @@ export class UserController {
   }
 
   @Get('me')
-  async me(
-    @Headers('authorization') authorizationHeader: string,
-  ): Promise<GetUserMeResDto> {
-    // Parse the Bearer token from the header
-    const token = authorizationHeader.split(' ')[1]; // Extract the token part after 'Bearer '
+  @UseGuards(JwtAuthGuard)
+  async me(@Request() req: any): Promise<GetUserMeResDto> {
+    const { user } = req;
+    if (!user.id) {
+      throw new HttpException('User is not found', HttpStatus.BAD_REQUEST);
+    }
 
     return plainToClass(
       GetUserMeResDto,
-      this.authService.getUserByToken(token),
+      await this.authService.getUserById(user.id),
     );
   }
 
@@ -66,6 +70,19 @@ export class UserController {
   @UseInterceptors(CacheInterceptor)
   @Get()
   async getUsers() {
+    const users = await this.userService.getAll();
+
+    return {
+      message: 'Users retrieved successfully',
+      users,
+    };
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(CacheInterceptor)
+  @Get()
+  async changePassword() {
     const users = await this.userService.getAll();
 
     return {

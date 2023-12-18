@@ -21,20 +21,8 @@ export class AuthService {
     ) as ReCaptcha;
   }
 
-  async getUserByToken(token: string): Promise<UserEntity | null> {
-    const payload = this.jwtService.getPayload(token) as { id: number };
-
-    if (!payload) {
-      throw new HttpException('Token is invalid.', HttpStatus.UNAUTHORIZED);
-    }
-
-    const user = await this.userService.getUserById(payload.id);
-
-    if (!user) {
-      throw new HttpException('User is not found', HttpStatus.BAD_REQUEST);
-    }
-
-    return user;
+  async getUserById(id: number): Promise<UserEntity | null> {
+    return this.userService.getUserById(id);
   }
 
   async register(userDto: CreateUserDto): Promise<UserEntity> {
