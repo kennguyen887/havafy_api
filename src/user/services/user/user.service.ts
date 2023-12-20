@@ -24,7 +24,6 @@ export class UserService {
   }
 
   async getUserById(id: number): Promise<UserEntity | null> {
-    console.log('------------id', id);
     return this.usersRepository.findOne({
       where: {
         id,

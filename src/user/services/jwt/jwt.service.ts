@@ -8,7 +8,7 @@ export class JwtService {
 
   sign(payload: string | Buffer | object): string {
     return sign(payload, this.configService.get('jwtSecret') as string, {
-      expiresIn: '2h',
+      expiresIn: '30d',
     });
   }
 

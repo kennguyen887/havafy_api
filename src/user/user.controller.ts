@@ -1,7 +1,6 @@
 import {
   Body,
   Controller,
-  Headers,
   Get,
   Post,
   UseGuards,
@@ -9,7 +8,9 @@ import {
   Request,
   HttpException,
   HttpStatus,
+  Put,
 } from '@nestjs/common';
+import { CommandBus } from '@nestjs/cqrs';
 import { CreateUserDto } from './dto/create-user.dto';
 import { AuthService } from './services/auth/auth.service';
 import { LoginDto } from './dto/login.dto';
@@ -19,11 +20,14 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CacheInterceptor } from '@nestjs/cache-manager';
 import { GetUserMeResDto } from './services/auth/dto';
 import { plainToClass } from 'class-transformer';
+import { UpdateUserRequestDto } from './dto';
+import { UpdateUserCommand } from './commands';
 
 @ApiTags('user')
 @Controller('user')
 export class UserController {
   constructor(
+    private readonly commandBus: CommandBus,
     private readonly authService: AuthService,
     private readonly userService: UserService,
   ) {}
@@ -63,6 +67,16 @@ export class UserController {
       GetUserMeResDto,
       await this.authService.getUserById(user.id),
     );
+  }
+
+  @Put()
+  @UseGuards(JwtAuthGuard)
+  async updateUser(
+    @Request() req: any,
+    @Body() data: UpdateUserRequestDto,
+  ): Promise<void> {
+    const { user } = req;
+    return this.commandBus.execute(new UpdateUserCommand(user.id, data));
   }
 
   @ApiBearerAuth()
