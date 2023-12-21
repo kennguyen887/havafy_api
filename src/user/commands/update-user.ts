@@ -5,6 +5,8 @@ import { Repository, Not } from 'typeorm';
 import { UserEntity } from '../entities/user.entity';
 import { UpdateUserRequestDto } from '../dto';
 
+import { PasswordService } from '../services/password/password.service';
+
 export class UpdateUserCommand {
   constructor(
     public readonly userId: number,
@@ -19,12 +21,13 @@ export class UpdateUserCommandHandler
   constructor(
     @InjectRepository(UserEntity)
     private usersRepository: Repository<UserEntity>,
+    private readonly passwordService: PasswordService,
   ) {}
 
   async execute(command: UpdateUserCommand): Promise<void> {
     const {
       userId,
-      data: { email, firstName, lastName },
+      data: { email, firstName, lastName, password },
     } = command;
 
     let user = await this.usersRepository.findOne({
@@ -52,11 +55,24 @@ export class UpdateUserCommandHandler
       user.email = email;
     }
 
-    if (firstName && lastName) {
+    if (firstName) {
+      user = {
+        ...user,
+        firstName,
+      };
+    }
+
+    if (lastName) {
       user = {
         ...user,
         lastName,
-        firstName,
+      };
+    }
+
+    if (password) {
+      user = {
+        ...user,
+        passwordHash: await this.passwordService.generate(password),
       };
     }
 

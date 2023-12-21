@@ -44,6 +44,7 @@
     "cache-manager-redis-store": "^3.0.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
+    "dayjs": "^1.11.10",
     "dotenv": "^16.0.3",
     "jsonwebtoken": "^9.0.0",
     "nodemailer": "^6.8.0",
