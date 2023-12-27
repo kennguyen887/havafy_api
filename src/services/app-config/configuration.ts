@@ -5,6 +5,7 @@ export const getConfig = (): AppConfig => {
     logLevel: process.env.LOG_LEVEL || 'info',
     database: {
       host: process.env.DB_HOST as string,
+      type: process.env.DB_TYPE as string,
       port: parseInt(process.env.DB_PORT as string, 10) || 5432,
       user: process.env.DB_USER as string,
       password: process.env.DB_PASSWORD as string,
@@ -45,6 +46,7 @@ export interface AppConfig {
 export interface DbConfig {
   host: string;
   port: number;
+  type: string;
   user: string;
   password: string;
   dbName: string;
