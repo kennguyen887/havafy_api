@@ -1,30 +1,43 @@
-FROM node:lts as builder
+FROM node:18.14.2-alpine3.16 as builder
 
-# Create app directory
-WORKDIR /usr/src/app
+WORKDIR /app
 
-# Install app dependencies
+RUN apk update && apk --update-cache add --no-progress --virtual .gyp \
+    g++ \
+    gcc \
+    make \
+    python3 \
+    git
+
 COPY package.json yarn.lock ./
 
-RUN yarn install --frozen-lockfile
+ENV NODE_OPTIONS="--max-old-space-size=4096"
 
-COPY . .
+RUN yarn cache clean && yarn install
 
-RUN yarn build
+RUN apk del .gyp
+RUN rm -rf /var/cache/apk/*
 
-FROM node:lts-slim
+COPY . ./
 
-ENV NODE_ENV production
-USER node
+RUN yarn run build
 
-# Create app directory
-WORKDIR /usr/src/app
+FROM node:18.14.2-alpine3.16 as runner
 
-# Install app dependencies
+WORKDIR /app
+
+RUN addgroup -g 1001 -S nodejs \
+    && adduser -S nestjs -u 1001
+
 COPY package.json yarn.lock ./
+COPY --from=builder /app/dist ./
 
-RUN yarn install --production --frozen-lockfile
+RUN yarn cache clean && yarn install --production
+RUN ls -la
+RUN ls -la src/
+RUN pwd
 
-COPY --from=builder /usr/src/app/dist ./dist
+USER nestjs
 
-CMD [ "node", "dist/src/main.js" ]
+EXPOSE 3000
+CMD ["node", "/app/src/main.js"]
