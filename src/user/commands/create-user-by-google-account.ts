@@ -75,61 +75,11 @@ export class CreateUserByGoogleAccountCommandHandler
         token: newUser.token,
       };
     } catch (error) {
-      console.log('-------------', error);
       throw new HttpException(
         'The Oauth2 token is invalid',
         HttpStatus.BAD_REQUEST,
       );
     }
-    /*
-    let user = await this.usersRepository.findOne({
-      where: {
-        id: userId,
-      },
-    });
-
-    if (!user) {
-      throw new HttpException('User not found.', HttpStatus.UNAUTHORIZED);
-    }
-
-    if (email) {
-      const existingUser = await this.usersRepository.findOne({
-        where: {
-          email,
-          id: Not(userId),
-        },
-      });
-
-      if (existingUser) {
-        throw new HttpException('Email is existing.', HttpStatus.BAD_REQUEST);
-      }
-
-      user.email = email;
-    }
-
-    if (firstName) {
-      user = {
-        ...user,
-        firstName,
-      };
-    }
-
-    if (lastName) {
-      user = {
-        ...user,
-        lastName,
-      };
-    }
-
-    if (password) {
-      user = {
-        ...user,
-        passwordHash: await this.passwordService.generate(password),
-      };
-    }
-
-    await this.usersRepository.save(user);
-    */
   }
   private generateRandomString(length: number): string {
     const characters =

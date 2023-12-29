@@ -14,6 +14,8 @@ async function bootstrap() {
    */
   app.use(bodyParser.json());
 
+  app.setGlobalPrefix('api');
+
   app.enableShutdownHooks();
 
   app.enableCors();
@@ -30,17 +32,12 @@ async function bootstrap() {
 
   // API docs
   const config = new DocumentBuilder()
-    .setTitle('Node API')
-    .setDescription(
-      `<a
-         target="_blank"
-         href="https://github.com/rodion-arr/nestjs-starter-kit"
-       >https://github.com/rodion-arr/nestjs-starter-kit</a>`,
-    )
+    .setTitle('Havafy API')
+    .setDescription(`Havafy.com`)
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('apidoc', app, document);
 
   const port = process.env.PORT || 3000;
 
