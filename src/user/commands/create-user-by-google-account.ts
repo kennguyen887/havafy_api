@@ -39,6 +39,7 @@ export class CreateUserByGoogleAccountCommandHandler
         method: 'get',
         url: `https://oauth2.googleapis.com/tokeninfo?id_token=${credential}`,
       });
+      console.log('--------------data', data);
       const { email, given_name, family_name, email_verified } = data;
 
       if (email_verified !== 'true') {
@@ -75,6 +76,7 @@ export class CreateUserByGoogleAccountCommandHandler
         token: newUser.token,
       };
     } catch (error) {
+      console.log('The Oauth2 token is invalid', error);
       throw new HttpException(
         'The Oauth2 token is invalid',
         HttpStatus.BAD_REQUEST,

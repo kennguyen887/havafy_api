@@ -9,7 +9,7 @@ import {
 export class CreateUserByGoogleAccountRequestDto {
   @IsNotEmpty()
   @IsString()
-  @MaxLength(2000)
+  @MaxLength(10000)
   credential!: string;
 
   @IsOptional()
