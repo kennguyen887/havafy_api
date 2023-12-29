@@ -33,9 +33,6 @@ COPY package.json yarn.lock ./
 COPY --from=builder /app/dist ./
 
 RUN yarn cache clean && yarn install --production
-RUN ls -la
-RUN ls -la src/
-RUN pwd
 
 USER nestjs
 

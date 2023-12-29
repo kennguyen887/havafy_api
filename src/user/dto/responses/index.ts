@@ -1,1 +1,1 @@
-export * from './consumer-claim-list-res.dto';
+export * from './login-by-provider-account';

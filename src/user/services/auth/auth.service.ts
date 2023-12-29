@@ -2,7 +2,6 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { ConfigService } from '@nestjs/config';
 import { ReCaptcha } from '../../../services/app-config/configuration';
-import { CreateUserDto } from '../../dto/create-user.dto';
 import { UserService } from '../user/user.service';
 import { LoginDto } from '../../dto/login.dto';
 import { UserEntity } from '../../entities/user.entity';
@@ -23,20 +22,6 @@ export class AuthService {
 
   async getUserById(id: number): Promise<UserEntity | null> {
     return this.userService.getUserById(id);
-  }
-
-  async register(userDto: CreateUserDto): Promise<UserEntity> {
-    const response = await this.verifyRecaptcha(userDto.token);
-
-    if (!response.data.success && response.data.score < 0.5) {
-      throw new HttpException('Token is invalid.', HttpStatus.UNAUTHORIZED);
-    }
-    // check if user exists and send custom error message
-    if (await this.userService.isUserExists(userDto.email)) {
-      throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
-    }
-
-    return await this.userService.createUser(userDto);
   }
 
   async verifyRecaptcha(token: string) {

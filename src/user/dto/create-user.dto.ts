@@ -27,7 +27,9 @@ export class CreateUserDto {
   @MaxLength(100)
   @Validate(IsValidPassword)
   password: string;
+}
 
+export class CreateUserReqDto extends CreateUserDto {
   @IsString()
   @IsNotEmpty()
   token: string;

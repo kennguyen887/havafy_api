@@ -11,7 +11,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserReqDto } from './dto/create-user.dto';
 import { AuthService } from './services/auth/auth.service';
 import { LoginDto } from './dto/login.dto';
 import { UserService } from './services/user/user.service';
@@ -20,8 +20,14 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CacheInterceptor } from '@nestjs/cache-manager';
 import { GetUserMeResDto } from './services/auth/dto';
 import { plainToClass } from 'class-transformer';
-import { UpdateUserRequestDto } from './dto';
-import { UpdateUserCommand } from './commands';
+import {
+  UpdateUserRequestDto,
+  CreateUserByGoogleAccountRequestDto,
+} from './dto';
+import {
+  UpdateUserCommand,
+  CreateUserByGoogleAccountCommand,
+} from './commands';
 
 @ApiTags('user')
 @Controller('user')
@@ -33,8 +39,18 @@ export class UserController {
   ) {}
 
   @Post('register')
-  async register(@Body() user: CreateUserDto) {
-    const newUser = await this.authService.register(user);
+  async register(@Body() data: CreateUserReqDto) {
+    const response = await this.authService.verifyRecaptcha(data.token);
+
+    if (!response.data.success && response.data.score < 0.5) {
+      throw new HttpException('Token is invalid.', HttpStatus.UNAUTHORIZED);
+    }
+    // check if user exists and send custom error message
+    if (await this.userService.isUserExists(data.email)) {
+      throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
+    }
+
+    const newUser = await this.userService.createUser(data);
 
     return {
       message: 'User created',
@@ -77,6 +93,13 @@ export class UserController {
   ): Promise<void> {
     const { user } = req;
     return this.commandBus.execute(new UpdateUserCommand(user.id, data));
+  }
+
+  @Post('login/google')
+  async createUserByGoogleAccount(
+    @Body() data: CreateUserByGoogleAccountRequestDto,
+  ): Promise<void> {
+    return this.commandBus.execute(new CreateUserByGoogleAccountCommand(data));
   }
 
   @ApiBearerAuth()
