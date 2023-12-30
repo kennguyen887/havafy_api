@@ -23,10 +23,12 @@ import { plainToClass } from 'class-transformer';
 import {
   UpdateUserRequestDto,
   CreateUserByGoogleAccountRequestDto,
+  ResetPasswordRequestDto,
 } from './dto';
 import {
   UpdateUserCommand,
   CreateUserByGoogleAccountCommand,
+  ResetPasswordCommand,
 } from './commands';
 
 @ApiTags('user')
@@ -100,6 +102,13 @@ export class UserController {
     @Body() data: CreateUserByGoogleAccountRequestDto,
   ): Promise<void> {
     return this.commandBus.execute(new CreateUserByGoogleAccountCommand(data));
+  }
+
+  @Post('resetPassword')
+  async submitResetPassword(
+    @Body() data: ResetPasswordRequestDto,
+  ): Promise<void> {
+    return this.commandBus.execute(new ResetPasswordCommand(data));
   }
 
   @ApiBearerAuth()

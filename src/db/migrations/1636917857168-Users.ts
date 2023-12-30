@@ -14,6 +14,11 @@ export class Users1636917857168 implements MigrationInterface {
             generationStrategy: 'increment',
           },
           {
+            name: 'active',
+            type: 'boolean',
+            default: true,
+          },
+          {
             name: 'first_name',
             type: 'varchar',
           },
@@ -27,8 +32,23 @@ export class Users1636917857168 implements MigrationInterface {
             isUnique: true,
           },
           {
+            name: 'email_verified',
+            type: 'boolean',
+            default: false,
+          },
+          {
             name: 'password',
             type: 'varchar',
+          },
+          {
+            name: 'password_reset_token',
+            type: 'varchar',
+            isNullable: true,
+          },
+          {
+            name: 'password_reset_expired',
+            type: 'timestamp',
+            isNullable: true,
           },
           {
             name: 'token',
@@ -42,6 +62,11 @@ export class Users1636917857168 implements MigrationInterface {
           },
           {
             name: 'avatar',
+            type: 'varchar',
+            isNullable: true,
+          },
+          {
+            name: 'locale',
             type: 'varchar',
             isNullable: true,
           },

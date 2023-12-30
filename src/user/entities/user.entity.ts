@@ -1,5 +1,4 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import { Nullable } from '../../shared/utils';
 
 @Entity({
   name: 'users',
@@ -7,6 +6,9 @@ import { Nullable } from '../../shared/utils';
 export class UserEntity {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column()
+  active: boolean;
 
   @Column({
     name: 'first_name',
@@ -20,6 +22,24 @@ export class UserEntity {
 
   @Column()
   email: string;
+
+  @Column({
+    name: 'email_verified',
+  })
+  emailVerified: boolean;
+
+  @Column({
+    name: 'password_reset_token',
+  })
+  passwordResetToken: string;
+
+  @Column({
+    name: 'password_reset_expired',
+  })
+  passwordResetExpired: string;
+
+  @Column()
+  locale: string;
 
   @Column({
     name: 'password',
