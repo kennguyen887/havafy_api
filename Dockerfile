@@ -31,7 +31,7 @@ RUN addgroup -g 1001 -S nodejs \
 
 COPY package.json yarn.lock ./
 COPY --from=builder /app/dist ./
-COPY --from=builder /app/db ./db
+COPY --from=builder /app/src/db ./db
 COPY --from=builder /app/type-orm.config.ts ./type-orm.config.ts
 
 RUN yarn cache clean && yarn install --production
