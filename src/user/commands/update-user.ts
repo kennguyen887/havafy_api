@@ -27,7 +27,7 @@ export class UpdateUserCommandHandler
   async execute(command: UpdateUserCommand): Promise<void> {
     const {
       userId,
-      data: { email, firstName, lastName, password },
+      data: { firstName, lastName, password },
     } = command;
 
     let user = await this.usersRepository.findOne({
@@ -40,7 +40,7 @@ export class UpdateUserCommandHandler
       throw new HttpException('User not found.', HttpStatus.UNAUTHORIZED);
     }
 
-    if (email) {
+    /*    if (email) {
       const existingUser = await this.usersRepository.findOne({
         where: {
           email,
@@ -54,6 +54,7 @@ export class UpdateUserCommandHandler
 
       user.email = email;
     }
+    */
 
     if (firstName) {
       user = {

@@ -1,4 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Nullable } from '../../shared/utils';
 
 @Entity({
   name: 'users',
@@ -27,4 +28,12 @@ export class UserEntity {
 
   @Column()
   token: string;
+
+  @Column()
+  avatar?: string;
+
+  @Column({
+    name: 'google_id',
+  })
+  googleId?: string;
 }

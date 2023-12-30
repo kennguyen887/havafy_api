@@ -36,6 +36,16 @@ export class Users1636917857168 implements MigrationInterface {
             isNullable: true,
           },
           {
+            name: 'google_id',
+            type: 'varchar',
+            isNullable: true,
+          },
+          {
+            name: 'avatar',
+            type: 'varchar',
+            isNullable: true,
+          },
+          {
             name: 'created_at',
             type: 'timestamp',
             default: 'now()',

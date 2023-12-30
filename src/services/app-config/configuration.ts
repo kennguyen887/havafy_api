@@ -30,6 +30,9 @@ export const getConfig = (): AppConfig => {
     recaptcha: {
       secret_key: process.env.RECAPTHA_SECRET_KEY as string,
     },
+    gcloud: {
+      client_id: process.env.GCOUD_CLIENT_ID as string,
+    },
   };
 };
 
@@ -41,6 +44,7 @@ export interface AppConfig {
   cache: CacheConfig;
   mail: MailConfig;
   recaptcha: ReCaptcha;
+  gcloud: GCloud;
 }
 
 export interface DbConfig {
@@ -72,4 +76,8 @@ export interface MailConfig {
 
 export interface ReCaptcha {
   secret_key: string;
+}
+
+export interface GCloud {
+  client_id: string;
 }

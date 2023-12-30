@@ -27,6 +27,10 @@ export class CreateUserDto {
   @MaxLength(100)
   @Validate(IsValidPassword)
   password: string;
+
+  @IsString()
+  @IsOptional()
+  googleId?: string;
 }
 
 export class CreateUserReqDto extends CreateUserDto {

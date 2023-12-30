@@ -1,5 +1,5 @@
 import { HttpStatus, HttpException } from '@nestjs/common';
-import axios from 'axios';
+import { ConfigService } from '@nestjs/config';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -8,9 +8,12 @@ import {
   CreateUserByGoogleAccountRequestDto,
   LoginByProviderAccountResDto,
 } from '../dto';
-import { CreateUserDto } from '../dto/create-user.dto';
 import { UserService } from '../services/user/user.service';
 import { PasswordService } from '../services/password/password.service';
+import { GCloud } from '../../services/app-config/configuration';
+
+import { OAuth2Client, TokenPayload } from 'google-auth-library';
+import { generateRandomString } from '../../shared/utils';
 
 export class CreateUserByGoogleAccountCommand {
   constructor(public readonly data: CreateUserByGoogleAccountRequestDto) {}
@@ -20,12 +23,17 @@ export class CreateUserByGoogleAccountCommand {
 export class CreateUserByGoogleAccountCommandHandler
   implements ICommandHandler<CreateUserByGoogleAccountCommand>
 {
+  private readonly gcloud: GCloud;
+
   constructor(
     @InjectRepository(UserEntity)
     private usersRepository: Repository<UserEntity>,
     private readonly passwordService: PasswordService,
+    private readonly configService: ConfigService,
     private readonly userService: UserService,
-  ) {}
+  ) {
+    this.gcloud = this.configService.get<GCloud>('gcloud') as GCloud;
+  }
 
   async execute(
     command: CreateUserByGoogleAccountCommand,
@@ -34,66 +42,64 @@ export class CreateUserByGoogleAccountCommandHandler
       data: { credential },
     } = command;
 
+    let payload: TokenPayload | undefined;
     try {
-      const { data } = await axios({
-        method: 'get',
-        url: `https://oauth2.googleapis.com/tokeninfo?id_token=${credential}`,
+      const client = new OAuth2Client();
+      const ticket = await client.verifyIdToken({
+        idToken: credential,
+        audience: this.gcloud.client_id, // Specify the CLIENT_ID of the app that accesses the backend
+        // Or, if multiple clients access the backend:
+        //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
       });
-      console.log('--------------data', data);
-      const { email, given_name, family_name, email_verified } = data;
-
-      if (email_verified !== 'true') {
-        throw new HttpException(
-          'Your email is not verified',
-          HttpStatus.BAD_REQUEST,
-        );
-      }
-
-      const existingUser = await this.usersRepository.findOne({
-        where: {
-          email,
-        },
-      });
-
-      if (existingUser) {
-        const token = this.userService.getUserToken(existingUser);
-        return {
-          userId: existingUser.id,
-          token,
-        };
-      }
-      const user: CreateUserDto = {
-        email,
-        password: this.generateRandomString(10),
-        lastName: given_name,
-        firstName: family_name,
-      };
-
-      const newUser = await this.userService.createUser(user);
-
-      return {
-        userId: newUser.id,
-        token: newUser.token,
-      };
+      payload = ticket.getPayload();
     } catch (error) {
       console.log('The Oauth2 token is invalid', error);
+      throw new HttpException('Token used too late.', HttpStatus.BAD_REQUEST);
+    }
+    if (!payload) {
+      throw new HttpException('The user is invalid.', HttpStatus.BAD_REQUEST);
+    }
+    const { email, given_name, family_name, email_verified, sub, picture } =
+      payload;
+
+    if (!email_verified || !email) {
       throw new HttpException(
-        'The Oauth2 token is invalid',
+        'Your email is not verified.',
         HttpStatus.BAD_REQUEST,
       );
     }
-  }
-  private generateRandomString(length: number): string {
-    const characters =
-      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[]{}|;:,.<>?';
-    let result = '';
-    const charactersLength = characters.length;
 
-    for (let i = 0; i < length; i++) {
-      const randomIndex = Math.floor(Math.random() * charactersLength);
-      result += characters.charAt(randomIndex);
+    const existingUser = await this.usersRepository.findOne({
+      where: {
+        email,
+      },
+    });
+
+    if (existingUser) {
+      const token = this.userService.getUserToken(existingUser);
+      return {
+        userId: existingUser.id,
+        token,
+      };
     }
+    const userPayload = {
+      email,
+      passwordHash: await this.passwordService.generate(
+        generateRandomString(10),
+      ),
+      lastName: given_name || '',
+      firstName: family_name || '',
+      googleId: sub,
+      avatar: picture,
+    };
 
-    return result;
+    let newUser = this.usersRepository.create(userPayload);
+    newUser = await this.usersRepository.save(newUser);
+    const token = this.userService.getUserToken(newUser);
+
+    return {
+      userId: newUser.id,
+      token: token,
+    };
   }
 }

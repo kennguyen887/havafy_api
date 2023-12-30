@@ -7,4 +7,6 @@ export const mockUserEntity: UserEntity = {
   firstName: 'fName',
   token: 'token',
   passwordHash: 'password',
+  avatar: '',
+  googleId: '',
 };

@@ -48,6 +48,9 @@ describe('config helper', () => {
       recaptcha: {
         secret_key: 'LcUOr8oAAAAAKa8bYrXtXF',
       },
+      gcloud: {
+        client_id: '',
+      },
     });
   });
 });

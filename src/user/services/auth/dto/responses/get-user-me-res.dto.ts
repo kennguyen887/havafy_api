@@ -13,4 +13,7 @@ export class GetUserMeResDto {
 
   @Expose()
   lastName!: string;
+
+  @Expose()
+  avatar!: string;
 }
