@@ -8,9 +8,17 @@ export const generateSlug = (value: string, options = {}): string => {
   });
 };
 
-export const generateRandomString = (length: number): string => {
-  const characters =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[]{}|;:,.<>?';
+export const generateRandomString = (
+  length: number,
+  hasSpecialChars = true,
+): string => {
+  let characters =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+  if (hasSpecialChars) {
+    characters += '!@#$%^&*()-_=+[]{}|;:,.<>?';
+  }
+
   let result = '';
   const charactersLength = characters.length;
 

@@ -35,8 +35,9 @@ export class UserEntity {
 
   @Column({
     name: 'password_reset_expired',
+    nullable: true,
   })
-  passwordResetExpired: string;
+  passwordResetExpired: Date | null;
 
   @Column()
   locale: string;

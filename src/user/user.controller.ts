@@ -24,11 +24,13 @@ import {
   UpdateUserRequestDto,
   CreateUserByGoogleAccountRequestDto,
   ResetPasswordRequestDto,
+  ChangePasswordByResetTokenRequestDto,
 } from './dto';
 import {
   UpdateUserCommand,
   CreateUserByGoogleAccountCommand,
-  ResetPasswordCommand,
+  SendResetPasswordTokenCommand,
+  ChangePasswordByResetTokenCommand,
 } from './commands';
 
 @ApiTags('user')
@@ -108,7 +110,14 @@ export class UserController {
   async submitResetPassword(
     @Body() data: ResetPasswordRequestDto,
   ): Promise<void> {
-    return this.commandBus.execute(new ResetPasswordCommand(data));
+    return this.commandBus.execute(new SendResetPasswordTokenCommand(data));
+  }
+
+  @Post('changePasswordByResetToken')
+  async changePasswordByResetToken(
+    @Body() data: ChangePasswordByResetTokenRequestDto,
+  ): Promise<void> {
+    return this.commandBus.execute(new ChangePasswordByResetTokenCommand(data));
   }
 
   @ApiBearerAuth()

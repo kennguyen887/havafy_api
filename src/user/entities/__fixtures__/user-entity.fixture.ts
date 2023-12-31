@@ -1,4 +1,5 @@
 import { UserEntity } from '../user.entity';
+import * as dayjs from 'dayjs';
 
 export const mockUserEntity: UserEntity = {
   id: 0,
@@ -10,7 +11,7 @@ export const mockUserEntity: UserEntity = {
   token: 'token',
   passwordHash: 'password',
   passwordResetToken: '',
-  passwordResetExpired: '',
+  passwordResetExpired: dayjs().add(1, 'day').toDate(),
   avatar: '',
   locale: 'us',
   googleId: '',
