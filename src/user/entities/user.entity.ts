@@ -29,32 +29,47 @@ export class UserEntity {
   emailVerified: boolean;
 
   @Column({
+    type: String,
     name: 'password_reset_token',
-  })
-  passwordResetToken: string;
-
-  @Column({
-    name: 'password_reset_expired',
+    unique: true,
     nullable: true,
   })
-  passwordResetExpired: Date | null;
+  passwordResetToken!: string | null;
 
-  @Column()
-  locale: string;
+  @Column({
+    type: Date,
+    nullable: true,
+    name: 'password_reset_expired',
+  })
+  passwordResetExpired!: Date | null;
+
+  @Column({
+    type: String,
+    nullable: true,
+  })
+  locale!: string | null;
 
   @Column({
     name: 'password',
   })
-  passwordHash: string;
-
-  @Column()
-  token: string;
-
-  @Column()
-  avatar?: string;
+  passwordHash!: string;
 
   @Column({
-    name: 'google_id',
+    type: String,
+    nullable: true,
   })
-  googleId?: string;
+  token!: string | null;
+
+  @Column({
+    type: String,
+    nullable: true,
+  })
+  avatar!: string | null;
+
+  @Column({
+    type: String,
+    name: 'google_id',
+    nullable: true,
+  })
+  googleId!: string | null;
 }

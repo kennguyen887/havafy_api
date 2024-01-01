@@ -9,7 +9,7 @@ import { ResetPasswordRequestDto } from '../dto';
 import { UserService } from '../services/user/user.service';
 import { MailService } from '../../global/services/mail/mail.service';
 import { GCloud } from '../../services/app-config/configuration';
-import { generateRandomString } from '../../shared/utils';
+import { generateRandomString } from '../../global/utils';
 
 export class SendResetPasswordTokenCommand {
   constructor(public readonly data: ResetPasswordRequestDto) {}
@@ -54,19 +54,26 @@ export class SendResetPasswordTokenCommandHandler
 
     const passwordResetToken = generateRandomString(10, false);
 
-    const sendOptions = {
-      to: 'ntnpro@gmail.com',
-      subject: 'User registered',
-      html: `<h1>22222</h1> xin chao! ${passwordResetToken}`,
-    };
-    const mailResult = await this.mailService.send(sendOptions);
+    try {
+      const sendOptions = {
+        to: 'ntnpro@gmail.com',
+        subject: 'User registered',
+        html: `<h1>22222</h1> xin chao! ${passwordResetToken}`,
+      };
+      const mailResult = await this.mailService.send(sendOptions);
+      console.log('------------mailResult:', mailResult);
+    } catch (error) {
+      throw new HttpException(
+        'The email token cannot be sent.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     await this.usersRepository.save({
       ...existingUser,
       passwordResetToken,
       passwordResetExpired: dayjs().add(1, 'day').toDate(),
     });
-
-    console.log('------------mailResult:', mailResult);
 
     return {
       email,

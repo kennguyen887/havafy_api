@@ -1,7 +1,7 @@
 import { HttpStatus, HttpException } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Not } from 'typeorm';
+import { Repository } from 'typeorm';
 import { UserEntity } from '../entities/user.entity';
 import { UpdateUserRequestDto } from '../dto';
 

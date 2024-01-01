@@ -10,7 +10,7 @@ export const mockUserEntity: UserEntity = {
   firstName: 'fName',
   token: 'token',
   passwordHash: 'password',
-  passwordResetToken: '',
+  passwordResetToken: null,
   passwordResetExpired: dayjs().add(1, 'day').toDate(),
   avatar: '',
   locale: 'us',

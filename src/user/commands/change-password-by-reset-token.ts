@@ -9,7 +9,6 @@ import { ChangePasswordByResetTokenRequestDto } from '../dto';
 import { PasswordService } from '../services/password/password.service';
 import { MailService } from '../../global/services/mail/mail.service';
 import { GCloud } from '../../services/app-config/configuration';
-import { generateRandomString } from '../../shared/utils';
 
 export class ChangePasswordByResetTokenCommand {
   constructor(public readonly data: ChangePasswordByResetTokenRequestDto) {}
@@ -38,35 +37,33 @@ export class ChangePasswordByResetTokenCommandHandler
       data: { resetToken, password },
     } = command;
 
-    const existingUser = await this.usersRepository.findOne({
+    const user = await this.usersRepository.findOne({
       where: {
         active: true,
         passwordResetToken: resetToken,
       },
     });
 
-    if (!existingUser || !existingUser.active) {
+    if (!user || !user.active) {
       throw new HttpException(
         'Your account is not found or active.',
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    const passwordResetToken = generateRandomString(10, false);
+    if (
+      user.passwordResetExpired &&
+      dayjs().isAfter(dayjs(user.passwordResetExpired))
+    ) {
+      throw new HttpException('Token expired.', HttpStatus.BAD_REQUEST);
+    }
 
-    const sendOptions = {
-      to: 'ntnpro@gmail.com',
-      subject: 'User registered',
-      html: `<h1>22222</h1> xin chao! ${passwordResetToken}`,
-    };
-    const mailResult = await this.mailService.send(sendOptions);
     await this.usersRepository.save({
-      ...existingUser,
+      ...user,
       passwordHash: await this.passwordService.generate(password),
       passwordResetExpired: null,
+      passwordResetToken: null,
     });
-
-    console.log('------------mailResult:', mailResult);
 
     return {
       email: password || '',
