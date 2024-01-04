@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UserEntity } from '../entities/user.entity';
+import { UserEntity } from '../../../global/entities/user.entity';
 import { ResetPasswordRequestDto } from '../dto';
 import { UserService } from '../services/user/user.service';
 import { MailService } from '../../../global/services/mail/mail.service';
@@ -104,7 +104,10 @@ export class SendResetPasswordTokenCommandHandler
         subject,
         html,
       });
-      console.log('Sent an reset password email success', { email, mailResult });
+      console.log('Sent an reset password email success', {
+        email,
+        mailResult,
+      });
     } catch (error) {
       throw new HttpException(
         'The email token cannot be sent.',

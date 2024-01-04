@@ -6,8 +6,8 @@ import { PasswordService } from './services/password/password.service';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from './services/jwt/jwt.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { UserEntity } from './entities/user.entity';
-import { mockUserEntity } from './entities/__fixtures__/user-entity.fixture';
+import { UserEntity } from '../../global/entities/user.entity';
+import { mockUserEntity } from '../../global/entities/__fixtures__/user-entity.fixture';
 
 describe('UserController', () => {
   let controller: UserController;

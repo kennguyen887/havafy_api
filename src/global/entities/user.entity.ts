@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { ProductEntity } from './product.entity';
 
 @Entity({
   name: 'users',
@@ -72,4 +73,7 @@ export class UserEntity {
     nullable: true,
   })
   googleId!: string | null;
+
+  @OneToMany(() => ProductEntity, (productEntity) => productEntity.user)
+  products!: ProductEntity[];
 }

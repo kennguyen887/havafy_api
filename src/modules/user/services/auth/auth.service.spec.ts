@@ -4,9 +4,9 @@ import { UserService } from '../password/user.service';
 import { PasswordService } from '../password/password.service';
 import { JwtService } from '../jwt/jwt.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { UserEntity } from '../../entities/user.entity';
+import { UserEntity } from '../../../../global/entities/user.entity';
 import { ConfigService } from '@nestjs/config';
-import { mockUserEntity } from '../../entities/__fixtures__/user-entity.fixture';
+import { mockUserEntity } from '../../../../global/entities/__fixtures__/user-entity.fixture';
 
 describe('AuthService', () => {
   let authService: AuthService;
