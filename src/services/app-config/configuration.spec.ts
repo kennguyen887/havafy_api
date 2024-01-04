@@ -34,6 +34,7 @@ describe('config helper', () => {
       jwtSecret: 'secret',
       logLevel: 'debug',
       port: 3000,
+      storefrontBaseUrl: '',
       mail: {
         from: 'no-reply@nestjs-starter-kit.smtp.com',
         transportOptions: {

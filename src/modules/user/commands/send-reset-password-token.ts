@@ -7,9 +7,10 @@ import { Repository } from 'typeorm';
 import { UserEntity } from '../entities/user.entity';
 import { ResetPasswordRequestDto } from '../dto';
 import { UserService } from '../services/user/user.service';
-import { MailService } from '../../global/services/mail/mail.service';
-import { GCloud } from '../../services/app-config/configuration';
-import { generateRandomString } from '../../global/utils';
+import { MailService } from '../../../global/services/mail/mail.service';
+import { GCloud } from '../../../services/app-config/configuration';
+import { generateRandomString } from '../../../global/utils';
+import { HtmlTemplateService } from '../../html-templates/html-template.service';
 
 export class SendResetPasswordTokenCommand {
   constructor(public readonly data: ResetPasswordRequestDto) {}
@@ -26,6 +27,7 @@ export class SendResetPasswordTokenCommandHandler
     private usersRepository: Repository<UserEntity>,
     private readonly mailService: MailService,
     private readonly configService: ConfigService,
+    private readonly htmlTemplateService: HtmlTemplateService,
     private readonly userService: UserService,
   ) {
     this.gcloud = this.configService.get<GCloud>('gcloud') as GCloud;
@@ -38,14 +40,14 @@ export class SendResetPasswordTokenCommandHandler
       data: { email },
     } = command;
 
-    const existingUser = await this.usersRepository.findOne({
+    const user = await this.usersRepository.findOne({
       where: {
         active: true,
         email,
       },
     });
 
-    if (!existingUser || !existingUser.active) {
+    if (!user || !user.active) {
       throw new HttpException(
         'Your account is not found or active.',
         HttpStatus.BAD_REQUEST,
@@ -54,23 +56,14 @@ export class SendResetPasswordTokenCommandHandler
 
     const passwordResetToken = generateRandomString(10, false);
 
-    try {
-      const sendOptions = {
-        to: 'ntnpro@gmail.com',
-        subject: 'User registered',
-        html: `<h1>22222</h1> xin chao! ${passwordResetToken}`,
-      };
-      const mailResult = await this.mailService.send(sendOptions);
-      console.log('------------mailResult:', mailResult);
-    } catch (error) {
-      throw new HttpException(
-        'The email token cannot be sent.',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+    await this.sendEmail({
+      email,
+      passwordResetToken,
+      fullName: `${user.firstName} ${user.lastName}`,
+    });
 
     await this.usersRepository.save({
-      ...existingUser,
+      ...user,
       passwordResetToken,
       passwordResetExpired: dayjs().add(1, 'day').toDate(),
     });
@@ -78,5 +71,45 @@ export class SendResetPasswordTokenCommandHandler
     return {
       email,
     };
+  }
+
+  private async sendEmail({
+    email,
+    passwordResetToken,
+    fullName,
+  }: {
+    email: string;
+    passwordResetToken: string;
+    fullName: string;
+  }): Promise<void> {
+    const storefrontBaseUrl = this.configService.get(
+      'storefrontBaseUrl',
+    ) as string;
+    const { subject, html } = await this.htmlTemplateService.render(
+      'email/reset-user-password',
+      {
+        data: {
+          resetPasswordLink: `${storefrontBaseUrl}/user/resetPassword?token=${passwordResetToken}`,
+          fullName,
+        },
+      },
+    );
+    if (!subject || !html) {
+      return;
+    }
+
+    try {
+      const mailResult = await this.mailService.send({
+        to: email,
+        subject,
+        html,
+      });
+      console.log('Sent an reset password email success', { email, mailResult });
+    } catch (error) {
+      throw new HttpException(
+        'The email token cannot be sent.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 }

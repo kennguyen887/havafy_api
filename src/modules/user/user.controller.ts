@@ -4,7 +4,7 @@ import {
   Get,
   Post,
   UseGuards,
-  UseInterceptors,
+  // UseInterceptors,
   Request,
   HttpException,
   HttpStatus,
@@ -17,7 +17,7 @@ import { LoginDto } from './dto/login.dto';
 import { UserService } from './services/user/user.service';
 import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CacheInterceptor } from '@nestjs/cache-manager';
+// import { CacheInterceptor } from '@nestjs/cache-manager';
 import { GetUserMeResDto } from './services/auth/dto';
 import { plainToClass } from 'class-transformer';
 import {
@@ -122,7 +122,7 @@ export class UserController {
 
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
-  @UseInterceptors(CacheInterceptor)
+  // @UseInterceptors(CacheInterceptor)
   @Get()
   async getUsers() {
     const users = await this.userService.getAll();
@@ -135,7 +135,6 @@ export class UserController {
 
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
-  @UseInterceptors(CacheInterceptor)
   @Get()
   async changePassword() {
     const users = await this.userService.getAll();

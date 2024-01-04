@@ -7,8 +7,8 @@ import { Repository } from 'typeorm';
 import { UserEntity } from '../entities/user.entity';
 import { ChangePasswordByResetTokenRequestDto } from '../dto';
 import { PasswordService } from '../services/password/password.service';
-import { MailService } from '../../global/services/mail/mail.service';
-import { GCloud } from '../../services/app-config/configuration';
+import { MailService } from '../../../global/services/mail/mail.service';
+import { GCloud } from '../../../services/app-config/configuration';
 
 export class ChangePasswordByResetTokenCommand {
   constructor(public readonly data: ChangePasswordByResetTokenRequestDto) {}
@@ -36,6 +36,25 @@ export class ChangePasswordByResetTokenCommandHandler
     const {
       data: { resetToken, password },
     } = command;
+
+    /* try {
+      const osClient = OneSignal.createConfiguration({
+        appKey: process.env['ONESIGNAL_REST_API_KEY'],
+        userKey: process.env['ONESIGNAL_AUTH_KEY'],
+      });
+
+      const email = new OneSignal.Notification();
+      email.email_subject = 'flags.subject';
+      email.email_body = 'flags.body';
+      email.email_from_address = 'contact@havafy.com';
+      email.include_email_tokens = ['ntnpro@gmail.com'];
+
+      const result = await osClient.createNotification(email);
+      console.log('-----------result:', result);
+    } catch (error) {
+      console.log('Unable to send email.', (error as Error).message);
+    }
+    */
 
     const user = await this.usersRepository.findOne({
       where: {

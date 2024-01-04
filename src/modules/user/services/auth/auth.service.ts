@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { ConfigService } from '@nestjs/config';
-import { ReCaptcha } from '../../../services/app-config/configuration';
+import { ReCaptcha } from '../../../../services/app-config/configuration';
 import { UserService } from '../user/user.service';
 import { LoginDto } from '../../dto/login.dto';
 import { UserEntity } from '../../entities/user.entity';

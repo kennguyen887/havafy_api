@@ -3,6 +3,7 @@ export const getConfig = (): AppConfig => {
     port: parseInt(process.env.PORT as string, 10) || 3000,
     jwtSecret: process.env.JWT_SECRET as string,
     logLevel: process.env.LOG_LEVEL || 'info',
+    storefrontBaseUrl: process.env.STOREFRONT_BASE_URL || '',
     database: {
       host: process.env.DB_HOST as string,
       type: process.env.DB_TYPE as string,
@@ -40,6 +41,7 @@ export interface AppConfig {
   port: number;
   jwtSecret: string;
   logLevel: string;
+  storefrontBaseUrl: string;
   database: DbConfig;
   cache: CacheConfig;
   mail: MailConfig;

@@ -34,7 +34,12 @@ export class MailService {
   }
 
   public async send(options: MailOptions): Promise<string> {
-    const result = await this.transport.sendMail(options);
+    let payload = options;
+
+    if (!options.from) {
+      payload = { ...options, from: this.fromValue };
+    }
+    const result = await this.transport.sendMail(payload);
 
     return result.response;
   }

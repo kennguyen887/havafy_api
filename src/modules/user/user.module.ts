@@ -9,14 +9,14 @@ import { PasswordService } from './services/password/password.service';
 import { JwtService } from './services/jwt/jwt.service';
 import { ConfigModule } from '@nestjs/config';
 import { JwtStrategy } from './services/auth/strategies/jwt/jwt.strategy';
-import { AppCacheModule } from '../app-cache/app-cache.module';
+// import { AppCacheModule } from '../../app-cache/app-cache.module';
 import { CommandHandlers } from './commands';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([UserEntity]),
     ConfigModule,
-    AppCacheModule,
+    // AppCacheModule,
     CqrsModule,
   ],
   controllers: [UserController],

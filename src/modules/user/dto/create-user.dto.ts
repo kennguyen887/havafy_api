@@ -7,26 +7,26 @@ import {
   MaxLength,
   Validate,
 } from 'class-validator';
-import { IsValidPassword } from '../../global/decorators';
+import { IsValidPassword } from '../../../global/decorators';
 
 export class CreateUserDto {
   @IsString()
   @IsOptional()
-  firstName: string;
+  firstName!: string;
 
   @IsString()
   @IsOptional()
-  lastName: string;
+  lastName!: string;
 
   @IsEmail()
-  email: string;
+  email!: string;
 
   @IsString()
   @IsNotEmpty()
   @MinLength(8)
   @MaxLength(100)
   @Validate(IsValidPassword)
-  password: string;
+  password!: string;
 
   @IsString()
   @IsOptional()
@@ -36,5 +36,5 @@ export class CreateUserDto {
 export class CreateUserReqDto extends CreateUserDto {
   @IsString()
   @IsNotEmpty()
-  token: string;
+  token!: string;
 }

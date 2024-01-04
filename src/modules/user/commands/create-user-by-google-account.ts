@@ -10,10 +10,10 @@ import {
 } from '../dto';
 import { UserService } from '../services/user/user.service';
 import { PasswordService } from '../services/password/password.service';
-import { GCloud } from '../../services/app-config/configuration';
+import { GCloud } from '../../../services/app-config/configuration';
 
 import { OAuth2Client, TokenPayload } from 'google-auth-library';
-import { generateRandomString } from '../../global/utils';
+import { generateRandomString } from '../../../global/utils';
 
 export class CreateUserByGoogleAccountCommand {
   constructor(public readonly data: CreateUserByGoogleAccountRequestDto) {}

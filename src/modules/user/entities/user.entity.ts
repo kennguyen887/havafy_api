@@ -5,28 +5,28 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 })
 export class UserEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column()
-  active: boolean;
+  active!: boolean;
 
   @Column({
     name: 'first_name',
   })
-  firstName: string;
+  firstName!: string;
 
   @Column({
     name: 'last_name',
   })
-  lastName: string;
+  lastName!: string;
 
   @Column()
-  email: string;
+  email!: string;
 
   @Column({
     name: 'email_verified',
   })
-  emailVerified: boolean;
+  emailVerified!: boolean;
 
   @Column({
     type: String,
