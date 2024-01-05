@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { ReCaptcha } from '../../../../services/app-config/configuration';
 import { UserService } from '../user/user.service';
 import { LoginDto } from '../../dto/login.dto';
-import { UserEntity } from '../../entities/user.entity';
+import { UserEntity } from '../../../../global/entities/user.entity';
 import { JwtService } from '../jwt/jwt.service';
 
 @Injectable()

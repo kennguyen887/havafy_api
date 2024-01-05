@@ -1,5 +1,6 @@
 import { UserEntity } from '../user.entity';
 import * as dayjs from 'dayjs';
+import { mockProductEntity } from './product-entity.fixture';
 
 export const mockUserEntity: UserEntity = {
   id: 0,
@@ -15,4 +16,5 @@ export const mockUserEntity: UserEntity = {
   avatar: '',
   locale: 'us',
   googleId: '',
+  products: [mockProductEntity],
 };

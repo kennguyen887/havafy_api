@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UserEntity } from '../entities/user.entity';
+import { UserEntity } from '../../../global/entities/user.entity';
 import {
   CreateUserByGoogleAccountRequestDto,
   LoginByProviderAccountResDto,
