@@ -89,7 +89,7 @@ export class SendResetPasswordTokenCommandHandler
       'email/reset-user-password',
       {
         data: {
-          resetPasswordLink: `${storefrontBaseUrl}/user/resetPassword?token=${passwordResetToken}`,
+          resetPasswordLink: `${storefrontBaseUrl}/user/changePassword/${passwordResetToken}`,
           fullName,
         },
       },

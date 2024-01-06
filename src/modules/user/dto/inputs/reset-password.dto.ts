@@ -13,7 +13,7 @@ export class ResetPasswordRequestDto {
 
   @IsNotEmpty()
   @IsString()
-  @MinLength(25)
-  @MaxLength(100)
+  @MinLength(20)
+  @MaxLength(5000)
   token!: string;
 }
