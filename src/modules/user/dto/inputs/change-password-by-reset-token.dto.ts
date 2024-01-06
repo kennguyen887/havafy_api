@@ -16,7 +16,7 @@ export class ChangePasswordByResetTokenRequestDto {
 
   @IsNotEmpty()
   @IsString()
-  @MinLength(10)
+  @MinLength(25)
   @MaxLength(100)
   resetToken!: string;
 }

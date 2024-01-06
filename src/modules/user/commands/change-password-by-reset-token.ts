@@ -30,31 +30,10 @@ export class ChangePasswordByResetTokenCommandHandler
     this.gcloud = this.configService.get<GCloud>('gcloud') as GCloud;
   }
 
-  async execute(
-    command: ChangePasswordByResetTokenCommand,
-  ): Promise<{ email: string }> {
+  async execute(command: ChangePasswordByResetTokenCommand): Promise<void> {
     const {
       data: { resetToken, password },
     } = command;
-
-    /* try {
-      const osClient = OneSignal.createConfiguration({
-        appKey: process.env['ONESIGNAL_REST_API_KEY'],
-        userKey: process.env['ONESIGNAL_AUTH_KEY'],
-      });
-
-      const email = new OneSignal.Notification();
-      email.email_subject = 'flags.subject';
-      email.email_body = 'flags.body';
-      email.email_from_address = 'contact@havafy.com';
-      email.include_email_tokens = ['ntnpro@gmail.com'];
-
-      const result = await osClient.createNotification(email);
-      console.log('-----------result:', result);
-    } catch (error) {
-      console.log('Unable to send email.', (error as Error).message);
-    }
-    */
 
     const user = await this.usersRepository.findOne({
       where: {
@@ -83,9 +62,5 @@ export class ChangePasswordByResetTokenCommandHandler
       passwordResetExpired: null,
       passwordResetToken: null,
     });
-
-    return {
-      email: password || '',
-    };
   }
 }

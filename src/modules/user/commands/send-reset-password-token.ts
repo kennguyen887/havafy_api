@@ -6,9 +6,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserEntity } from '../../../global/entities/user.entity';
 import { ResetPasswordRequestDto } from '../dto';
-import { UserService } from '../services/user/user.service';
 import { MailService } from '../../../global/services/mail/mail.service';
 import { GCloud } from '../../../services/app-config/configuration';
+import { AuthService } from '../services/auth/auth.service';
 import { generateRandomString } from '../../../global/utils';
 import { HtmlTemplateService } from '../../html-templates/html-template.service';
 
@@ -28,17 +28,21 @@ export class SendResetPasswordTokenCommandHandler
     private readonly mailService: MailService,
     private readonly configService: ConfigService,
     private readonly htmlTemplateService: HtmlTemplateService,
-    private readonly userService: UserService,
+    private readonly authService: AuthService,
   ) {
     this.gcloud = this.configService.get<GCloud>('gcloud') as GCloud;
   }
 
-  async execute(
-    command: SendResetPasswordTokenCommand,
-  ): Promise<{ email: string }> {
+  async execute(command: SendResetPasswordTokenCommand): Promise<void> {
     const {
-      data: { email },
+      data: { email, token },
     } = command;
+
+    const response = await this.authService.verifyRecaptcha(token);
+
+    if (!response.data.success && response.data.score < 0.5) {
+      throw new HttpException('Token is invalid.', HttpStatus.UNAUTHORIZED);
+    }
 
     const user = await this.usersRepository.findOne({
       where: {
@@ -54,7 +58,7 @@ export class SendResetPasswordTokenCommandHandler
       );
     }
 
-    const passwordResetToken = generateRandomString(10, false);
+    const passwordResetToken = generateRandomString(25, false);
 
     await this.sendEmail({
       email,
@@ -67,10 +71,6 @@ export class SendResetPasswordTokenCommandHandler
       passwordResetToken,
       passwordResetExpired: dayjs().add(1, 'day').toDate(),
     });
-
-    return {
-      email,
-    };
   }
 
   private async sendEmail({
