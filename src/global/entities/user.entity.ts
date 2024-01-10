@@ -5,8 +5,8 @@ import { ProductEntity } from './product.entity';
   name: 'users',
 })
 export class UserEntity {
-  @PrimaryGeneratedColumn()
-  id!: number;
+  @PrimaryGeneratedColumn('uuid')
+  id!: string;
 
   @Column()
   active!: boolean;

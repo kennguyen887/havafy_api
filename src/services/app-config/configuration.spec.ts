@@ -51,6 +51,8 @@ describe('config helper', () => {
       },
       gcloud: {
         client_id: '',
+        client_email: '',
+        private_key: '',
       },
     });
   });

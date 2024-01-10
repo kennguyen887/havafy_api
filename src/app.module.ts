@@ -1,6 +1,7 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { UserModule } from './modules/user/user.module';
 import { ProductModule } from './modules/product/product.module';
+import { SpeechModule } from './modules/speech/speech.module';
 import { ConfigModule } from '@nestjs/config';
 import { DbModule } from './db/db.module';
 import { getConfig } from './services/app-config/configuration';
@@ -23,6 +24,7 @@ import { HtmlTemplateModule } from './modules/html-templates';
     DbModule,
     // AppCacheModule,
     UserModule,
+    SpeechModule,
     ProductModule,
     ConfigModule,
     LoggerModule,

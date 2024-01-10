@@ -9,7 +9,7 @@ import { PasswordService } from '../services/password/password.service';
 
 export class UpdateUserCommand {
   constructor(
-    public readonly userId: number,
+    public readonly userId: string,
     public readonly data: UpdateUserRequestDto,
   ) {}
 }

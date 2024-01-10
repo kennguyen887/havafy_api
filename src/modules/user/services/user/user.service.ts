@@ -23,7 +23,7 @@ export class UserService {
     });
   }
 
-  async getUserById(id: number): Promise<UserEntity | null> {
+  async getUserById(id: string): Promise<UserEntity | null> {
     return this.usersRepository.findOne({
       where: {
         id,

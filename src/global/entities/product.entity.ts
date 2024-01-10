@@ -12,15 +12,15 @@ import { UserEntity } from './user.entity';
   name: 'products',
 })
 export class ProductEntity {
-  @PrimaryGeneratedColumn()
-  id!: number;
+  @PrimaryGeneratedColumn('uuid')
+  id!: string;
 
   @Column()
   active!: boolean;
 
   @Index('product-userId-idx')
   @Column()
-  userId!: number;
+  userId!: string;
 
   @Column({ type: 'varchar', length: 200 })
   name!: string;

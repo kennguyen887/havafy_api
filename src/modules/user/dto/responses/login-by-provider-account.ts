@@ -6,5 +6,5 @@ export class LoginByProviderAccountResDto {
   token!: string;
 
   @Expose()
-  userId!: number;
+  userId!: string;
 }

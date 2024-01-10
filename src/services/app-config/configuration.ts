@@ -33,6 +33,8 @@ export const getConfig = (): AppConfig => {
     },
     gcloud: {
       client_id: process.env.GCOUD_CLIENT_ID as string,
+      client_email: process.env.GCLOUD_CLIENT_EMAIL as string,
+      private_key: process.env.GCLOUD_PRIVATE_KEY as string,
     },
   };
 };
@@ -82,4 +84,6 @@ export interface ReCaptcha {
 
 export interface GCloud {
   client_id: string;
+  client_email: string;
+  private_key: string;
 }

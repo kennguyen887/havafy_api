@@ -2,11 +2,12 @@ import { ProductEntity } from '../product.entity';
 import { ProductStatus, ProductType, ProductAttribute } from '../../models';
 import { mockUserEntity } from './user-entity.fixture';
 import * as dayjs from 'dayjs';
+import { v4 as uuidV4 } from 'uuid';
 
 export const mockProductEntity: ProductEntity = {
-  id: 0,
+  id: uuidV4(),
   active: true,
-  userId: 1,
+  userId: uuidV4(),
   name: 'string',
   price: 1,
   basePrice: 1,

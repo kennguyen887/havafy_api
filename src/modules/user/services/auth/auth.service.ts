@@ -20,7 +20,7 @@ export class AuthService {
     ) as ReCaptcha;
   }
 
-  async getUserById(id: number): Promise<UserEntity | null> {
+  async getUserById(id: string): Promise<UserEntity | null> {
     return this.userService.getUserById(id);
   }
 
