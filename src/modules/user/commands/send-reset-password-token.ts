@@ -8,8 +8,9 @@ import { UserEntity } from '../../../global/entities/user.entity';
 import { ResetPasswordRequestDto } from '../dto';
 import { MailService } from '../../../global/services/mail/mail.service';
 import { GCloud } from '../../../services/app-config/configuration';
-import { AuthService } from '../services/auth/auth.service';
 import { generateRandomString } from '../../../global/utils';
+import { CaptchaService } from '../../../global/services/mail/captcha.service';
+
 import { HtmlTemplateService } from '../../html-templates/html-template.service';
 
 export class SendResetPasswordTokenCommand {
@@ -26,9 +27,9 @@ export class SendResetPasswordTokenCommandHandler
     @InjectRepository(UserEntity)
     private usersRepository: Repository<UserEntity>,
     private readonly mailService: MailService,
+    private readonly captchaService: CaptchaService,
     private readonly configService: ConfigService,
     private readonly htmlTemplateService: HtmlTemplateService,
-    private readonly authService: AuthService,
   ) {
     this.gcloud = this.configService.get<GCloud>('gcloud') as GCloud;
   }
@@ -38,7 +39,7 @@ export class SendResetPasswordTokenCommandHandler
       data: { email, token },
     } = command;
 
-    const response = await this.authService.verifyRecaptcha(token);
+    const response = await this.captchaService.verifyRecaptcha(token);
 
     if (!response.data.success && response.data.score < 0.5) {
       throw new HttpException('Token is invalid.', HttpStatus.UNAUTHORIZED);

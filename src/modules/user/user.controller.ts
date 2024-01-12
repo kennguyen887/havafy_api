@@ -18,6 +18,8 @@ import { UserService } from './services/user/user.service';
 import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 // import { CacheInterceptor } from '@nestjs/cache-manager';
+
+import { CaptchaService } from '../../global/services/mail/captcha.service';
 import { GetUserMeResDto } from './services/auth/dto';
 import { plainToClass } from 'class-transformer';
 import {
@@ -40,11 +42,12 @@ export class UserController {
     private readonly commandBus: CommandBus,
     private readonly authService: AuthService,
     private readonly userService: UserService,
+    private readonly captchaService: CaptchaService,
   ) {}
 
   @Post('register')
   async register(@Body() data: CreateUserReqDto) {
-    const response = await this.authService.verifyRecaptcha(data.token);
+    const response = await this.captchaService.verifyRecaptcha(data.token);
 
     if (!response.data.success && response.data.score < 0.5) {
       throw new HttpException('Token is invalid.', HttpStatus.UNAUTHORIZED);

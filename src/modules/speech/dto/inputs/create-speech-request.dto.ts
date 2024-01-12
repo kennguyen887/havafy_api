@@ -1,32 +1,36 @@
 import {
   IsNotEmpty,
   MinLength,
-  IsInt,
+  IsNumber,
   IsOptional,
   IsString,
   MaxLength,
-  IsEnum,
 } from 'class-validator';
-
-import { SsmlVoiceGender } from '../../../../global/models';
 
 export class CreateSpeechRequestDto {
   @IsNotEmpty()
   @IsString()
   @MinLength(10)
-  @MaxLength(2000)
-  text?: string;
-
-  @IsOptional()
-  @IsInt()
-  speed!: number;
+  @MaxLength(10000)
+  text!: string;
 
   @IsNotEmpty()
   @IsString()
-  @MaxLength(200)
+  @MinLength(5)
+  @MaxLength(50)
   voice!: string;
 
   @IsNotEmpty()
-  @IsEnum(SsmlVoiceGender)
-  ssmlGender!: SsmlVoiceGender;
+  @IsString()
+  @MinLength(20)
+  @MaxLength(5000)
+  token!: string;
+
+  @IsOptional()
+  @IsNumber({
+    allowInfinity: false,
+    allowNaN: false,
+    maxDecimalPlaces: 5,
+  })
+  speed?: number;
 }

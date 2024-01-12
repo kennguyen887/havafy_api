@@ -2,6 +2,7 @@ import { Global, Module } from '@nestjs/common';
 import { AsyncLocalStorage } from 'async_hooks';
 import { ASYNC_STORAGE } from './constants';
 import { MailService } from './services/mail/mail.service';
+import { CaptchaService } from './services/mail/captcha.service';
 import { ConfigModule } from '@nestjs/config';
 
 @Global()
@@ -13,7 +14,8 @@ import { ConfigModule } from '@nestjs/config';
       useValue: new AsyncLocalStorage(),
     },
     MailService,
+    CaptchaService,
   ],
-  exports: [ASYNC_STORAGE, MailService],
+  exports: [ASYNC_STORAGE, MailService, CaptchaService],
 })
 export class GlobalModule {}

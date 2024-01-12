@@ -20,6 +20,7 @@ import { CommandHandlers } from './commands';
     CqrsModule,
   ],
   controllers: [UserController],
+  exports: [AuthService, UserService, PasswordService, JwtService, JwtStrategy],
   providers: [
     AuthService,
     UserService,

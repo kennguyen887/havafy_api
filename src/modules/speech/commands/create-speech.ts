@@ -1,13 +1,14 @@
 import { HttpStatus, HttpException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { MailService } from '../../../global/services/mail/mail.service';
 import { GCloud, AwsS3 } from '../../../services/app-config/configuration';
 import { v4 as uuidV4 } from 'uuid';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 
 import TextToSpeech from '@google-cloud/text-to-speech';
 import { CreateSpeechRequestDto, CreateSpeechResponsetDto } from '../dto';
+import { SsmlVoiceGender } from '../../../global/models';
+import { CaptchaService } from '../../../global/services/mail/captcha.service';
 
 export class CreateSpeechCommand {
   constructor(public readonly data: CreateSpeechRequestDto) {}
@@ -21,7 +22,7 @@ export class CreateSpeechCommandHandler
   private readonly awsS3: AwsS3;
 
   constructor(
-    private readonly mailService: MailService,
+    private readonly captchaService: CaptchaService,
     private readonly configService: ConfigService,
   ) {
     this.gcloud = this.configService.get<GCloud>('gcloud') as GCloud;
@@ -31,10 +32,21 @@ export class CreateSpeechCommandHandler
   async execute(
     command: CreateSpeechCommand,
   ): Promise<CreateSpeechResponsetDto> {
-    const { text, speed = 1, voice, ssmlGender } = command.data;
+    const { text, speed = 1, voice, token } = command.data;
+
+    const reCaptchaResponse = await this.captchaService.verifyRecaptcha(token);
+
+    if (!reCaptchaResponse.data.success && reCaptchaResponse.data.score < 0.5) {
+      throw new HttpException('Token is invalid.', HttpStatus.UNAUTHORIZED);
+    }
+
     const s3Bucket = 'havafycom';
     const filePath = `text-to-speech/${uuidV4()}.mp3`;
     const speechFileUrl = `https://${s3Bucket}.s3.${this.awsS3.region}.amazonaws.com/${filePath}`;
+
+    if (text.length > 300) {
+      throw new HttpException('Your text is too long.', HttpStatus.BAD_REQUEST);
+    }
 
     // Import other required libraries
     // Creates a client
@@ -52,7 +64,7 @@ export class CreateSpeechCommandHandler
       voice: {
         languageCode: `${voiceCode[0]}-${voiceCode[1]}`,
         name: voice,
-        ssmlGender,
+        ssmlGender: this.getSsmlGender(voiceCode[2]),
       },
       audioConfig: { audioEncoding: 2, speakingRate: speed },
     });
@@ -90,5 +102,17 @@ export class CreateSpeechCommandHandler
     return {
       speechFileUrl,
     };
+  }
+
+  private getSsmlGender(voice: string): SsmlVoiceGender {
+    const isExisting = Object.values(SsmlVoiceGender).includes(
+      voice as SsmlVoiceGender,
+    );
+
+    if (isExisting) {
+      return voice as SsmlVoiceGender;
+    }
+
+    return SsmlVoiceGender.SSML_VOICE_GENDER_UNSPECIFIED;
   }
 }

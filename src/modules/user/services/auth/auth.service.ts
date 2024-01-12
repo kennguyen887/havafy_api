@@ -1,7 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import axios from 'axios';
 import { ConfigService } from '@nestjs/config';
-import { ReCaptcha } from '../../../../services/app-config/configuration';
 import { UserService } from '../user/user.service';
 import { LoginDto } from '../../dto/login.dto';
 import { UserEntity } from '../../../../global/entities/user.entity';
@@ -9,31 +7,14 @@ import { JwtService } from '../jwt/jwt.service';
 
 @Injectable()
 export class AuthService {
-  private readonly recaptcha: ReCaptcha;
   constructor(
     private readonly userService: UserService,
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
-  ) {
-    this.recaptcha = this.configService.get<ReCaptcha>(
-      'recaptcha',
-    ) as ReCaptcha;
-  }
+  ) {}
 
   async getUserById(id: string): Promise<UserEntity | null> {
     return this.userService.getUserById(id);
-  }
-
-  async verifyRecaptcha(token: string) {
-    const secretKey = this.recaptcha.secret_key;
-
-    const verificationUrl =
-      'https://www.google.com/recaptcha/api/siteverify?secret=' +
-      secretKey +
-      '&response=' +
-      token;
-
-    return await axios.post(verificationUrl);
   }
 
   async login(loginRequest: LoginDto): Promise<string | void> {
