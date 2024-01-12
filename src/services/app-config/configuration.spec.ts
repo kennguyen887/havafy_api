@@ -54,6 +54,11 @@ describe('config helper', () => {
         client_email: '',
         private_key: '',
       },
+      awsS3: {
+        secretAccessKey: '',
+        accessKeyId: '',
+        region: '',
+      },
     });
   });
 });

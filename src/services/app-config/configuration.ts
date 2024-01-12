@@ -36,6 +36,11 @@ export const getConfig = (): AppConfig => {
       client_email: process.env.GCLOUD_CLIENT_EMAIL as string,
       private_key: process.env.GCLOUD_PRIVATE_KEY as string,
     },
+    awsS3: {
+      secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY as string,
+      accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID as string,
+      region: process.env.AWS_S3_REGION as string,
+    },
   };
 };
 
@@ -49,6 +54,7 @@ export interface AppConfig {
   mail: MailConfig;
   recaptcha: ReCaptcha;
   gcloud: GCloud;
+  awsS3: AwsS3;
 }
 
 export interface DbConfig {
@@ -86,4 +92,10 @@ export interface GCloud {
   client_id: string;
   client_email: string;
   private_key: string;
+}
+
+export interface AwsS3 {
+  secretAccessKey: string;
+  accessKeyId: string;
+  region: string;
 }
