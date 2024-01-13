@@ -1,3 +1,5 @@
+import { BullModuleOptions } from '@nestjs/bull';
+
 export const getConfig = (): AppConfig => {
   return {
     port: parseInt(process.env.PORT as string, 10) || 3000,
@@ -16,6 +18,16 @@ export const getConfig = (): AppConfig => {
       host: process.env.REDIS_HOST as string,
       port: parseInt(process.env.REDIS_PORT as string, 10) || 6379,
       password: process.env.REDIS_PASSWORD as string,
+    },
+    bull: {
+      redis: {
+        host: process.env.REDIS_HOST as string,
+        port: parseInt(process.env.REDIS_PORT as string, 10) || 6379,
+        username: 'default',
+        password: process.env.REDIS_PASSWORD as string,
+        db: parseInt(process.env.REDIS_DB || '0', 10),
+        tls: process.env.REDIS_TLS === 'true' ? {} : undefined,
+      },
     },
     mail: {
       from: process.env.MAIL_FROM as string,
@@ -55,6 +67,7 @@ export interface AppConfig {
   recaptcha: ReCaptcha;
   gcloud: GCloud;
   awsS3: AwsS3;
+  bull: BullModuleOptions;
 }
 
 export interface DbConfig {

@@ -1,8 +1,10 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
+import { BullModule } from '@nestjs/bull';
+import { ConfigService, ConfigModule } from '@nestjs/config';
+import { BullModuleOptions } from '@nestjs/bull';
 import { UserModule } from './modules/user/user.module';
 import { ProductModule } from './modules/product/product.module';
 import { SpeechModule } from './modules/speech/speech.module';
-import { ConfigModule } from '@nestjs/config';
 import { DbModule } from './db/db.module';
 import { getConfig } from './services/app-config/configuration';
 // import { AppCacheModule } from './app-cache/app-cache.module';
@@ -10,16 +12,30 @@ import { LoggerModule } from './logger/logger.module';
 import { AsyncStorageMiddleware } from './global/middleware/async-storage/async-storage.middleware';
 import { GlobalModule } from './global/global.module';
 import { HtmlTemplateModule } from './modules/html-templates';
+import { JobQueueModule } from './modules/job-queue/job-queue.module';
 @Module({
   imports: [
     GlobalModule,
     ConfigModule.forRoot({
       cache: true,
+      isGlobal: true,
       load: [getConfig],
     }),
     HtmlTemplateModule.register({
       root: __dirname,
       templateDir: '../templates',
+    }),
+    BullModule.forRootAsync({
+      useFactory: (configService: ConfigService) => {
+        const config = configService.get<BullModuleOptions>(
+          'bull',
+        ) as BullModuleOptions;
+        if (!config) {
+          throw new Error('Cannot start app without Bull config');
+        }
+        return config;
+      },
+      inject: [ConfigService],
     }),
     DbModule,
     // AppCacheModule,
@@ -28,6 +44,7 @@ import { HtmlTemplateModule } from './modules/html-templates';
     ProductModule,
     ConfigModule,
     LoggerModule,
+    JobQueueModule,
   ],
 })
 export class AppModule {

@@ -30,6 +30,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.485.0",
     "@google-cloud/text-to-speech": "^5.0.1",
+    "@nestjs/bull": "^10.0.1",
     "@nestjs/common": "^9.4.0",
     "@nestjs/config": "^2.3.1",
     "@nestjs/core": "^9.4.0",
@@ -41,6 +42,7 @@
     "@nestjs/typeorm": "^9.0.1",
     "axios": "^1.5.1",
     "bcryptjs": "^2.4.3",
+    "bull": "^4.12.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "dayjs": "^1.11.10",
