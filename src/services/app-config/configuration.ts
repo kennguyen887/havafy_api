@@ -53,6 +53,11 @@ export const getConfig = (): AppConfig => {
       accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID as string,
       region: process.env.AWS_S3_REGION as string,
     },
+    paypal: {
+      mode: process.env.PAYPAL_MODE as string,
+      clientId: process.env.PAYPAL_CLIENT_ID as string,
+      clientSecret: process.env.PAYPAL_CLIENT_SECRET as string,
+    },
   };
 };
 
@@ -68,6 +73,7 @@ export interface AppConfig {
   gcloud: GCloud;
   awsS3: AwsS3;
   bull: BullModuleOptions;
+  paypal: PaypalConfig;
 }
 
 export interface DbConfig {
@@ -111,4 +117,10 @@ export interface AwsS3 {
   secretAccessKey: string;
   accessKeyId: string;
   region: string;
+}
+
+export interface PaypalConfig {
+  mode: string;
+  clientId: string;
+  clientSecret: string;
 }

@@ -13,6 +13,7 @@ import { AsyncStorageMiddleware } from './global/middleware/async-storage/async-
 import { GlobalModule } from './global/global.module';
 import { HtmlTemplateModule } from './modules/html-templates';
 import { JobQueueModule } from './modules/job-queue/job-queue.module';
+import { PaymentModule } from './modules/payment/payment.module';
 @Module({
   imports: [
     GlobalModule,
@@ -45,6 +46,7 @@ import { JobQueueModule } from './modules/job-queue/job-queue.module';
     ConfigModule,
     LoggerModule,
     JobQueueModule,
+    PaymentModule,
   ],
 })
 export class AppModule {
