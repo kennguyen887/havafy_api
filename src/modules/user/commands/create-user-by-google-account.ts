@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UserEntity } from '../../../global/entities/user.entity';
+import { UserEntity } from 'src/global/entities/user.entity';
 import {
   CreateUserByGoogleAccountRequestDto,
   LoginByProviderAccountResDto,
@@ -13,7 +13,7 @@ import { PasswordService } from '../services/password/password.service';
 import { GCloud } from '../../../services/app-config/configuration';
 
 import { OAuth2Client, TokenPayload } from 'google-auth-library';
-import { generateRandomString } from '../../../global/utils';
+import { generateRandomString } from 'src/global/utils';
 
 export class CreateUserByGoogleAccountCommand {
   constructor(public readonly data: CreateUserByGoogleAccountRequestDto) {}

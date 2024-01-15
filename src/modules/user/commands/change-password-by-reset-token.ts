@@ -4,10 +4,10 @@ import { ConfigService } from '@nestjs/config';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UserEntity } from '../../../global/entities/user.entity';
+import { UserEntity } from 'src/global/entities/user.entity';
 import { ChangePasswordByResetTokenRequestDto } from '../dto';
 import { PasswordService } from '../services/password/password.service';
-import { MailService } from '../../../global/services/mail/mail.service';
+import { MailService } from 'src/global/services/mail/mail.service';
 import { GCloud } from '../../../services/app-config/configuration';
 
 export class ChangePasswordByResetTokenCommand {

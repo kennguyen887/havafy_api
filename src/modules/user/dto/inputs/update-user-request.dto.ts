@@ -6,7 +6,7 @@ import {
   MinLength,
   Validate,
 } from 'class-validator';
-import { IsValidPassword } from '../../../../global/decorators';
+import { IsValidPassword } from 'src/global/decorators';
 
 export class UpdateUserRequestDto {
   @IsOptional()

@@ -4,12 +4,12 @@ import { ConfigService } from '@nestjs/config';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UserEntity } from '../../../global/entities/user.entity';
+import { UserEntity } from 'src/global/entities/user.entity';
 import { ResetPasswordRequestDto } from '../dto';
-import { MailService } from '../../../global/services/mail/mail.service';
-import { GCloud } from '../../../services/app-config/configuration';
-import { generateRandomString } from '../../../global/utils';
-import { CaptchaService } from '../../../global/services/mail/captcha.service';
+import { MailService } from 'src/global/services/mail/mail.service';
+import { GCloud } from 'src/services/app-config/configuration';
+import { generateRandomString } from 'src/global/utils';
+import { CaptchaService } from 'src/global/services/mail/captcha.service';
 
 import { HtmlTemplateService } from '../../html-templates/html-template.service';
 

@@ -5,7 +5,7 @@ import {
   IsString,
   MaxLength,
 } from 'class-validator';
-import { PaymentGateway } from 'src/global/models';
+import { PaymentMethod } from 'src/global/models';
 
 export class VerifyPaymentRequestDto {
   @IsNotEmpty()
@@ -15,6 +15,6 @@ export class VerifyPaymentRequestDto {
   orderId!: string;
 
   @IsNotEmpty()
-  @IsEnum(PaymentGateway)
-  paymentGateway!: PaymentGateway;
+  @IsEnum(PaymentMethod)
+  paymentMethod!: PaymentMethod;
 }

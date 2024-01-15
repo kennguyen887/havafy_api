@@ -18,4 +18,6 @@ export const mockUserEntity: UserEntity = {
   locale: 'us',
   googleId: '',
   products: [mockProductEntity],
+  createdAt: dayjs().toDate(),
+  updatedAt: dayjs().toDate(),
 };

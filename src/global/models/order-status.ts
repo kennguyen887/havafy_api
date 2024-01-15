@@ -19,3 +19,10 @@ export enum DeliveryStatus {
   SHIPPING = 'shipping',
   SHIPPED = 'shipped',
 }
+
+export enum ShippingMethod {
+  COD = 'cod',
+  CANCELED = 'canceled',
+  SHIPPING = 'shipping',
+  SHIPPED = 'shipped',
+}

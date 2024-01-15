@@ -4,6 +4,8 @@ import {
   Column,
   PrimaryGeneratedColumn,
   ManyToOne,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { ProductStatus, ProductType, ProductAttribute } from '../models';
 import { UserEntity } from './user.entity';
@@ -15,15 +17,15 @@ export class ProductEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column()
-  active!: boolean;
-
   @Index('product-userId-idx')
   @Column()
   userId!: string;
 
-  @Column({ type: 'varchar', length: 200 })
+  @Column({ type: 'varchar', length: 300 })
   name!: string;
+
+  @Column({ type: 'varchar', length: 150 })
+  sku!: string;
 
   @Column({ type: 'decimal', precision: 18, scale: 6, default: 0 })
   price!: number;
@@ -38,7 +40,7 @@ export class ProductEntity {
     default: null,
     nullable: true,
   })
-  discountPrice!: number;
+  discountPrice!: number | null;
 
   @Column({ type: 'varchar', length: 50, default: ProductStatus.DRAFT })
   status!: ProductStatus;
@@ -63,4 +65,16 @@ export class ProductEntity {
 
   @ManyToOne(() => UserEntity, (user) => user.products)
   user!: UserEntity;
+
+  @CreateDateColumn({
+    type: 'timestamp with time zone',
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  createdAt!: Date;
+
+  @UpdateDateColumn({
+    type: 'timestamp with time zone',
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  updatedAt!: Date;
 }

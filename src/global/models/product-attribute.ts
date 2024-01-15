@@ -1,11 +1,11 @@
 export class ProductAttribute {
-  fullName!: string;
+  color?: string;
 
-  phoneNumber!: string;
+  size?: string;
 
-  country!: string;
+  gender?: string;
 
-  postalCode!: string;
+  version?: string;
 
-  address!: string;
+  weight?: number;
 }

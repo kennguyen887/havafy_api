@@ -1,7 +1,7 @@
 import { Process, Processor } from '@nestjs/bull';
 import { CommandBus } from '@nestjs/cqrs';
 import { Job } from 'bull';
-import { QUEUE_JOB_NAMES, HAVAFY_QUEUE } from '../../../global/models';
+import { QUEUE_JOB_NAMES, HAVAFY_QUEUE } from 'src/global/models';
 import { CleanSpeechCommand } from '../../speech/commands';
 
 /* istanbul ignore next */
