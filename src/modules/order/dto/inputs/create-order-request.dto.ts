@@ -9,6 +9,7 @@ import {
   ArrayMinSize,
   ArrayMaxSize,
   ValidateNested,
+  IsOptional,
 } from 'class-validator';
 
 import { Type } from 'class-transformer';
@@ -43,4 +44,10 @@ export class CreateOrderRequestDto {
   @IsNotEmpty()
   @IsEnum(PaymentMethod)
   paymentMethod!: PaymentMethod;
+
+  @IsString()
+  @IsOptional()
+  @MinLength(3)
+  @MaxLength(100)
+  promoCode?: string;
 }

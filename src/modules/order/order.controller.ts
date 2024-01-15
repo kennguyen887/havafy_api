@@ -4,8 +4,8 @@ import { ApiTags } from '@nestjs/swagger';
 import { CreateOrderRequestDto, CreateOrderResponseDto } from './dto';
 import { CreateOrderCommand } from './commands';
 
-@ApiTags('Order')
-@Controller('Order')
+@ApiTags('order')
+@Controller('order')
 export class OrderController {
   constructor(private readonly commandBus: CommandBus) {}
 

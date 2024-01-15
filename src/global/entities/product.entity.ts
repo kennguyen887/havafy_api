@@ -18,7 +18,7 @@ export class ProductEntity {
   id!: string;
 
   @Index('product-userId-idx')
-  @Column()
+  @Column({ type: 'varchar', name: 'user_id', length: 36 })
   userId!: string;
 
   @Column({ type: 'varchar', length: 300 })
@@ -30,22 +30,24 @@ export class ProductEntity {
   @Column({ type: 'decimal', precision: 18, scale: 6, default: 0 })
   price!: number;
 
-  @Column({ type: 'decimal', precision: 18, scale: 6, default: 0 })
-  basePrice!: number;
-
   @Column({
     type: 'decimal',
+    name: 'base_price',
     precision: 18,
     scale: 6,
-    default: null,
-    nullable: true,
+    default: 0,
   })
-  discountPrice!: number | null;
+  basePrice!: number;
 
   @Column({ type: 'varchar', length: 50, default: ProductStatus.DRAFT })
   status!: ProductStatus;
 
-  @Column({ type: 'varchar', length: 50, default: ProductType.MAIN })
+  @Column({
+    type: 'varchar',
+    name: 'product_type',
+    length: 50,
+    default: ProductType.MAIN,
+  })
   productType!: ProductType;
 
   @Column({ type: 'text', nullable: true })
@@ -54,27 +56,29 @@ export class ProductEntity {
   @Column({ type: 'varchar', length: 3 })
   currency!: string;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'timestamp', nullable: true, name: 'published_at' })
   publishedAt?: Date;
 
-  @Column({ type: 'boolean', default: false })
+  @Column({ type: 'boolean', default: false, name: 'is_hidden' })
   isHidden!: boolean;
 
   @Column({ type: 'json', nullable: true })
   attributes!: ProductAttribute;
 
-  @ManyToOne(() => UserEntity, (user) => user.products)
-  user!: UserEntity;
+  // @ManyToOne(() => UserEntity, (user) => user.products)
+  // user!: UserEntity;
 
   @CreateDateColumn({
     type: 'timestamp with time zone',
     default: () => 'CURRENT_TIMESTAMP',
+    name: 'created_at',
   })
   createdAt!: Date;
 
   @UpdateDateColumn({
     type: 'timestamp with time zone',
     default: () => 'CURRENT_TIMESTAMP',
+    name: 'updated_at',
   })
   updatedAt!: Date;
 }

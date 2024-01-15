@@ -3,7 +3,7 @@ import { ProductController } from './product.controller';
 import { ProductService } from './product.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CqrsModule } from '@nestjs/cqrs';
-import { ProductEntity } from '../../global/entities/product.entity';
+import { ProductEntity } from 'src/global/entities/product.entity';
 import { ConfigModule } from '@nestjs/config';
 // import { CommandHandlers } from './commands';
 
@@ -15,5 +15,6 @@ import { ConfigModule } from '@nestjs/config';
   ],
   controllers: [ProductController],
   providers: [ProductService /*...CommandHandlers*/],
+  exports: [ProductService],
 })
 export class ProductModule {}

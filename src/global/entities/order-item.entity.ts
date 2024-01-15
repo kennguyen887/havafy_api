@@ -18,7 +18,7 @@ export class OrderItemEntity {
   id!: string;
 
   @Index('orderItem-orderId-idx')
-  @Column()
+  @Column({ type: 'varchar', name: 'order_id', length: 36 })
   orderId!: string;
 
   @Column({ type: 'varchar', length: 200 })
@@ -30,7 +30,13 @@ export class OrderItemEntity {
   @Column({ type: 'decimal', precision: 18, scale: 6, default: 0 })
   price!: number;
 
-  @Column({ type: 'decimal', precision: 18, scale: 6, default: 0 })
+  @Column({
+    type: 'decimal',
+    precision: 18,
+    scale: 6,
+    default: 0,
+    name: 'base_price',
+  })
   basePrice!: number;
 
   @Column({ type: 'text', nullable: true })
@@ -45,12 +51,14 @@ export class OrderItemEntity {
   @CreateDateColumn({
     type: 'timestamp with time zone',
     default: () => 'CURRENT_TIMESTAMP',
+    name: 'created_at',
   })
   createdAt!: Date;
 
   @UpdateDateColumn({
     type: 'timestamp with time zone',
     default: () => 'CURRENT_TIMESTAMP',
+    name: 'updated_at',
   })
   updatedAt!: Date;
 }

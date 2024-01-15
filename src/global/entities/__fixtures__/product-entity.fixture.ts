@@ -11,7 +11,6 @@ export const mockProductEntity: ProductEntity = {
   sku: 'ABC123',
   price: 29.99,
   basePrice: 39.99,
-  discountPrice: null,
   status: ProductStatus.DRAFT,
   productType: ProductType.MAIN,
   description: 'This is a mock product for testing purposes.',
@@ -25,5 +24,5 @@ export const mockProductEntity: ProductEntity = {
   } as ProductAttribute,
   createdAt: dayjs().toDate(),
   updatedAt: dayjs().toDate(),
-  user: mockUserEntity,
+  // user: mockUserEntity,
 };

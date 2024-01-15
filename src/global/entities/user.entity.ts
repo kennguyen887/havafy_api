@@ -6,7 +6,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { ProductEntity } from './product.entity';
+import { OrderEntity } from './order.entity';
 
 @Entity({
   name: 'users',
@@ -81,8 +81,8 @@ export class UserEntity {
   })
   googleId!: string | null;
 
-  @OneToMany(() => ProductEntity, (productEntity) => productEntity.user)
-  products!: ProductEntity[];
+  @OneToMany(() => OrderEntity, (orderEntity) => orderEntity.user)
+  orders!: OrderEntity[];
 
   @CreateDateColumn({
     type: 'timestamp with time zone',

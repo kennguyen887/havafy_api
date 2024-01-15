@@ -44,13 +44,6 @@ export class CreateProductAndOrderTables1705309225616
             scale: 2,
           },
           {
-            name: 'discount_price',
-            type: 'decimal',
-            precision: 10,
-            scale: 2,
-            isNullable: true,
-          },
-          {
             name: 'base_price',
             type: 'decimal',
             precision: 10,
@@ -163,6 +156,19 @@ export class CreateProductAndOrderTables1705309225616
           },
           {
             name: 'tax_amount',
+            type: 'decimal',
+            precision: 10,
+            scale: 2,
+            isNullable: true,
+          },
+          {
+            name: 'promo_code',
+            type: 'varchar',
+            length: '50',
+            isNullable: true,
+          },
+          {
+            name: 'promo_discount',
             type: 'decimal',
             precision: 10,
             scale: 2,
