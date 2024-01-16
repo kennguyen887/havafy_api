@@ -21,6 +21,9 @@ export class OrderItemEntity {
   @Column({ type: 'varchar', name: 'order_id', length: 36 })
   orderId!: string;
 
+  @Column({ default: 0, nullable: true, type: 'int' })
+  quantity!: number;
+
   @Column({ type: 'varchar', length: 200 })
   name!: string;
 

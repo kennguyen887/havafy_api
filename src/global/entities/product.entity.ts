@@ -3,12 +3,10 @@ import {
   Index,
   Column,
   PrimaryGeneratedColumn,
-  ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { ProductStatus, ProductType, ProductAttribute } from '../models';
-import { UserEntity } from './user.entity';
 
 @Entity({
   name: 'products',
@@ -26,6 +24,9 @@ export class ProductEntity {
 
   @Column({ type: 'varchar', length: 150 })
   sku!: string;
+
+  @Column({ default: 0, nullable: true, type: 'int' })
+  quantity!: number;
 
   @Column({ type: 'decimal', precision: 18, scale: 6, default: 0 })
   price!: number;
@@ -64,9 +65,6 @@ export class ProductEntity {
 
   @Column({ type: 'json', nullable: true })
   attributes!: ProductAttribute;
-
-  // @ManyToOne(() => UserEntity, (user) => user.products)
-  // user!: UserEntity;
 
   @CreateDateColumn({
     type: 'timestamp with time zone',

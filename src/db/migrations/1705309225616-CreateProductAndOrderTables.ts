@@ -38,6 +38,11 @@ export class CreateProductAndOrderTables1705309225616
             isNullable: true,
           },
           {
+            name: 'quantity',
+            type: 'int',
+            isNullable: true,
+          },
+          {
             name: 'price',
             type: 'decimal',
             precision: 10,
@@ -273,6 +278,11 @@ export class CreateProductAndOrderTables1705309225616
           {
             name: 'product_id',
             type: 'uuid',
+            isNullable: true,
+          },
+          {
+            name: 'quantity',
+            type: 'int',
             isNullable: true,
           },
           {

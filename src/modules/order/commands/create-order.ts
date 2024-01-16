@@ -10,7 +10,12 @@ import {
   CreateOrderResponseDto,
 } from '../dto';
 import { PaymentMethod } from 'src/global/models';
-import { ProductEntity } from 'src/global/entities';
+import {
+  OrderEntity,
+  OrderItemEntity,
+  ProductEntity,
+} from 'src/global/entities';
+import { v4 as uuidV4 } from 'uuid';
 
 export class CreateOrderCommand {
   constructor(public readonly data: CreateOrderRequestDto) {}
@@ -42,23 +47,49 @@ export class CreateOrderCommandHandler
     const products = await this.productService.getProducts(
       items.map((item) => item.productSku),
     );
-    const mapProducts = products.reduce((acc, product: ProductEntity) => {
-      acc[product.sku] = product;
-      return acc;
-    }, {} as Record<string, ProductEntity>);
-    const order = await this.orderService.createOrder({
-      items: this.getOrderItem(items),
-    });
+
+    const orderPayload = new OrderEntity();
+    orderPayload.id = uuidV4();
+
+    if (promoCode) {
+      const promo = await this.orderService.getPromoDiscount(promoCode);
+      if (promo.dicountAmount > 0) {
+        orderPayload.promoCode = promoCode;
+        orderPayload.promoDiscount = promo.dicountAmount;
+      }
+    }
+
+    const order = await this.orderService.createOrder(orderPayload);
+
+    const orderItems = this.getOrderItem(items, products, orderPayload.id);
+
+    await this.orderService.createOrderItem(orderItems);
+
+    return {
+      orderId: order.id,
+      status: order.status,
+    };
   }
 
   getOrderItem(
     items: CreateOrderItemsDto[],
-    mapProducts: Record<string, ProductEntity>,
+    products: ProductEntity[],
+    orderId: string,
   ) {
+    const mapProducts = products.reduce((acc, product: ProductEntity) => {
+      acc[product.sku] = product;
+      return acc;
+    }, {} as Record<string, ProductEntity>);
+
     return items.map((item) => {
+      const product = mapProducts[item.productSku];
       return {
-        ...item,
-        price: mapProducts[item.productSku].price,
+        orderId,
+        quantity: item.quantity,
+        name: product.name,
+        basePrice: product.basePrice,
+        sku: product.sku,
+        price: product.price,
       };
     });
   }
