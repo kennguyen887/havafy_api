@@ -17,6 +17,8 @@ import {
   ShippingMethod,
 } from '../models';
 
+import { Nullable } from 'src/global/utils';
+
 @Entity({
   name: 'orders',
 })
@@ -74,10 +76,18 @@ export class OrderEntity {
     default: null,
     nullable: true,
   })
-  promoDiscount!: number;
+  promoDiscount!: Nullable<number>;
 
-  @Column({ type: 'varchar', length: 50, name: 'promo_code' })
-  promoCode!: string;
+  @Column({ type: 'varchar', length: 50, name: 'promo_code', nullable: true })
+  promoCode!: Nullable<string>;
+
+  @Column({
+    type: 'varchar',
+    length: 100,
+    name: 'payment_order_id',
+    nullable: true,
+  })
+  paymentOrderId!: string | null;
 
   @Column({ type: 'varchar', length: 10, default: OrderStatus.PENDING })
   status!: OrderStatus;
@@ -113,7 +123,7 @@ export class OrderEntity {
   shippingMethod!: ShippingMethod;
 
   @Column({ type: 'text', nullable: true })
-  note!: string;
+  note!: Nullable<string>;
 
   @Column({ type: 'varchar', length: 3 })
   currency!: string;

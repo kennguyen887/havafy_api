@@ -167,6 +167,12 @@ export class CreateProductAndOrderTables1705309225616
             isNullable: true,
           },
           {
+            name: 'payment_order_id',
+            type: 'varchar',
+            length: '100',
+            isNullable: true,
+          },
+          {
             name: 'promo_code',
             type: 'varchar',
             length: '50',
