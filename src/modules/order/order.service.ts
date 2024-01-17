@@ -35,22 +35,31 @@ export class OrderService {
     );
 
     let orderPayload = new OrderEntity();
-    orderPayload = {
-      ...orderPayload,
-      id: uuidV4(),
-      paymentMethod,
-      paymentOrderId,
-      promoCode: promoCode || null,
-    };
+    const subtotal = products.reduce(
+      (accumulator, product) =>
+        new Decimal(accumulator).add(product.price).toNumber(),
+      0,
+    );
+    let discountTotal = 0;
 
     if (promoCode) {
       const promo = await this.getPromoDiscount(promoCode);
       if (promo.dicountAmount > 0) {
         orderPayload.promoCode = promoCode;
         orderPayload.promoDiscount = promo.dicountAmount;
+        discountTotal = promo.dicountAmount;
       }
     }
-
+    const grandTotal = new Decimal(subtotal).sub(discountTotal).toNumber();
+    orderPayload = {
+      ...orderPayload,
+      id: uuidV4(),
+      paymentMethod,
+      paymentOrderId,
+      subtotal,
+      discountTotal,
+      grandTotal,
+    };
     const order = await this.ordersRepository.save(orderPayload);
     const orderItems = this.getOrderItem(items, products, orderPayload.id);
     await this.orderItemsRepository.save(orderItems);
