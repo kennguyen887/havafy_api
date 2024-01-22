@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import Decimal from 'decimal.js';
@@ -12,10 +13,11 @@ import {
   CreateOrderItemsDto,
   CreateOrderResponseDto,
 } from './dto';
-import dayjs from 'dayjs';
 import { OrderStatus } from 'src/global/models';
 import { v4 as uuidV4 } from 'uuid';
 import { ProductService } from 'src/modules/product/product.service';
+import * as dayjs from 'dayjs';
+
 @Injectable()
 export class OrderService {
   constructor(
@@ -30,9 +32,13 @@ export class OrderService {
     data: CreateOrderRequestDto,
   ): Promise<CreateOrderResponseDto> {
     const { paymentMethod, paymentOrderId, promoCode, items } = data;
-    const products = await this.productService.getProducts(
-      items.map((item) => item.productSku),
-    );
+    const products = await this.productService.getProducts([
+      ...new Set(items.map((item) => item.productSku)),
+    ]);
+
+    if (!products.length) {
+      throw new HttpException('Product is not found.', HttpStatus.BAD_REQUEST);
+    }
 
     let orderPayload = new OrderEntity();
     const subtotal = products.reduce(

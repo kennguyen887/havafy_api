@@ -25,6 +25,9 @@ export class ProductEntity {
   @Column({ type: 'varchar', length: 150 })
   sku!: string;
 
+  @Column({ type: 'varchar', length: 300, nullable: true })
+  thumbnail!: string;
+
   @Column({ default: 0, nullable: true, type: 'int' })
   quantity!: number;
 

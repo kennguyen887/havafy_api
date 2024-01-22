@@ -26,7 +26,6 @@ export class OrderEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Index('order-userId-idx')
   @Column({ type: 'varchar', name: 'user_id', length: 36 })
   userId!: string;
 

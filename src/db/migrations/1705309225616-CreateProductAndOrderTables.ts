@@ -38,6 +38,12 @@ export class CreateProductAndOrderTables1705309225616
             isNullable: true,
           },
           {
+            name: 'thumbnail',
+            type: 'varchar',
+            length: '300',
+            isNullable: true,
+          },
+          {
             name: 'quantity',
             type: 'int',
             isNullable: true,
@@ -207,7 +213,7 @@ export class CreateProductAndOrderTables1705309225616
             length: '10',
           },
           {
-            name: 'paymen_address',
+            name: 'payment_address',
             type: 'json',
             isNullable: true,
           },

@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CqrsModule } from '@nestjs/cqrs';
 import { ProductEntity } from 'src/global/entities/product.entity';
 import { ConfigModule } from '@nestjs/config';
-// import { CommandHandlers } from './commands';
+import { QueryHandlers } from './queries';
 
 @Module({
   imports: [
@@ -14,7 +14,7 @@ import { ConfigModule } from '@nestjs/config';
     CqrsModule,
   ],
   controllers: [ProductController],
-  providers: [ProductService /*...CommandHandlers*/],
+  providers: [ProductService, ...QueryHandlers],
   exports: [ProductService],
 })
 export class ProductModule {}

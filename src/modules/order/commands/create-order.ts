@@ -22,17 +22,17 @@ export class CreateOrderCommandHandler
   async execute(
     command: CreateOrderCommand,
   ): Promise<CreateOrderResponseDto | void> {
-    const { paymentMethod, paymentOrderId } = command.data;
+    // const { paymentMethod, paymentOrderId } = command.data;
 
-    if (paymentMethod !== PaymentMethod.PAYPAL) {
-      return;
-    }
+    // if (paymentMethod !== PaymentMethod.PAYPAL) {
+    //   return;
+    // }
 
-    const orderVerified = await this.paypalService.verifyOrder(paymentOrderId);
+    // const orderVerified = await this.paypalService.verifyOrder(paymentOrderId);
 
-    if (!orderVerified) {
-      throw new HttpException('Payment is not found', HttpStatus.BAD_REQUEST);
-    }
+    // if (!orderVerified) {
+    //   throw new HttpException('Payment is not found', HttpStatus.BAD_REQUEST);
+    // }
 
     return this.orderService.createOrder(command.data);
   }
