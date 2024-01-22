@@ -12,6 +12,8 @@ import {
   CreateOrderRequestDto,
   CreateOrderItemsDto,
   CreateOrderResponseDto,
+  GetOrderGrandTotalRequestDto,
+  GetOrderGrandTotalResDto,
 } from './dto';
 import { OrderStatus } from 'src/global/models';
 import { v4 as uuidV4 } from 'uuid';
@@ -19,6 +21,7 @@ import { ProductService } from 'src/modules/product/product.service';
 import * as dayjs from 'dayjs';
 
 import { PaymentStatus } from 'src/global/models';
+import { Nullable } from 'src/global/utils/types';
 
 @Injectable()
 export class OrderService {
@@ -30,11 +33,10 @@ export class OrderService {
     private readonly productService: ProductService,
   ) {}
 
-  async createOrder(
-    userId: string,
-    data: CreateOrderRequestDto,
-  ): Promise<CreateOrderResponseDto> {
-    const { paymentMethod, paymentOrderId, promoCode, items } = data;
+  async getProductGrandTotal(
+    data: GetOrderGrandTotalRequestDto,
+  ): Promise<GetOrderGrandTotalResDto> {
+    const { promoCode, items } = data;
     const products = await this.productService.getProducts([
       ...new Set(items.map((item) => item.productSku)),
     ]);
@@ -43,23 +45,59 @@ export class OrderService {
       throw new HttpException('Product is not found.', HttpStatus.BAD_REQUEST);
     }
 
-    let orderPayload = new OrderEntity();
     const subtotal = products.reduce(
       (accumulator, product) =>
         new Decimal(accumulator).add(product.price).toNumber(),
       0,
     );
     let discountTotal = 0;
-
+    let promoDiscount: Nullable<number> = null;
     if (promoCode) {
       const promo = await this.getPromoDiscount(promoCode);
+      console.log('----promo', promo);
       if (promo.dicountAmount > 0) {
-        orderPayload.promoCode = promoCode;
-        orderPayload.promoDiscount = promo.dicountAmount;
-        discountTotal = promo.dicountAmount;
+        promoDiscount = promo.dicountAmount;
+        discountTotal = promoDiscount;
       }
     }
-    const grandTotal = new Decimal(subtotal).sub(discountTotal).toNumber();
+    let grandTotal =  const grandTotalAmount = new Decimal(subtotal).sub(discountTotal);
+    if (promoDiscount !== null && promoDiscount > subtotal) {
+      grandTotal = 0;
+      promoDiscount = subtotal;
+    }
+
+    console.log('----discountTotal', discountTotal);
+   
+    const grandTotal = grandTotalAmount.isNegative()
+      ? 0
+      : grandTotalAmount.toNumber();
+
+    return {
+      hasPromoCodeValid: !!promoDiscount,
+      promoDiscount,
+      subtotal,
+      discountTotal,
+      grandTotal,
+    };
+  }
+
+  async createOrder(
+    userId: string,
+    data: CreateOrderRequestDto,
+  ): Promise<CreateOrderResponseDto> {
+    const { paymentMethod, paymentOrderId, promoCode, items } = data;
+
+    const products = await this.productService.getProducts([
+      ...new Set(items.map((item) => item.productSku)),
+    ]);
+
+    const { subtotal, grandTotal, discountTotal, promoDiscount } =
+      await this.getProductGrandTotal(data);
+    let orderPayload = new OrderEntity();
+
+    orderPayload.promoCode = promoCode || null;
+    orderPayload.promoDiscount = promoDiscount;
+
     orderPayload = {
       ...orderPayload,
       userId,
@@ -70,6 +108,7 @@ export class OrderService {
       discountTotal,
       grandTotal,
       paymentStatus: PaymentStatus.SUCCESS,
+      status: OrderStatus.COMPLETED,
     };
     console.log('----orderPayload', orderPayload);
     const order = await this.ordersRepository.save(orderPayload);
@@ -153,7 +192,7 @@ export class OrderService {
       };
     }
 
-    dicountAmount = new Decimal(dicountAmount).toNumber();
+    dicountAmount = new Decimal(promo.dicountAmount).toNumber();
 
     return {
       dicountAmount,
