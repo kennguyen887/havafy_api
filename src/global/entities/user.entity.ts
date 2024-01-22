@@ -15,30 +15,33 @@ export class UserEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column()
+  @Column({
+    type: 'boolean',
+  })
   active!: boolean;
 
   @Column({
-    name: 'first_name',
+    type: 'varchar',
   })
   firstName!: string;
 
   @Column({
-    name: 'last_name',
+    type: 'varchar',
   })
   lastName!: string;
 
-  @Column()
+  @Column({
+    type: 'varchar',
+  })
   email!: string;
 
   @Column({
-    name: 'email_verified',
+    type: 'boolean',
   })
   emailVerified!: boolean;
 
   @Column({
     type: String,
-    name: 'password_reset_token',
     unique: true,
     nullable: true,
   })
@@ -47,7 +50,6 @@ export class UserEntity {
   @Column({
     type: Date,
     nullable: true,
-    name: 'password_reset_expired',
   })
   passwordResetExpired!: Date | null;
 
@@ -59,6 +61,7 @@ export class UserEntity {
 
   @Column({
     name: 'password',
+    type: String,
   })
   passwordHash!: string;
 
@@ -76,7 +79,6 @@ export class UserEntity {
 
   @Column({
     type: String,
-    name: 'google_id',
     nullable: true,
   })
   googleId!: string | null;

@@ -11,7 +11,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
-import { CreateUserReqDto } from './dto/create-user.dto';
+import { CreateUserReqDto, GetJwtUserPayloadDto } from './dto';
 import { AuthService } from './services/auth/auth.service';
 import { LoginDto } from './dto/login.dto';
 import { UserService } from './services/user/user.service';
@@ -80,7 +80,7 @@ export class UserController {
 
   @Get('me')
   @UseGuards(JwtAuthGuard)
-  async me(@Request() req: any): Promise<GetUserMeResDto> {
+  async me(@Request() req: GetJwtUserPayloadDto): Promise<GetUserMeResDto> {
     const { user } = req;
     if (!user.id) {
       throw new HttpException('User is not found', HttpStatus.BAD_REQUEST);
@@ -95,7 +95,7 @@ export class UserController {
   @Put()
   @UseGuards(JwtAuthGuard)
   async updateUser(
-    @Request() req: any,
+    @Request() req: GetJwtUserPayloadDto,
     @Body() data: UpdateUserRequestDto,
   ): Promise<void> {
     const { user } = req;

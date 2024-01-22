@@ -18,6 +18,8 @@ import { v4 as uuidV4 } from 'uuid';
 import { ProductService } from 'src/modules/product/product.service';
 import * as dayjs from 'dayjs';
 
+import { PaymentStatus } from 'src/global/models';
+
 @Injectable()
 export class OrderService {
   constructor(
@@ -29,6 +31,7 @@ export class OrderService {
   ) {}
 
   async createOrder(
+    userId: string,
     data: CreateOrderRequestDto,
   ): Promise<CreateOrderResponseDto> {
     const { paymentMethod, paymentOrderId, promoCode, items } = data;
@@ -59,13 +62,16 @@ export class OrderService {
     const grandTotal = new Decimal(subtotal).sub(discountTotal).toNumber();
     orderPayload = {
       ...orderPayload,
+      userId,
       id: uuidV4(),
       paymentMethod,
       paymentOrderId,
       subtotal,
       discountTotal,
       grandTotal,
+      paymentStatus: PaymentStatus.SUCCESS,
     };
+    console.log('----orderPayload', orderPayload);
     const order = await this.ordersRepository.save(orderPayload);
     const orderItems = this.getOrderItem(items, products, orderPayload.id);
     await this.orderItemsRepository.save(orderItems);
@@ -133,8 +139,8 @@ export class OrderService {
 
     const usedCount = await this.ordersRepository
       .createQueryBuilder('order')
-      .where('order.created_at >= :startDate', { startDate: promo.startedAt })
-      .andWhere('order.promo_code = :promoCode', { promoCode: code })
+      .where('order.createdAt >= :startDate', { startDate: promo.startedAt })
+      .andWhere('order.promoCode = :promoCode', { promoCode: code })
       .andWhere('order.status = :orderStatus', {
         orderStatus: OrderStatus.COMPLETED,
       })

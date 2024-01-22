@@ -26,14 +26,14 @@ export class OrderEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column({ type: 'varchar', name: 'user_id', length: 36 })
+  @Index('orders-userId-idx')
+  @Column({ type: 'uuid' })
   userId!: string;
 
   @Column({
     type: 'decimal',
     precision: 18,
     scale: 6,
-    name: 'grand_total',
     default: 0,
   })
   grandTotal!: number;
@@ -42,14 +42,12 @@ export class OrderEntity {
     type: 'decimal',
     precision: 18,
     scale: 6,
-    name: 'subtotal',
     default: 0,
   })
   subtotal!: number;
 
   @Column({
     type: 'decimal',
-    name: 'discount_total',
     precision: 18,
     scale: 6,
     default: null,
@@ -59,7 +57,6 @@ export class OrderEntity {
 
   @Column({
     type: 'decimal',
-    name: 'tax_amount',
     precision: 18,
     scale: 6,
     default: null,
@@ -69,7 +66,6 @@ export class OrderEntity {
 
   @Column({
     type: 'decimal',
-    name: 'promo_discount',
     precision: 18,
     scale: 6,
     default: null,
@@ -77,13 +73,12 @@ export class OrderEntity {
   })
   promoDiscount!: Nullable<number>;
 
-  @Column({ type: 'varchar', length: 50, name: 'promo_code', nullable: true })
+  @Column({ type: 'varchar', length: 50, nullable: true })
   promoCode!: Nullable<string>;
 
   @Column({
     type: 'varchar',
     length: 100,
-    name: 'payment_order_id',
     nullable: true,
   })
   paymentOrderId!: string | null;
@@ -95,21 +90,19 @@ export class OrderEntity {
     type: 'varchar',
     length: 10,
     default: PaymentStatus.PENDING,
-    name: 'payment_status',
   })
   paymentStatus!: PaymentStatus;
 
-  @Column({ type: 'json', nullable: true, name: 'shipping_address' })
+  @Column({ type: 'json', nullable: true })
   shippingAddress!: Record<string, any>;
 
-  @Column({ type: 'json', nullable: true, name: 'payment_address' })
+  @Column({ type: 'json', nullable: true })
   paymentAddress!: Record<string, any>;
 
   @Column({
     type: 'varchar',
     length: 10,
     nullable: true,
-    name: 'payment_method',
   })
   paymentMethod!: PaymentMethod;
 
@@ -117,7 +110,6 @@ export class OrderEntity {
     type: 'varchar',
     length: 10,
     nullable: true,
-    name: 'shipping_method',
   })
   shippingMethod!: ShippingMethod;
 
@@ -139,14 +131,12 @@ export class OrderEntity {
   @CreateDateColumn({
     type: 'timestamp with time zone',
     default: () => 'CURRENT_TIMESTAMP',
-    name: 'created_at',
   })
   createdAt!: Date;
 
   @UpdateDateColumn({
     type: 'timestamp with time zone',
     default: () => 'CURRENT_TIMESTAMP',
-    name: 'updated_at',
   })
   updatedAt!: Date;
 }

@@ -33,7 +33,7 @@ export class CreateProductAndOrderTables1705309225616
             isUnique: true,
           },
           {
-            name: 'user_id',
+            name: 'userId',
             type: 'uuid',
             isNullable: true,
           },
@@ -55,7 +55,7 @@ export class CreateProductAndOrderTables1705309225616
             scale: 2,
           },
           {
-            name: 'base_price',
+            name: 'basePrice',
             type: 'decimal',
             precision: 10,
             scale: 2,
@@ -76,7 +76,7 @@ export class CreateProductAndOrderTables1705309225616
             default: "'pending'",
           },
           {
-            name: 'product_type',
+            name: 'productType',
             type: 'varchar',
             length: '10',
             isNullable: true,
@@ -98,23 +98,23 @@ export class CreateProductAndOrderTables1705309225616
             isNullable: true,
           },
           {
-            name: 'is_hidden',
+            name: 'isHidden',
             type: 'boolean',
             default: false,
           },
           {
-            name: 'published_at',
+            name: 'publishedAt',
             type: 'timestamp with time zone',
             default: 'CURRENT_TIMESTAMP',
             isNullable: true,
           },
           {
-            name: 'created_at',
+            name: 'createdAt',
             type: 'timestamp with time zone',
             default: 'CURRENT_TIMESTAMP',
           },
           {
-            name: 'updated_at',
+            name: 'updatedAt',
             type: 'timestamp with time zone',
             default: 'CURRENT_TIMESTAMP',
           },
@@ -126,7 +126,7 @@ export class CreateProductAndOrderTables1705309225616
       'products',
       new TableIndex({
         name: 'IDX_PROUDUCT_USER_ID',
-        columnNames: ['user_id'],
+        columnNames: ['userId'],
       }),
     );
 
@@ -143,7 +143,7 @@ export class CreateProductAndOrderTables1705309225616
             isPrimary: true,
           },
           {
-            name: 'user_id',
+            name: 'userId',
             type: 'uuid',
           },
           {
@@ -153,39 +153,39 @@ export class CreateProductAndOrderTables1705309225616
             scale: 2,
           },
           {
-            name: 'grand_total',
+            name: 'grandTotal',
             type: 'decimal',
             precision: 10,
             scale: 2,
           },
           {
-            name: 'discount_total',
-            type: 'decimal',
-            precision: 10,
-            scale: 2,
-            isNullable: true,
-          },
-          {
-            name: 'tax_amount',
+            name: 'discountTotal',
             type: 'decimal',
             precision: 10,
             scale: 2,
             isNullable: true,
           },
           {
-            name: 'payment_order_id',
+            name: 'taxAmount',
+            type: 'decimal',
+            precision: 10,
+            scale: 2,
+            isNullable: true,
+          },
+          {
+            name: 'paymentOrderId',
             type: 'varchar',
             length: '100',
             isNullable: true,
           },
           {
-            name: 'promo_code',
+            name: 'promoCode',
             type: 'varchar',
             length: '50',
             isNullable: true,
           },
           {
-            name: 'promo_discount',
+            name: 'promoDiscount',
             type: 'decimal',
             precision: 10,
             scale: 2,
@@ -197,28 +197,28 @@ export class CreateProductAndOrderTables1705309225616
             isNullable: true,
           },
           {
-            name: 'payment_status',
+            name: 'paymentStatus',
             type: 'varchar',
             length: '10',
           },
           {
-            name: 'shipping_method',
+            name: 'shippingMethod',
             type: 'varchar',
             length: '10',
             isNullable: true,
           },
           {
-            name: 'payment_method',
+            name: 'paymentMethod',
             type: 'varchar',
             length: '10',
           },
           {
-            name: 'payment_address',
+            name: 'paymentAddress',
             type: 'json',
             isNullable: true,
           },
           {
-            name: 'shipping_address',
+            name: 'shippingAddress',
             type: 'json',
             isNullable: true,
           },
@@ -240,12 +240,12 @@ export class CreateProductAndOrderTables1705309225616
             isNullable: true,
           },
           {
-            name: 'created_at',
+            name: 'createdAt',
             type: 'timestamp with time zone',
             default: 'CURRENT_TIMESTAMP',
           },
           {
-            name: 'updated_at',
+            name: 'updatedAt',
             type: 'timestamp with time zone',
             default: 'CURRENT_TIMESTAMP',
           },
@@ -257,7 +257,7 @@ export class CreateProductAndOrderTables1705309225616
     await queryRunner.createForeignKey(
       'orders',
       new TableForeignKey({
-        columnNames: ['user_id'],
+        columnNames: ['userId'],
         referencedColumnNames: ['id'],
         referencedTableName: 'users',
         onDelete: 'CASCADE', // Adjust the delete rule as needed
@@ -268,7 +268,7 @@ export class CreateProductAndOrderTables1705309225616
       'orders',
       new TableIndex({
         name: 'IDX_ORDER_USER_ID',
-        columnNames: ['user_id'],
+        columnNames: ['userId'],
       }),
     );
 
@@ -284,11 +284,11 @@ export class CreateProductAndOrderTables1705309225616
             isPrimary: true,
           },
           {
-            name: 'order_id',
+            name: 'orderId',
             type: 'uuid',
           },
           {
-            name: 'product_id',
+            name: 'productId',
             type: 'uuid',
             isNullable: true,
           },
@@ -315,7 +315,7 @@ export class CreateProductAndOrderTables1705309225616
             scale: 2,
           },
           {
-            name: 'base_price',
+            name: 'basePrice',
             type: 'decimal',
             precision: 10,
             scale: 2,
@@ -332,12 +332,12 @@ export class CreateProductAndOrderTables1705309225616
             isNullable: true,
           },
           {
-            name: 'created_at',
+            name: 'createdAt',
             type: 'timestamp with time zone',
             default: 'CURRENT_TIMESTAMP',
           },
           {
-            name: 'updated_at',
+            name: 'updatedAt',
             type: 'timestamp with time zone',
             default: 'CURRENT_TIMESTAMP',
           },
@@ -349,7 +349,7 @@ export class CreateProductAndOrderTables1705309225616
     await queryRunner.createForeignKey(
       'order_items',
       new TableForeignKey({
-        columnNames: ['order_id'],
+        columnNames: ['orderId'],
         referencedColumnNames: ['id'],
         referencedTableName: 'orders',
         onDelete: 'CASCADE', // Adjust the delete rule as needed
@@ -359,7 +359,7 @@ export class CreateProductAndOrderTables1705309225616
     await queryRunner.createForeignKey(
       'order_items',
       new TableForeignKey({
-        columnNames: ['product_id'],
+        columnNames: ['productId'],
         referencedColumnNames: ['id'],
         referencedTableName: 'products',
         onDelete: 'CASCADE', // Adjust the delete rule as needed
@@ -370,7 +370,7 @@ export class CreateProductAndOrderTables1705309225616
       'order_items',
       new TableIndex({
         name: 'IDX_ORDER_ITEM_ORDER_ID',
-        columnNames: ['order_id'],
+        columnNames: ['orderId'],
       }),
     );
   }

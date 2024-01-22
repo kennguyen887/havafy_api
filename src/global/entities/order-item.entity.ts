@@ -11,14 +11,14 @@ import { ProductAttribute } from '../models';
 import { OrderEntity } from './order.entity';
 
 @Entity({
-  name: 'order-items',
+  name: 'order_items',
 })
 export class OrderItemEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
   @Index('orderItem-orderId-idx')
-  @Column({ type: 'varchar', name: 'order_id', length: 36 })
+  @Column({ type: 'uuid' })
   orderId!: string;
 
   @Column({ default: 0, nullable: true, type: 'int' })
@@ -38,7 +38,6 @@ export class OrderItemEntity {
     precision: 18,
     scale: 6,
     default: 0,
-    name: 'base_price',
   })
   basePrice!: number;
 
@@ -54,14 +53,12 @@ export class OrderItemEntity {
   @CreateDateColumn({
     type: 'timestamp with time zone',
     default: () => 'CURRENT_TIMESTAMP',
-    name: 'created_at',
   })
   createdAt!: Date;
 
   @UpdateDateColumn({
     type: 'timestamp with time zone',
     default: () => 'CURRENT_TIMESTAMP',
-    name: 'updated_at',
   })
   updatedAt!: Date;
 }

@@ -16,7 +16,7 @@ export class ProductEntity {
   id!: string;
 
   @Index('product-userId-idx')
-  @Column({ type: 'varchar', name: 'user_id', length: 36 })
+  @Column({ type: 'varchar', length: 36 })
   userId!: string;
 
   @Column({ type: 'varchar', length: 300 })
@@ -36,7 +36,6 @@ export class ProductEntity {
 
   @Column({
     type: 'decimal',
-    name: 'base_price',
     precision: 18,
     scale: 6,
     default: 0,
@@ -48,7 +47,6 @@ export class ProductEntity {
 
   @Column({
     type: 'varchar',
-    name: 'product_type',
     length: 50,
     default: ProductType.MAIN,
   })
@@ -60,10 +58,10 @@ export class ProductEntity {
   @Column({ type: 'varchar', length: 3 })
   currency!: string;
 
-  @Column({ type: 'timestamp', nullable: true, name: 'published_at' })
+  @Column({ type: 'timestamp', nullable: true })
   publishedAt?: Date;
 
-  @Column({ type: 'boolean', default: false, name: 'is_hidden' })
+  @Column({ type: 'boolean', default: false })
   isHidden!: boolean;
 
   @Column({ type: 'json', nullable: true })
@@ -72,14 +70,12 @@ export class ProductEntity {
   @CreateDateColumn({
     type: 'timestamp with time zone',
     default: () => 'CURRENT_TIMESTAMP',
-    name: 'created_at',
   })
   createdAt!: Date;
 
   @UpdateDateColumn({
     type: 'timestamp with time zone',
     default: () => 'CURRENT_TIMESTAMP',
-    name: 'updated_at',
   })
   updatedAt!: Date;
 }

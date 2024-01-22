@@ -19,11 +19,11 @@ export class Users1636917857168 implements MigrationInterface {
             default: true,
           },
           {
-            name: 'first_name',
+            name: 'firstName',
             type: 'varchar',
           },
           {
-            name: 'last_name',
+            name: 'lastName',
             type: 'varchar',
           },
           {
@@ -32,7 +32,7 @@ export class Users1636917857168 implements MigrationInterface {
             isUnique: true,
           },
           {
-            name: 'email_verified',
+            name: 'emailVerified',
             type: 'boolean',
             default: false,
           },
@@ -41,12 +41,12 @@ export class Users1636917857168 implements MigrationInterface {
             type: 'varchar',
           },
           {
-            name: 'password_reset_token',
+            name: 'passwordResetToken',
             type: 'varchar',
             isNullable: true,
           },
           {
-            name: 'password_reset_expired',
+            name: 'passwordResetExpired',
             type: 'timestamp',
             isNullable: true,
           },
@@ -56,7 +56,7 @@ export class Users1636917857168 implements MigrationInterface {
             isNullable: true,
           },
           {
-            name: 'google_id',
+            name: 'googleId',
             type: 'varchar',
             isNullable: true,
           },
@@ -71,12 +71,12 @@ export class Users1636917857168 implements MigrationInterface {
             isNullable: true,
           },
           {
-            name: 'created_at',
+            name: 'createdAt',
             type: 'timestamp with time zone',
             default: 'CURRENT_TIMESTAMP',
           },
           {
-            name: 'updated_at',
+            name: 'updatedAt',
             type: 'timestamp with time zone',
             default: 'CURRENT_TIMESTAMP',
           },

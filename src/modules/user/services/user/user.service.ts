@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from 'src/global/entities/user.entity';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from '../../dto/create-user.dto';
+import { CreateUserDto } from '../../dto/inputs/create-user.dto';
 import { PasswordService } from '../password/password.service';
 import { JwtService } from '../jwt/jwt.service';
 
