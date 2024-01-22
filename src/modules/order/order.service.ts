@@ -60,17 +60,14 @@ export class OrderService {
         discountTotal = promoDiscount;
       }
     }
-    let grandTotal =  const grandTotalAmount = new Decimal(subtotal).sub(discountTotal);
+    let grandTotal = new Decimal(subtotal).sub(discountTotal).toNumber();
     if (promoDiscount !== null && promoDiscount > subtotal) {
       grandTotal = 0;
       promoDiscount = subtotal;
+      discountTotal = promoDiscount;
     }
 
     console.log('----discountTotal', discountTotal);
-   
-    const grandTotal = grandTotalAmount.isNegative()
-      ? 0
-      : grandTotalAmount.toNumber();
 
     return {
       hasPromoCodeValid: !!promoDiscount,
@@ -149,7 +146,7 @@ export class OrderService {
     const promoCodes = [
       {
         code: 'D20TTS20240501',
-        dicountAmount: 20,
+        dicountAmount: 15,
         dicountPercent: null,
         maxUsed: 5,
         startedAt: dayjs('2024-01-15').toDate(),
