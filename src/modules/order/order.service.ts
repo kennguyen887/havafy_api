@@ -14,6 +14,7 @@ import {
   CreateOrderResponseDto,
   GetOrderGrandTotalRequestDto,
   GetOrderGrandTotalResDto,
+  GetOrdeItemResDto,
 } from './dto';
 import { OrderStatus } from 'src/global/models';
 import { v4 as uuidV4 } from 'uuid';
@@ -22,6 +23,7 @@ import * as dayjs from 'dayjs';
 
 import { PaymentStatus } from 'src/global/models';
 import { Nullable } from 'src/global/utils/types';
+import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class OrderService {
@@ -44,12 +46,17 @@ export class OrderService {
     if (!products.length) {
       throw new HttpException('Product is not found.', HttpStatus.BAD_REQUEST);
     }
+    const mapProducts = products.reduce((acc, product: ProductEntity) => {
+      acc[product.sku] = product;
+      return acc;
+    }, {} as Record<string, ProductEntity>);
 
-    const subtotal = products.reduce(
-      (accumulator, product) =>
-        new Decimal(accumulator).add(product.price).toNumber(),
-      0,
-    );
+    const subtotal = items.reduce((preSubtotal, item) => {
+      const product = mapProducts[item.productSku];
+      const total = new Decimal(product.price).mul(item.quantity).toNumber();
+      return new Decimal(preSubtotal).add(total).toNumber();
+    }, 0);
+
     let discountTotal = 0;
     let promoDiscount: Nullable<number> = null;
     if (promoCode) {
@@ -67,14 +74,26 @@ export class OrderService {
       discountTotal = promoDiscount;
     }
 
-    console.log('----discountTotal', discountTotal);
-
     return {
       hasPromoCodeValid: !!promoDiscount,
       promoDiscount,
       subtotal,
       discountTotal,
       grandTotal,
+      items: items.map((item) => {
+        const product = mapProducts[item.productSku];
+        const total = new Decimal(product.price).mul(item.quantity).toNumber();
+        return plainToClass(
+          GetOrdeItemResDto,
+          {
+            ...product,
+            name: product.name,
+            quantity: item.quantity,
+            total,
+          },
+          { excludeExtraneousValues: true },
+        );
+      }),
     };
   }
 
