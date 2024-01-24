@@ -211,6 +211,7 @@ export class CreateProductAndOrderTables1705309225616
             name: 'paymentMethod',
             type: 'varchar',
             length: '10',
+            isNullable: true,
           },
           {
             name: 'paymentAddress',

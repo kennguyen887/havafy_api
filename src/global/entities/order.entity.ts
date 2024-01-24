@@ -81,7 +81,7 @@ export class OrderEntity {
     length: 100,
     nullable: true,
   })
-  paymentOrderId!: string | null;
+  paymentOrderId!: Nullable<string>;
 
   @Column({ type: 'varchar', length: 10, default: OrderStatus.PENDING })
   status!: OrderStatus;
@@ -104,7 +104,7 @@ export class OrderEntity {
     length: 10,
     nullable: true,
   })
-  paymentMethod!: PaymentMethod;
+  paymentMethod!: Nullable<PaymentMethod>;
 
   @Column({
     type: 'varchar',

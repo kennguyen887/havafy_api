@@ -23,7 +23,9 @@ import * as dayjs from 'dayjs';
 
 import { PaymentStatus } from 'src/global/models';
 import { Nullable } from 'src/global/utils/types';
+import { PaymentMethod } from 'src/global/models';
 import { plainToClass } from 'class-transformer';
+import { PaypalService } from 'src/global/services/mail/paypal.service';
 
 @Injectable()
 export class OrderService {
@@ -33,6 +35,7 @@ export class OrderService {
     @InjectRepository(OrderItemEntity)
     private orderItemsRepository: Repository<OrderItemEntity>,
     private readonly productService: ProductService,
+    private readonly paypalService: PaypalService,
   ) {}
 
   async getProductGrandTotal(
@@ -102,6 +105,19 @@ export class OrderService {
     data: CreateOrderRequestDto,
   ): Promise<CreateOrderResponseDto> {
     const { paymentMethod, paymentOrderId, promoCode, items } = data;
+    let paymentStatus = PaymentStatus.PENDING;
+    let status = OrderStatus.PENDING;
+    if (paymentOrderId && paymentMethod === PaymentMethod.PAYPAL) {
+      const orderVerified = await this.paypalService.verifyOrder(
+        paymentOrderId,
+      );
+
+      if (!orderVerified) {
+        throw new HttpException('Payment is not found', HttpStatus.BAD_REQUEST);
+      }
+      paymentStatus = PaymentStatus.SUCCESS;
+      status = OrderStatus.COMPLETED;
+    }
 
     const products = await this.productService.getProducts([
       ...new Set(items.map((item) => item.productSku)),
@@ -114,17 +130,22 @@ export class OrderService {
     orderPayload.promoCode = promoCode || null;
     orderPayload.promoDiscount = promoDiscount;
 
+    if (grandTotal === 0 && promoCode) {
+      paymentStatus = PaymentStatus.SUCCESS;
+      status = OrderStatus.COMPLETED;
+    }
+
     orderPayload = {
       ...orderPayload,
       userId,
       id: uuidV4(),
-      paymentMethod,
-      paymentOrderId,
+      paymentMethod: paymentMethod || null,
+      paymentOrderId: paymentOrderId || null,
       subtotal,
       discountTotal,
       grandTotal,
-      paymentStatus: PaymentStatus.SUCCESS,
-      status: OrderStatus.COMPLETED,
+      paymentStatus,
+      status,
     };
     console.log('----orderPayload', orderPayload);
     const order = await this.ordersRepository.save(orderPayload);

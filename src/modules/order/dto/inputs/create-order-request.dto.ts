@@ -35,15 +35,15 @@ export class CreateOrderRequestDto {
   @Type(() => CreateOrderItemsDto)
   items!: CreateOrderItemsDto[];
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @MinLength(6)
   @MaxLength(100)
-  paymentOrderId!: string;
+  paymentOrderId?: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsEnum(PaymentMethod)
-  paymentMethod!: PaymentMethod;
+  paymentMethod?: PaymentMethod;
 
   @IsString()
   @IsOptional()
