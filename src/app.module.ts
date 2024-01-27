@@ -15,6 +15,8 @@ import { GlobalModule } from './global/global.module';
 import { HtmlTemplateModule } from './modules/html-templates';
 import { JobQueueModule } from './modules/job-queue/job-queue.module';
 import { PaymentModule } from './modules/payment/payment.module';
+import { ProductUsageModule } from './modules/product-usage/product-usage.module';
+
 @Module({
   imports: [
     GlobalModule,
@@ -40,6 +42,7 @@ import { PaymentModule } from './modules/payment/payment.module';
       inject: [ConfigService],
     }),
     DbModule,
+    ProductUsageModule,
     // AppCacheModule,
     UserModule,
     SpeechModule,

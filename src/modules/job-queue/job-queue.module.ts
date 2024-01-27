@@ -36,7 +36,7 @@ export class JobQueueModule implements OnModuleInit {
           count: DEFAULT_QUEUE_JOB_COUNT,
         },
         repeat: {
-          cron: '0 */2 * * *',
+          cron: '0 0 * * *',
         },
       },
     );

@@ -7,6 +7,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { OrderEntity } from './order.entity';
+import { ProductUserRemainEntity } from './product-user-remain.entity';
+import { ProductUserUsageEntity } from './product-user-usage.entity';
 
 @Entity({
   name: 'users',
@@ -85,6 +87,18 @@ export class UserEntity {
 
   @OneToMany(() => OrderEntity, (orderEntity) => orderEntity.user)
   orders!: OrderEntity[];
+
+  @OneToMany(
+    () => ProductUserRemainEntity,
+    (productUserRemain) => productUserRemain.user,
+  )
+  productUserRemain!: ProductUserRemainEntity[];
+
+  @OneToMany(
+    () => ProductUserUsageEntity,
+    (productUserUsage) => productUserUsage.user,
+  )
+  productUserUsage!: ProductUserUsageEntity[];
 
   @CreateDateColumn({
     type: 'timestamp with time zone',

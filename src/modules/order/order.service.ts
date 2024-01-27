@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import ShortUniqueId from 'short-unique-id';
 import Decimal from 'decimal.js';
 import {
   OrderItemEntity,
@@ -36,7 +37,7 @@ export class OrderService {
     private orderItemsRepository: Repository<OrderItemEntity>,
     private readonly productService: ProductService,
     private readonly paypalService: PaypalService,
-  ) {}
+  ) { }
 
   async getProductGrandTotal(
     data: GetOrderGrandTotalRequestDto,
@@ -135,9 +136,17 @@ export class OrderService {
       status = OrderStatus.COMPLETED;
     }
 
+    // instantiate using one of the default dictionary strings
+    const uid = new ShortUniqueId({
+      dictionary: 'alphanum_upper',
+      length: 10,
+    });
+    const orderNumber = uid.rnd();
+
     orderPayload = {
       ...orderPayload,
       userId,
+      orderNumber,
       id: uuidV4(),
       paymentMethod: paymentMethod || null,
       paymentOrderId: paymentOrderId || null,
@@ -154,6 +163,7 @@ export class OrderService {
     return {
       orderId: order.id,
       status: order.status,
+      orderNumber,
     };
   }
 

@@ -2,9 +2,11 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { GetOrderGrandTotalRequestDto, GetOrderGrandTotalResDto } from '../dto';
 import { OrderService } from '../order.service';
 
+import { Nullable } from 'src/global/utils/types';
+
 export class GetOrderGrandTotalQuery {
   constructor(
-    public readonly userId: string,
+    public readonly userId: Nullable<string>,
     public readonly data: GetOrderGrandTotalRequestDto,
   ) {}
 }

@@ -31,6 +31,13 @@ export class OrderEntity {
   userId!: string;
 
   @Column({
+    type: 'varchar',
+    length: 20,
+    nullable: true,
+  })
+  orderNumber!: Nullable<string>;
+
+  @Column({
     type: 'decimal',
     precision: 18,
     scale: 6,

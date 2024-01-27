@@ -143,6 +143,12 @@ export class CreateProductAndOrderTables1705309225616
             isPrimary: true,
           },
           {
+            name: 'orderNumber',
+            type: 'varchar',
+            length: '20',
+            isNullable: true,
+          },
+          {
             name: 'userId',
             type: 'uuid',
           },

@@ -9,6 +9,10 @@ export enum ProductStatus {
 
 export enum ProductType {
   MAIN = 'main',
+  AI_SERVICE = 'ai_service',
+  SOURCE_CODE = 'source_code',
+  DIGIAL_ASSET = 'digital_asset',
+  CONSULTANT = 'consultant',
   JOB = 'job',
   E_COMMERCE = 'e_commerce',
   EVENT = 'event',

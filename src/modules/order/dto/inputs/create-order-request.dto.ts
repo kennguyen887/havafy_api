@@ -45,9 +45,9 @@ export class CreateOrderRequestDto {
   @IsEnum(PaymentMethod)
   paymentMethod?: PaymentMethod;
 
-  @IsString()
   @IsOptional()
   @MinLength(3)
   @MaxLength(100)
+  @IsString()
   promoCode?: string;
 }

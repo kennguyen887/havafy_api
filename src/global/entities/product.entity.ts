@@ -16,7 +16,7 @@ export class ProductEntity {
   id!: string;
 
   @Index('product-userId-idx')
-  @Column({ type: 'varchar', length: 36 })
+  @Column({ type: 'uuid' })
   userId!: string;
 
   @Column({ type: 'varchar', length: 300 })

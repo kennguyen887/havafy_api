@@ -7,5 +7,8 @@ export class CreateOrderResponseDto {
   orderId!: string;
 
   @Expose()
+  orderNumber!: string;
+
+  @Expose()
   status!: OrderStatus;
 }

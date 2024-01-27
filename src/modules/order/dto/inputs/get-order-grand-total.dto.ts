@@ -33,8 +33,8 @@ export class GetOrderGrandTotalRequestDto {
   @Type(() => GetOrderGrandTotalItemsDto)
   items!: GetOrderGrandTotalItemsDto[];
 
-  @IsString()
   @IsOptional()
+  @IsString()
   @MinLength(3)
   @MaxLength(100)
   promoCode?: string;

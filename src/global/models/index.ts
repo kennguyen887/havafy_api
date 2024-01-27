@@ -5,5 +5,6 @@ export * from './product-status';
 export * from './product-attribute';
 export * from './text-to-speech';
 export * from './payments';
+export * from './product-usage';
 
 export * from './queue-jobs';
