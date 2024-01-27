@@ -1,25 +1,14 @@
-import {
-  IsEnum,
-  IsString,
-  IsNotEmpty,
-  IsInt,
-  MaxLength,
-} from 'class-validator';
-import { ProductUsageType } from 'src/global/models';
+import { IsString, IsNotEmpty, IsInt, MaxLength } from 'class-validator';
 
 export class CreateProductUserUsageRequestDto {
   @IsNotEmpty()
   @IsString()
   @MaxLength(100)
-  productSku!: string;
+  sku!: string;
 
   @IsNotEmpty()
   @IsInt()
   usageAmount!: number;
-
-  @IsNotEmpty()
-  @IsEnum(ProductUsageType)
-  productUsageType!: ProductUsageType;
 
   @IsNotEmpty()
   @IsString()

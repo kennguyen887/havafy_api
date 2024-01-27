@@ -1,3 +1,5 @@
+import { ProductUsageType } from './';
+
 export class ProductAttribute {
   color?: string;
 
@@ -8,4 +10,6 @@ export class ProductAttribute {
   version?: string;
 
   weight?: number;
+
+  productUsageType?: ProductUsageType;
 }
