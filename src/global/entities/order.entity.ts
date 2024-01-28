@@ -1,13 +1,4 @@
-import {
-  Entity,
-  Index,
-  Column,
-  PrimaryGeneratedColumn,
-  ManyToOne,
-  OneToMany,
-  CreateDateColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Entity, Index, Column, ManyToOne, OneToMany } from 'typeorm';
 import { OrderItemEntity } from './order-item.entity';
 import { UserEntity } from './user.entity';
 import {
@@ -16,15 +7,18 @@ import {
   PaymentStatus,
   ShippingMethod,
 } from '../models';
+import { IdentityEntity } from './base.entity';
 
 import { Nullable } from 'src/global/utils';
 
 @Entity({
   name: 'orders',
 })
-export class OrderEntity {
-  @PrimaryGeneratedColumn('uuid')
-  id!: string;
+export class OrderEntity extends IdentityEntity {
+  constructor(partial: Partial<OrderEntity>) {
+    super();
+    Object.assign(this, partial);
+  }
 
   @Index('orders-userId-idx')
   @Column({ type: 'uuid' })
@@ -60,7 +54,7 @@ export class OrderEntity {
     default: null,
     nullable: true,
   })
-  discountTotal!: number;
+  discountTotal!: Nullable<number>;
 
   @Column({
     type: 'decimal',
@@ -69,7 +63,7 @@ export class OrderEntity {
     default: null,
     nullable: true,
   })
-  taxAmount!: number;
+  taxAmount!: Nullable<number>;
 
   @Column({
     type: 'decimal',
@@ -118,7 +112,7 @@ export class OrderEntity {
     length: 10,
     nullable: true,
   })
-  shippingMethod!: ShippingMethod;
+  shippingMethod!: Nullable<ShippingMethod>;
 
   @Column({ type: 'text', nullable: true })
   note!: Nullable<string>;
@@ -134,16 +128,4 @@ export class OrderEntity {
 
   @ManyToOne(() => UserEntity, (user) => user.orders)
   user!: UserEntity;
-
-  @CreateDateColumn({
-    type: 'timestamp with time zone',
-    default: () => 'CURRENT_TIMESTAMP',
-  })
-  createdAt!: Date;
-
-  @UpdateDateColumn({
-    type: 'timestamp with time zone',
-    default: () => 'CURRENT_TIMESTAMP',
-  })
-  updatedAt!: Date;
 }

@@ -1,21 +1,16 @@
-import {
-  Entity,
-  Index,
-  Column,
-  PrimaryGeneratedColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
-  ManyToOne,
-} from 'typeorm';
+import { Entity, Index, Column, ManyToOne } from 'typeorm';
 import { ProductType, ProductUsageType } from '../models';
 import { UserEntity } from './user.entity';
+import { IdentityEntity } from './base.entity';
 
 @Entity({
   name: 'product_user_remain',
 })
-export class ProductUserRemainEntity {
-  @PrimaryGeneratedColumn('uuid')
-  id!: string;
+export class ProductUserRemainEntity extends IdentityEntity {
+  constructor(partial: Partial<ProductUserRemainEntity>) {
+    super();
+    Object.assign(this, partial);
+  }
 
   @Index('product-user-remain-userId-idx')
   @Column({ type: 'uuid' })
@@ -43,18 +38,6 @@ export class ProductUserRemainEntity {
 
   @Column({ default: 0, type: 'int' })
   remainAmount!: number;
-
-  @CreateDateColumn({
-    type: 'timestamp with time zone',
-    default: () => 'CURRENT_TIMESTAMP',
-  })
-  createdAt!: Date;
-
-  @UpdateDateColumn({
-    type: 'timestamp with time zone',
-    default: () => 'CURRENT_TIMESTAMP',
-  })
-  updatedAt!: Date;
 
   @ManyToOne(() => UserEntity, (user) => user.orders)
   user!: UserEntity;

@@ -126,7 +126,7 @@ export class OrderService {
 
     const { subtotal, grandTotal, discountTotal, promoDiscount } =
       await this.getProductGrandTotal(data);
-    let orderPayload = new OrderEntity();
+    let orderPayload = new OrderEntity({});
 
     orderPayload.promoCode = promoCode || null;
     orderPayload.promoDiscount = promoDiscount;
@@ -149,7 +149,7 @@ export class OrderService {
       orderNumber,
       id: uuidV4(),
       paymentMethod: paymentMethod || null,
-      paymentOrderId: paymentOrderId || null,
+      paymentOrderId: payment OrderId || null,
       subtotal,
       discountTotal,
       grandTotal,
@@ -171,7 +171,7 @@ export class OrderService {
     items: CreateOrderItemsDto[],
     products: ProductEntity[],
     orderId: string,
-  ) {
+  ): OrderItemEntity[] {
     const mapProducts = products.reduce((acc, product: ProductEntity) => {
       acc[product.sku] = product;
       return acc;
@@ -179,14 +179,14 @@ export class OrderService {
 
     return items.map((item) => {
       const product = mapProducts[item.productSku];
-      return {
+      return new OrderItemEntity({
         orderId,
         quantity: item.quantity,
         name: product.name,
         basePrice: product.basePrice,
         sku: product.sku,
         price: product.price,
-      };
+      });
     });
   }
   async getPromoDiscount(code: string): Promise<{

@@ -1,21 +1,17 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  OneToMany,
-  CreateDateColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Entity, Column, OneToMany } from 'typeorm';
 import { OrderEntity } from './order.entity';
 import { ProductUserRemainEntity } from './product-user-remain.entity';
 import { ProductUserUsageEntity } from './product-user-usage.entity';
+import { IdentityEntity } from './base.entity';
 
 @Entity({
   name: 'users',
 })
-export class UserEntity {
-  @PrimaryGeneratedColumn('uuid')
-  id!: string;
+export class UserEntity extends IdentityEntity {
+  constructor(partial: Partial<UserEntity>) {
+    super();
+    Object.assign(this, partial);
+  }
 
   @Column({
     type: 'boolean',
@@ -34,6 +30,7 @@ export class UserEntity {
 
   @Column({
     type: 'varchar',
+    unique: true,
   })
   email!: string;
 
@@ -99,16 +96,4 @@ export class UserEntity {
     (productUserUsage) => productUserUsage.user,
   )
   productUserUsage!: ProductUserUsageEntity[];
-
-  @CreateDateColumn({
-    type: 'timestamp with time zone',
-    default: () => 'CURRENT_TIMESTAMP',
-  })
-  createdAt!: Date;
-
-  @UpdateDateColumn({
-    type: 'timestamp with time zone',
-    default: () => 'CURRENT_TIMESTAMP',
-  })
-  updatedAt!: Date;
 }

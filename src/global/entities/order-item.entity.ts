@@ -1,21 +1,18 @@
-import {
-  Entity,
-  Index,
-  Column,
-  PrimaryGeneratedColumn,
-  ManyToOne,
-  CreateDateColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Entity, Index, Column, ManyToOne } from 'typeorm';
 import { ProductAttribute } from '../models';
 import { OrderEntity } from './order.entity';
+import { IdentityEntity } from './base.entity';
+
+import { Nullable } from 'src/global/utils';
 
 @Entity({
   name: 'order_items',
 })
-export class OrderItemEntity {
-  @PrimaryGeneratedColumn('uuid')
-  id!: string;
+export class OrderItemEntity extends IdentityEntity {
+  constructor(partial: Partial<OrderItemEntity>) {
+    super();
+    Object.assign(this, partial);
+  }
 
   @Index('orderItem-orderId-idx')
   @Column({ type: 'uuid' })
@@ -39,26 +36,14 @@ export class OrderItemEntity {
     scale: 6,
     default: 0,
   })
-  basePrice!: number;
+  basePrice!: Nullable<number>;
 
   @Column({ type: 'text', nullable: true })
-  description!: string;
+  description!: Nullable<string>;
 
   @Column({ type: 'json', nullable: true })
-  attributes!: ProductAttribute;
+  attributes!: Nullable<ProductAttribute>;
 
   @ManyToOne(() => OrderEntity, (order) => order.items)
   order!: OrderEntity;
-
-  @CreateDateColumn({
-    type: 'timestamp with time zone',
-    default: () => 'CURRENT_TIMESTAMP',
-  })
-  createdAt!: Date;
-
-  @UpdateDateColumn({
-    type: 'timestamp with time zone',
-    default: () => 'CURRENT_TIMESTAMP',
-  })
-  updatedAt!: Date;
 }

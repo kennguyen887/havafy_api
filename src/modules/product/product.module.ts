@@ -6,6 +6,7 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { ProductEntity } from 'src/global/entities/product.entity';
 import { ConfigModule } from '@nestjs/config';
 import { QueryHandlers } from './queries';
+import { CommandHandlers } from './commands';
 
 @Module({
   imports: [
@@ -14,7 +15,7 @@ import { QueryHandlers } from './queries';
     CqrsModule,
   ],
   controllers: [ProductController],
-  providers: [ProductService, ...QueryHandlers],
+  providers: [ProductService, ...QueryHandlers, ...CommandHandlers],
   exports: [ProductService],
 })
 export class ProductModule {}

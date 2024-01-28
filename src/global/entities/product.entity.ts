@@ -1,35 +1,32 @@
-import {
-  Entity,
-  Index,
-  Column,
-  PrimaryGeneratedColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Entity, Index, Column } from 'typeorm';
 import { ProductStatus, ProductType, ProductAttribute } from '../models';
+import { Nullable } from 'src/global/utils/types';
+import { IdentityEntity } from './base.entity';
 
 @Entity({
   name: 'products',
 })
-export class ProductEntity {
-  @PrimaryGeneratedColumn('uuid')
-  id!: string;
+export class ProductEntity extends IdentityEntity {
+  constructor(partial: Partial<ProductEntity>) {
+    super();
+    Object.assign(this, partial);
+  }
 
   @Index('product-userId-idx')
-  @Column({ type: 'uuid' })
-  userId!: string;
+  @Column({ type: 'uuid', nullable: true })
+  userId!: Nullable<string>;
 
   @Column({ type: 'varchar', length: 300 })
   name!: string;
 
-  @Column({ type: 'varchar', length: 150 })
+  @Column({ type: 'varchar', length: 150, unique: true })
   sku!: string;
 
   @Column({ type: 'varchar', length: 300, nullable: true })
-  thumbnail!: string;
+  thumbnail!: Nullable<string>;
 
   @Column({ default: 0, nullable: true, type: 'int' })
-  quantity!: number;
+  quantity!: Nullable<number>;
 
   @Column({ type: 'decimal', precision: 18, scale: 6, default: 0 })
   price!: number;
@@ -39,8 +36,9 @@ export class ProductEntity {
     precision: 18,
     scale: 6,
     default: 0,
+    nullable: true,
   })
-  basePrice!: number;
+  basePrice!: Nullable<number>;
 
   @Column({ type: 'varchar', length: 50, default: ProductStatus.DRAFT })
   status!: ProductStatus;
@@ -53,29 +51,17 @@ export class ProductEntity {
   productType!: ProductType;
 
   @Column({ type: 'text', nullable: true })
-  description!: string;
+  description!: Nullable<string>;
 
   @Column({ type: 'varchar', length: 3 })
-  currency!: string;
+  currency!: Nullable<string>;
 
   @Column({ type: 'timestamp', nullable: true })
-  publishedAt?: Date;
+  publishedAt!: Nullable<Date>;
 
   @Column({ type: 'boolean', default: false })
   isHidden!: boolean;
 
   @Column({ type: 'json', nullable: true })
-  attributes!: ProductAttribute;
-
-  @CreateDateColumn({
-    type: 'timestamp with time zone',
-    default: () => 'CURRENT_TIMESTAMP',
-  })
-  createdAt!: Date;
-
-  @UpdateDateColumn({
-    type: 'timestamp with time zone',
-    default: () => 'CURRENT_TIMESTAMP',
-  })
-  updatedAt!: Date;
+  attributes!: Nullable<ProductAttribute>;
 }

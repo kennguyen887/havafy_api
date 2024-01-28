@@ -2,20 +2,22 @@ import {
   Entity,
   Index,
   Column,
-  PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
 } from 'typeorm';
 import { ProductType, ProductUsageType } from '../models';
 import { UserEntity } from './user.entity';
+import { IdentityEntity } from './base.entity';
 
 @Entity({
   name: 'product_user_usage',
 })
-export class ProductUserUsageEntity {
-  @PrimaryGeneratedColumn('uuid')
-  id!: string;
+export class ProductUserUsageEntity extends IdentityEntity {
+  constructor(partial: Partial<ProductUserUsageEntity>) {
+    super();
+    Object.assign(this, partial);
+  }
 
   @Index('product-user-usage-userId-idx')
   @Column({ type: 'uuid' })
