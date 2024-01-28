@@ -1,6 +1,6 @@
 import { IsString, IsNotEmpty, IsInt, MaxLength } from 'class-validator';
 
-export class CreateProductUserRemainRequestDto {
+export class ProductUserRemainItemRequestDto {
   @IsNotEmpty()
   @IsString()
   @MaxLength(100)
@@ -8,9 +8,5 @@ export class CreateProductUserRemainRequestDto {
 
   @IsNotEmpty()
   @IsInt()
-  addRemainAmount!: number;
-
-  @IsNotEmpty()
-  @IsString()
-  userId!: string;
+  quantity!: number;
 }

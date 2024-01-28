@@ -77,11 +77,6 @@ export class UserProductUsage1706333246844 implements MigrationInterface {
             isPrimary: true,
           },
           {
-            name: 'productName',
-            type: 'varchar',
-            length: '300',
-          },
-          {
             name: 'sku',
             type: 'varchar',
             length: '150',

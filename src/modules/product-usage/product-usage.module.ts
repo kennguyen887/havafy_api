@@ -8,6 +8,7 @@ import { ProductUserRemainEntity } from 'src/global/entities/product-user-remain
 import { ProductModule } from '../product/product.module';
 import { ConfigModule } from '@nestjs/config';
 import { QueryHandlers } from './queries';
+import { CommandHandlers } from './commands';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { QueryHandlers } from './queries';
     CqrsModule,
   ],
   controllers: [ProductUsageController],
-  providers: [ProductUsageService, ...QueryHandlers],
+  providers: [ProductUsageService, ...QueryHandlers, ...CommandHandlers],
   exports: [ProductUsageService],
 })
 export class ProductUsageModule {}

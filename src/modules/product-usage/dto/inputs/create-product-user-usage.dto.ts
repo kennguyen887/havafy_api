@@ -1,4 +1,10 @@
-import { IsString, IsNotEmpty, IsInt, MaxLength } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsInt,
+  MaxLength,
+  IsObject,
+} from 'class-validator';
 
 export class CreateProductUserUsageRequestDto {
   @IsNotEmpty()
@@ -15,12 +21,12 @@ export class CreateProductUserUsageRequestDto {
   userId!: string;
 
   @IsNotEmpty()
-  @IsString()
-  @MaxLength(1000)
-  payloadRequest!: string;
+  @IsObject()
+  @MaxLength(10000)
+  payloadRequest!: object;
 
   @IsNotEmpty()
-  @IsString()
-  @MaxLength(500)
-  outputResult!: string;
+  @IsObject()
+  @MaxLength(10000)
+  outputResult!: object;
 }

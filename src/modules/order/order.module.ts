@@ -8,12 +8,14 @@ import { CommandHandlers } from './commands';
 import { OrderEntity, OrderItemEntity } from 'src/global/entities';
 import { PaypalService } from 'src/global/services/mail/paypal.service';
 import { ProductModule } from '../product/product.module';
+import { ProductUsageModule } from '../product-usage/product-usage.module';
 import { QueryHandlers } from './queries';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([OrderEntity, OrderItemEntity]),
     forwardRef(() => ProductModule),
+    forwardRef(() => ProductUsageModule),
     ConfigModule,
     CqrsModule,
   ],

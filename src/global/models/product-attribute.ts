@@ -12,4 +12,6 @@ export class ProductAttribute {
   weight?: number;
 
   productUsageType?: ProductUsageType;
+
+  addUsageRemainAmount?: number;
 }

@@ -6,7 +6,7 @@ import { ProductUserRemainEntity } from 'src/global/entities/product-user-remain
 import { ProductUserUsageEntity } from 'src/global/entities/product-user-usage.entity';
 import {
   CreateProductUserUsageRequestDto,
-  CreateProductUserRemainRequestDto,
+  ProductUserRemainItemRequestDto,
 } from './dto';
 import { ProductService } from 'src/modules/product/product.service';
 import Decimal from 'decimal.js';
@@ -22,13 +22,15 @@ export class ProductUsageService {
   ) {}
 
   async createProductUserRemain(
-    data: CreateProductUserRemainRequestDto,
+    userId: string,
+    item: ProductUserRemainItemRequestDto,
   ): Promise<void> {
-    const { sku } = data;
+    const { sku, quantity } = item;
 
     const products = await this.productService.getProducts([sku]);
     const product = products.find((product) => product.sku === sku);
     const productUsageType = product?.attributes?.productUsageType;
+    const addUsageRemainAmount = product?.attributes?.addUsageRemainAmount || 0;
 
     if (!product || !productUsageType) {
       console.log('Product attribute is not found productUsageType');
@@ -37,12 +39,13 @@ export class ProductUsageService {
 
     const remain = await this.productUserRemainRepository
       .createQueryBuilder('remain')
-      .andWhere('remain.sku = : sku', { sku })
-      .andWhere('remain.userId = :userId ', { userId: data.userId })
+      .andWhere('remain.sku = :sku', { sku })
+      .andWhere('remain.userId = :userId ', { userId })
       .getOne();
 
     const remainAmount = new Decimal(remain?.remainAmount || 0)
-      .add(data.addRemainAmount)
+      .add(addUsageRemainAmount)
+      .mul(quantity)
       .toNumber();
 
     const productUserRemain = {
@@ -50,7 +53,7 @@ export class ProductUsageService {
       sku,
       productType: product.productType,
       productUsageType,
-      userId: data.userId,
+      userId,
       remainAmount,
     };
 
@@ -67,13 +70,15 @@ export class ProductUsageService {
     const productUsageType = product?.attributes?.productUsageType;
 
     if (!product || !productUsageType) {
-      console.log('Product attribute is not found productUsageType');
-      return;
+      throw new HttpException(
+        'Product attribute is not found productUsageType',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     const remain = await this.productUserRemainRepository
       .createQueryBuilder('remain')
-      .andWhere('remain.sku = : sku', { sku })
+      .andWhere('remain.sku = :sku', { sku })
       .andWhere('remain.userId = :userId ', { userId: data.userId })
       .getOne();
 
@@ -84,12 +89,12 @@ export class ProductUsageService {
       );
     }
 
-    const productUserUsage = {
+    const productUserUsage = new ProductUserUsageEntity({
       ...data,
-      productName: product.name,
+      productType: product.productType,
       sku: product.sku,
       productUsageType,
-    };
+    });
 
     await this.productUserUsageRepository.save(productUserUsage);
 
@@ -105,5 +110,15 @@ export class ProductUsageService {
     };
 
     await this.productUserRemainRepository.save(productUserRemain);
+  }
+
+  async getUserRemain(userId: string, sku: string): Promise<number> {
+    const remain = await this.productUserRemainRepository
+      .createQueryBuilder('remain')
+      .andWhere('remain.sku = :sku', { sku })
+      .andWhere('remain.userId = :userId ', { userId })
+      .getOne();
+
+    return new Decimal(remain?.remainAmount || 0).toNumber();
   }
 }

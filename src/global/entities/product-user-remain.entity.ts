@@ -16,9 +16,6 @@ export class ProductUserRemainEntity extends IdentityEntity {
   @Column({ type: 'uuid' })
   userId!: string;
 
-  @Column({ type: 'varchar', length: 300 })
-  productName!: string;
-
   @Column({ type: 'varchar', length: 150 })
   sku!: string;
 

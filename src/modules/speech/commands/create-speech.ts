@@ -1,17 +1,22 @@
 import { HttpStatus, HttpException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { CommandHandler, CommandBus, ICommandHandler } from '@nestjs/cqrs';
 import { GCloud, AwsS3 } from '../../../services/app-config/configuration';
 import { v4 as uuidV4 } from 'uuid';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 
 import TextToSpeech from '@google-cloud/text-to-speech';
 import { CreateSpeechRequestDto, CreateSpeechResponsetDto } from '../dto';
-import { SsmlVoiceGender } from '../../../global/models';
-import { CaptchaService } from '../../../global/services/mail/captcha.service';
+import { SsmlVoiceGender } from 'src/global/models';
+import { CaptchaService } from 'src/global/services/mail/captcha.service';
+import { CreateProductUserUsageCommand } from 'src/modules/product-usage/commands';
+import { ProductUsageService } from 'src/modules/product-usage/product-usage.service';
 
 export class CreateSpeechCommand {
-  constructor(public readonly data: CreateSpeechRequestDto) {}
+  constructor(
+    public readonly userId: string,
+    public readonly data: CreateSpeechRequestDto,
+  ) {}
 }
 
 @CommandHandler(CreateSpeechCommand)
@@ -20,10 +25,13 @@ export class CreateSpeechCommandHandler
 {
   private readonly gcloud: GCloud;
   private readonly awsS3: AwsS3;
+  private readonly productSku: string = 'TTS-100';
 
   constructor(
     private readonly captchaService: CaptchaService,
     private readonly configService: ConfigService,
+    private readonly productUsageService: ProductUsageService,
+    private readonly commandBus: CommandBus,
   ) {
     this.gcloud = this.configService.get<GCloud>('gcloud') as GCloud;
     this.awsS3 = this.configService.get<AwsS3>('awsS3') as AwsS3;
@@ -32,7 +40,26 @@ export class CreateSpeechCommandHandler
   async execute(
     command: CreateSpeechCommand,
   ): Promise<CreateSpeechResponsetDto> {
-    const { text, speed = 1, voice, token } = command.data;
+    const {
+      userId,
+      data: { text, speed = 1, voice, token },
+    } = command;
+
+    if (text.length > 2000) {
+      throw new HttpException('Your text is too long.', HttpStatus.BAD_REQUEST);
+    }
+
+    const remainAmount = await this.productUsageService.getUserRemain(
+      userId,
+      this.productSku,
+    );
+
+    if (text.length > remainAmount) {
+      throw new HttpException(
+        `Your remain amount is ${remainAmount} characters`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
 
     const reCaptchaResponse = await this.captchaService.verifyRecaptcha(token);
 
@@ -43,10 +70,6 @@ export class CreateSpeechCommandHandler
     const s3Bucket = 'havafycom';
     const filePath = `text-to-speech/${uuidV4()}.mp3`;
     const speechFileUrl = `https://${s3Bucket}.s3.${this.awsS3.region}.amazonaws.com/${filePath}`;
-
-    if (text.length > 300) {
-      throw new HttpException('Your text is too long.', HttpStatus.BAD_REQUEST);
-    }
 
     // Import other required libraries
     // Creates a client
@@ -99,6 +122,23 @@ export class CreateSpeechCommandHandler
       console.error('Cannot put file to AWS S3', err);
       throw new HttpException('Cannot create speech.', HttpStatus.BAD_REQUEST);
     }
+
+    this.commandBus.execute(
+      new CreateProductUserUsageCommand({
+        sku: this.productSku,
+        usageAmount: text.length,
+        userId,
+        payloadRequest: {
+          text,
+          speed,
+          voice,
+        },
+        outputResult: {
+          speechFileUrl,
+        },
+      }),
+    );
+
     return {
       speechFileUrl,
     };

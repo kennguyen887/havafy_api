@@ -40,6 +40,7 @@ export class ProductService {
         currency: 'USD',
         attributes: {
           productUsageType: ProductUsageType.CHARACTERS,
+          addUsageRemainAmount: 1000000, // 1 milions
         },
       });
     }

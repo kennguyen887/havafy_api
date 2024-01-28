@@ -9,6 +9,7 @@ import {
 import { ProductType, ProductUsageType } from '../models';
 import { UserEntity } from './user.entity';
 import { IdentityEntity } from './base.entity';
+import { Nullable } from 'src/global/utils/types';
 
 @Entity({
   name: 'product_user_usage',
@@ -44,10 +45,10 @@ export class ProductUserUsageEntity extends IdentityEntity {
   usageAmount!: number;
 
   @Column({ type: 'json', nullable: true })
-  payloadRequest!: string;
+  payloadRequest!: Nullable<object>;
 
   @Column({ type: 'json', nullable: true })
-  outputResult!: string;
+  outputResult!: Nullable<object>;
 
   @CreateDateColumn({
     type: 'timestamp with time zone',

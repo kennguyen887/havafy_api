@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CommandBus } from '@nestjs/cqrs';
 import ShortUniqueId from 'short-unique-id';
 import Decimal from 'decimal.js';
 import {
@@ -27,6 +28,7 @@ import { Nullable } from 'src/global/utils/types';
 import { PaymentMethod } from 'src/global/models';
 import { plainToClass } from 'class-transformer';
 import { PaypalService } from 'src/global/services/mail/paypal.service';
+import { CreateProductUserRemainCommand } from '../product-usage/commands';
 
 @Injectable()
 export class OrderService {
@@ -37,7 +39,8 @@ export class OrderService {
     private orderItemsRepository: Repository<OrderItemEntity>,
     private readonly productService: ProductService,
     private readonly paypalService: PaypalService,
-  ) { }
+    private readonly commandBus: CommandBus,
+  ) {}
 
   async getProductGrandTotal(
     data: GetOrderGrandTotalRequestDto,
@@ -160,6 +163,16 @@ export class OrderService {
     const order = await this.ordersRepository.save(orderPayload);
     const orderItems = this.getOrderItem(items, products, orderPayload.id);
     await this.orderItemsRepository.save(orderItems);
+
+    this.commandBus.execute(
+      new CreateProductUserRemainCommand(
+        userId,
+        orderItems.map((item) => {
+          return { sku: item.sku, quantity: item.quantity };
+        }),
+      ),
+    );
+
     return {
       orderId: order.id,
       status: order.status,
