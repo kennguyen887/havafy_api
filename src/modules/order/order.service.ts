@@ -149,7 +149,7 @@ export class OrderService {
       orderNumber,
       id: uuidV4(),
       paymentMethod: paymentMethod || null,
-      paymentOrderId: payment OrderId || null,
+      paymentOrderId: paymentOrderId || null,
       subtotal,
       discountTotal,
       grandTotal,
