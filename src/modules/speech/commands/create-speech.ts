@@ -45,14 +45,19 @@ export class CreateSpeechCommandHandler
       data: { text, speed = 1, voice, token },
     } = command;
 
-    if (text.length > 2000) {
+    const DEFAULT_TEXT_MAX_LENGHT = 2900;
+    const ALLOW_MAX_LENGHT = 6000;
+
+    if (text.length > ALLOW_MAX_LENGHT) {
       throw new HttpException('Your text is too long.', HttpStatus.BAD_REQUEST);
     }
 
-    const remainAmount = await this.productUsageService.getUserRemain(
-      userId,
+    const remains = await this.productUsageService.getUserRemains(userId, [
       this.productSku,
-    );
+    ]);
+    const remainAmount =
+      remains.find((remain) => remain.sku === this.productSku)?.remainAmount ||
+      0;
 
     if (text.length > remainAmount) {
       throw new HttpException(
@@ -82,17 +87,22 @@ export class CreateSpeechCommandHandler
     });
     // Construct the request
     const voiceCode = voice.split('-');
-    const [response] = await speechClient.synthesizeSpeech({
-      input: { text },
-      voice: {
-        languageCode: `${voiceCode[0]}-${voiceCode[1]}`,
-        name: voice,
-        ssmlGender: this.getSsmlGender(voiceCode[2]),
-      },
-      audioConfig: { audioEncoding: 2, speakingRate: speed },
-    });
+    const textChunks = this.splitTextByDot(text, DEFAULT_TEXT_MAX_LENGHT);
+    const chunkSpeechs = await Promise.all(
+      textChunks.map((text) => {
+        return speechClient.synthesizeSpeech({
+          input: { ssml: `<speak>${text}</speak>` },
+          voice: {
+            languageCode: `${voiceCode[0]}-${voiceCode[1]}`,
+            name: voice,
+            ssmlGender: this.getSsmlGender(voiceCode[2]),
+          },
+          audioConfig: { audioEncoding: 2, speakingRate: speed },
+        });
+      }),
+    );
 
-    if (!response || !response.audioContent) {
+    if (!chunkSpeechs[0][0] || !chunkSpeechs[0][0]?.audioContent) {
       console.error('Have a error when synthesize speech', command.data);
       throw new HttpException('Cannot create speech.', HttpStatus.BAD_REQUEST);
     }
@@ -109,7 +119,11 @@ export class CreateSpeechCommandHandler
     });
 
     try {
-      const buffer = Buffer.from(response.audioContent);
+      const buffer = Buffer.concat(
+        chunkSpeechs.map(([response]) =>
+          Buffer.from(response.audioContent || ''),
+        ),
+      );
       await client.send(
         new PutObjectCommand({
           Bucket: s3Bucket,
@@ -154,5 +168,23 @@ export class CreateSpeechCommandHandler
     }
 
     return SsmlVoiceGender.SSML_VOICE_GENDER_UNSPECIFIED;
+  }
+
+  private splitTextByDot(text: string, maxLength: number): string[] {
+    const chunks = text.split('.'); // Split by dot, but not if followed by whitespace
+
+    const resultChunks = chunks.reduce((acc, chunk: string) => {
+      let chunkCurrent = acc.length;
+
+      if (acc.length && acc[acc.length - 1].length < maxLength) {
+        if (`${acc[acc.length - 1] || ''} ${chunk}.`.length < maxLength) {
+          chunkCurrent = acc.length - 1;
+        }
+      }
+      acc[chunkCurrent] = `${acc[chunkCurrent] || ''} ${chunk}.`;
+      return acc;
+    }, [] as string[]);
+
+    return resultChunks;
   }
 }

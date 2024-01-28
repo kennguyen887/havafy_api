@@ -1,5 +1,5 @@
-import { GetProductUsageListQueryHandler } from './get-product-usage-list';
+import { GetProductRemainListQueryHandler } from './get-product-remain-list';
 
-export * from './get-product-usage-list';
+export * from './get-product-remain-list';
 
-export const QueryHandlers = [GetProductUsageListQueryHandler];
+export const QueryHandlers = [GetProductRemainListQueryHandler];

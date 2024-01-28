@@ -1,7 +1,10 @@
-import { Query, Controller, Get } from '@nestjs/common';
+import { Query, Controller, Get, Request, UseGuards } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ApiTags } from '@nestjs/swagger';
-import { GetProductUsageListQuery } from './queries';
+import { GetProductRemainListQuery } from './queries';
+import { GetProductUserRemainQueryDto } from './dto';
+import { GetJwtUserPayloadDto } from '../user/dto';
+import { JwtAuthGuard } from '../user/guards/jwt-auth/jwt-auth.guard';
 
 @ApiTags('product-usage')
 @Controller('product-usage')
@@ -12,7 +15,13 @@ export class ProductUsageController {
   ) {}
 
   @Get()
-  async list(@Query() query: any) {
-    return this.queryBus.execute(new GetProductUsageListQuery(query));
+  @UseGuards(JwtAuthGuard)
+  async list(
+    @Request() req: GetJwtUserPayloadDto,
+    @Query() query: GetProductUserRemainQueryDto,
+  ) {
+    return this.queryBus.execute(
+      new GetProductRemainListQuery(req.user.id, query),
+    );
   }
 }

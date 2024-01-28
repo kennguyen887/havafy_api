@@ -112,13 +112,21 @@ export class ProductUsageService {
     await this.productUserRemainRepository.save(productUserRemain);
   }
 
-  async getUserRemain(userId: string, sku: string): Promise<number> {
-    const remain = await this.productUserRemainRepository
+  async getUserRemains(
+    userId: string,
+    skuList: string[],
+  ): Promise<{ sku: string; remainAmount: number }[]> {
+    const remains = await this.productUserRemainRepository
       .createQueryBuilder('remain')
-      .andWhere('remain.sku = :sku', { sku })
+      .andWhere('remain.sku IN (:...skuList)', { skuList })
       .andWhere('remain.userId = :userId ', { userId })
-      .getOne();
+      .getMany();
 
-    return new Decimal(remain?.remainAmount || 0).toNumber();
+    return remains?.map((remain) => {
+      return {
+        sku: remain.sku,
+        remainAmount: new Decimal(remain?.remainAmount || 0).toNumber(),
+      };
+    });
   }
 }
