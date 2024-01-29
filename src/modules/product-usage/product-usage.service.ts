@@ -25,12 +25,16 @@ export class ProductUsageService {
     userId: string,
     item: ProductUserRemainItemRequestDto,
   ): Promise<void> {
-    const { sku, quantity } = item;
+    const { sku, quantity, customRemainAmount } = item;
 
     const products = await this.productService.getProducts([sku]);
     const product = products.find((product) => product.sku === sku);
     const productUsageType = product?.attributes?.productUsageType;
-    const addUsageRemainAmount = product?.attributes?.addUsageRemainAmount || 0;
+    let addUsageRemainAmount = product?.attributes?.addUsageRemainAmount || 0;
+
+    if (customRemainAmount) {
+      addUsageRemainAmount = customRemainAmount;
+    }
 
     if (!product || !productUsageType) {
       console.log('Product attribute is not found productUsageType');

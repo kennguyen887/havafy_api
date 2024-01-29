@@ -1,6 +1,6 @@
 import { HttpStatus, HttpException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { CommandHandler, ICommandHandler, CommandBus } from '@nestjs/cqrs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserEntity } from 'src/global/entities/user.entity';
@@ -14,6 +14,7 @@ import { GCloud } from '../../../services/app-config/configuration';
 
 import { OAuth2Client, TokenPayload } from 'google-auth-library';
 import { generateRandomString } from 'src/global/utils';
+import { CreateProductUserRemainCommand } from '../../product-usage/commands';
 
 export class CreateUserByGoogleAccountCommand {
   constructor(public readonly data: CreateUserByGoogleAccountRequestDto) {}
@@ -31,6 +32,7 @@ export class CreateUserByGoogleAccountCommandHandler
     private readonly passwordService: PasswordService,
     private readonly configService: ConfigService,
     private readonly userService: UserService,
+    private readonly commandBus: CommandBus,
   ) {
     this.gcloud = this.configService.get<GCloud>('gcloud') as GCloud;
   }
@@ -96,6 +98,17 @@ export class CreateUserByGoogleAccountCommandHandler
     let newUser = this.usersRepository.create(userPayload);
     newUser = await this.usersRepository.save(newUser);
     const token = this.userService.getUserToken(newUser);
+
+    // create product remain for new user
+    await this.commandBus.execute(
+      new CreateProductUserRemainCommand(newUser.id, [
+        {
+          sku: 'TTS-100',
+          quantity: 1,
+          customRemainAmount: 1000,
+        },
+      ]),
+    );
 
     return {
       userId: newUser.id,

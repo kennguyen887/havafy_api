@@ -31,12 +31,9 @@ export class OrderController {
   }
 
   @Post('getGrandTotal')
-  @UseGuards(JwtAuthGuard)
   async getOrderGrandTotal(
     @Body() data: GetOrderGrandTotalRequestDto,
-    @Request() req: GetJwtUserPayloadDto,
   ): Promise<GetOrderGrandTotalResDto> {
-    const { user } = req;
-    return this.queryBus.execute(new GetOrderGrandTotalQuery(user.id, data));
+    return this.queryBus.execute(new GetOrderGrandTotalQuery(null, data));
   }
 }

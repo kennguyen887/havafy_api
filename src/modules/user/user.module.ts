@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { UserController } from './user.controller';
 import { AuthService } from './services/auth/auth.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -10,11 +10,13 @@ import { JwtService } from './services/jwt/jwt.service';
 import { ConfigModule } from '@nestjs/config';
 import { JwtStrategy } from './services/auth/strategies/jwt/jwt.strategy';
 // import { AppCacheModule } from '../../app-cache/app-cache.module';
+import { ProductUsageModule } from '../product-usage/product-usage.module';
 import { CommandHandlers } from './commands';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([UserEntity]),
+    forwardRef(() => ProductUsageModule),
     ConfigModule,
     // AppCacheModule,
     CqrsModule,

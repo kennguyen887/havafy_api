@@ -1,4 +1,10 @@
-import { IsString, IsNotEmpty, IsInt, MaxLength } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsInt,
+  MaxLength,
+  IsOptional,
+} from 'class-validator';
 
 export class ProductUserRemainItemRequestDto {
   @IsNotEmpty()
@@ -9,4 +15,8 @@ export class ProductUserRemainItemRequestDto {
   @IsNotEmpty()
   @IsInt()
   quantity!: number;
+
+  @IsOptional()
+  @IsInt()
+  customRemainAmount?: number;
 }

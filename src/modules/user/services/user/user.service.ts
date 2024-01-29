@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from 'src/global/entities/user.entity';
+import { CommandBus } from '@nestjs/cqrs';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from '../../dto/inputs/create-user.dto';
 import { PasswordService } from '../password/password.service';
 import { JwtService } from '../jwt/jwt.service';
+import { CreateProductUserRemainCommand } from '../../../product-usage/commands';
 
 @Injectable()
 export class UserService {
@@ -13,6 +15,7 @@ export class UserService {
     private usersRepository: Repository<UserEntity>,
     private readonly passwordService: PasswordService,
     private readonly jwtService: JwtService,
+    private readonly commandBus: CommandBus,
   ) {}
 
   async isUserExists(email: string): Promise<UserEntity | null> {
@@ -43,6 +46,16 @@ export class UserService {
     newUser = await this.updateUser(newUser);
 
     newUser.token = this.getUserToken(newUser);
+    // create product remain for new user
+    await this.commandBus.execute(
+      new CreateProductUserRemainCommand(newUser.id, [
+        {
+          sku: 'TTS-100',
+          quantity: 1,
+          customRemainAmount: 1000,
+        },
+      ]),
+    );
     return await this.updateUser(newUser);
   }
 
