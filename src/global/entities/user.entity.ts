@@ -1,5 +1,6 @@
 import { Entity, Column, OneToMany } from 'typeorm';
 import { OrderEntity } from './order.entity';
+import { TaskEntity } from './task.entity';
 import { ProductUserRemainEntity } from './product-user-remain.entity';
 import { ProductUserUsageEntity } from './product-user-usage.entity';
 import { IdentityEntity } from './base.entity';
@@ -84,6 +85,9 @@ export class UserEntity extends IdentityEntity {
 
   @OneToMany(() => OrderEntity, (orderEntity) => orderEntity.user)
   orders!: OrderEntity[];
+
+  @OneToMany(() => TaskEntity, (taskEntity) => taskEntity.user)
+  tasks!: TaskEntity[];
 
   @OneToMany(
     () => ProductUserRemainEntity,

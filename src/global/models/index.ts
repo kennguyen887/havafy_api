@@ -6,5 +6,7 @@ export * from './product-attribute';
 export * from './text-to-speech';
 export * from './payments';
 export * from './product-usage';
+export * from './task';
+export * from './media';
 
 export * from './queue-jobs';
