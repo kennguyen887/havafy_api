@@ -16,6 +16,7 @@ import { HtmlTemplateModule } from './modules/html-templates';
 import { JobQueueModule } from './modules/job-queue/job-queue.module';
 import { PaymentModule } from './modules/payment/payment.module';
 import { ProductUsageModule } from './modules/product-usage/product-usage.module';
+import { TaskModule } from './modules/task/task.module';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { ProductUsageModule } from './modules/product-usage/product-usage.module
     JobQueueModule,
     PaymentModule,
     OrderModule,
+    TaskModule,
   ],
 })
 export class AppModule {

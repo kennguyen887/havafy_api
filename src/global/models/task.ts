@@ -10,3 +10,9 @@ export enum DoneType {
   BEFORE_DATE = 'before_date',
   ON_DATE = 'on_date',
 }
+
+export enum TaskCurrency {
+  USD = 'USD',
+  VND = 'VND',
+  SGD = 'SGD',
+}

@@ -1,5 +1,5 @@
 import { Entity, Index, Column, ManyToOne } from 'typeorm';
-import { TaskStatus, DoneType } from '../models';
+import { TaskStatus, DoneType, TaskCurrency } from '../models';
 import { Nullable } from 'src/global/utils/types';
 import { IdentityEntity } from './base.entity';
 import { UserEntity } from './user.entity';
@@ -38,8 +38,8 @@ export class TaskEntity extends IdentityEntity {
   @Column({ type: 'varchar', length: 200 })
   location!: Nullable<string>;
 
-  @Column({ type: 'varchar', length: 3 })
-  currency!: Nullable<string>;
+  @Column({ type: 'varchar', length: 3, nullable: true })
+  currency!: Nullable<TaskCurrency>;
 
   @Column({ type: 'timestamp', nullable: true })
   publishedAt!: Nullable<Date>;

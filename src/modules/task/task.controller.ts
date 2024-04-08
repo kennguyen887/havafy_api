@@ -15,8 +15,8 @@ import { GetTaskListQuery } from './queries';
 import { CreateTaskCommand } from './commands';
 import { JwtAuthGuard } from '../user/guards/jwt-auth/jwt-auth.guard';
 
-@ApiTags('product')
-@Controller('product')
+@ApiTags('tasks')
+@Controller('tasks')
 export class TaskController {
   constructor(
     private readonly commandBus: CommandBus,
