@@ -218,6 +218,14 @@ export class CreateTaskTables1712547394694 implements MigrationInterface {
       }),
     );
 
+    await queryRunner.createIndex(
+      'comments',
+      new TableIndex({
+        name: 'IDX_COMMENT_USER_ID_FEATURE',
+        columnNames: ['userId', 'featureType'],
+      }),
+    );
+
     await queryRunner.createForeignKey(
       'tasks',
       new TableForeignKey({

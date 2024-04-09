@@ -17,6 +17,7 @@ import { JobQueueModule } from './modules/job-queue/job-queue.module';
 import { PaymentModule } from './modules/payment/payment.module';
 import { ProductUsageModule } from './modules/product-usage/product-usage.module';
 import { TaskModule } from './modules/task/task.module';
+import { CommentModule } from './modules/comment/comment.module';
 
 @Module({
   imports: [
@@ -54,6 +55,7 @@ import { TaskModule } from './modules/task/task.module';
     PaymentModule,
     OrderModule,
     TaskModule,
+    CommentModule,
   ],
 })
 export class AppModule {
