@@ -14,11 +14,11 @@ export class CreateTaskCommand {
 export class CreateTaskCommandHandler
   implements ICommandHandler<CreateTaskCommand>
 {
-  constructor(private readonly productService: TaskService) {}
+  constructor(private readonly taskService: TaskService) {}
 
   async execute(command: CreateTaskCommand): Promise<void> {
     const { data, userId } = command;
 
-    return this.productService.createTask(userId, data);
+    return this.taskService.createTask(userId, data);
   }
 }

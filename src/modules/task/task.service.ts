@@ -20,4 +20,11 @@ export class TaskService {
       userId,
     });
   }
+
+  async deleteTask(userId: string, taskId: string): Promise<void> {
+    await this.taskRepository.delete({
+      id: taskId,
+      userId,
+    });
+  }
 }

@@ -102,11 +102,7 @@ export class CreateTaskTables1712547394694 implements MigrationInterface {
             default: 'uuid_generate_v4()',
             isPrimary: true,
           },
-          {
-            name: 'type', // linking to tables: products, tasks, orders
-            type: 'varchar',
-            length: '10',
-          },
+
           {
             name: 'userId',
             type: 'uuid',
@@ -115,6 +111,11 @@ export class CreateTaskTables1712547394694 implements MigrationInterface {
             name: 'url',
             type: 'varchar',
             length: '300',
+          },
+          {
+            name: 'featureType', // linking to tables: products, tasks, orders
+            type: 'varchar',
+            length: '50',
           },
           {
             name: 'featureId',
@@ -131,6 +132,61 @@ export class CreateTaskTables1712547394694 implements MigrationInterface {
             name: 'attributes',
             type: 'json',
             isNullable: true,
+          },
+          {
+            name: 'createdAt',
+            type: 'timestamp with time zone',
+            default: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'updatedAt',
+            type: 'timestamp with time zone',
+            default: 'CURRENT_TIMESTAMP',
+          },
+        ],
+      }),
+    );
+
+    await queryRunner.createTable(
+      new Table({
+        name: 'comments',
+        columns: [
+          {
+            name: 'id',
+            type: 'uuid',
+            generationStrategy: 'uuid',
+            default: 'uuid_generate_v4()',
+            isPrimary: true,
+          },
+
+          {
+            name: 'userId',
+            type: 'uuid',
+          },
+          {
+            name: 'title',
+            type: 'varchar',
+            length: '300',
+            isNullable: true,
+          },
+          {
+            name: 'description',
+            type: 'text',
+          },
+          {
+            name: 'featureType', // linking to tables: products, tasks, orders
+            type: 'varchar',
+            length: '50',
+          },
+          {
+            name: 'featureId',
+            type: 'varchar',
+            length: '36',
+          },
+          {
+            name: 'status',
+            type: 'varchar',
+            length: '50',
           },
           {
             name: 'createdAt',
@@ -174,6 +230,16 @@ export class CreateTaskTables1712547394694 implements MigrationInterface {
 
     await queryRunner.createForeignKey(
       'media',
+      new TableForeignKey({
+        columnNames: ['userId'],
+        referencedColumnNames: ['id'],
+        referencedTableName: 'users',
+        onDelete: 'CASCADE', // Adjust the delete rule as needed
+      }),
+    );
+
+    await queryRunner.createForeignKey(
+      'comments',
       new TableForeignKey({
         columnNames: ['userId'],
         referencedColumnNames: ['id'],

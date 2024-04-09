@@ -30,6 +30,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.485.0",
     "@google-cloud/text-to-speech": "^5.0.1",
+    "@nestjs-packages/sqs": "^1.0.2",
     "@nestjs/bull": "^10.0.1",
     "@nestjs/common": "^9.4.0",
     "@nestjs/config": "^2.3.1",
@@ -66,6 +67,7 @@
     "slugify": "^1.6.6",
     "swagger-ui-express": "^4.6.2",
     "uuid": "^9.0.0",
+    "winston": "^3.13.0",
     "wrap-ansi": "^8.1.0"
   },
   "devDependencies": {

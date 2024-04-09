@@ -8,5 +8,6 @@ export * from './payments';
 export * from './product-usage';
 export * from './task';
 export * from './media';
-
+export * from './comment';
+export * from './feature';
 export * from './queue-jobs';

@@ -1,5 +1,5 @@
 import { Entity, Index, Column, ManyToOne } from 'typeorm';
-import { MediaStatus } from '../models';
+import { MediaStatus, FeatureType } from '../models';
 import { IdentityEntity } from './base.entity';
 import { Nullable } from 'src/global/utils/types';
 import { UserEntity } from './user.entity';
@@ -19,6 +19,9 @@ export class MediaEntity extends IdentityEntity {
 
   @Column({ type: 'varchar', length: 300 })
   url!: string;
+
+  @Column({ type: 'varchar', length: 50 })
+  featureType!: FeatureType;
 
   @Column({ type: 'uuid' })
   featureId!: string;
