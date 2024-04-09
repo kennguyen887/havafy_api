@@ -18,6 +18,7 @@ import { PaymentModule } from './modules/payment/payment.module';
 import { ProductUsageModule } from './modules/product-usage/product-usage.module';
 import { TaskModule } from './modules/task/task.module';
 import { CommentModule } from './modules/comment/comment.module';
+import { MediaModule } from './modules/media/media.module';
 
 @Module({
   imports: [
@@ -56,6 +57,7 @@ import { CommentModule } from './modules/comment/comment.module';
     OrderModule,
     TaskModule,
     CommentModule,
+    MediaModule,
   ],
 })
 export class AppModule {

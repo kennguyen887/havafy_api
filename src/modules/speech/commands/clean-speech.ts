@@ -24,7 +24,7 @@ export class CleanSpeechCommandHandler
 
   async execute(command: CleanSpeechCommand): Promise<void> {
     const { hours = 1 } = command;
-    const BUCKET_NAME = 'havafycom';
+    const BUCKET_NAME = this.awsS3.s3Bucket;
     const FOLDER_PATH = 'text-to-speech';
     // create a file on S3
     const credentials = {

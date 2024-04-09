@@ -52,6 +52,7 @@ export const getConfig = (): AppConfig => {
       secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY as string,
       accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID as string,
       region: process.env.AWS_S3_REGION as string,
+      s3Bucket: process.env.SERVICE_AWS_S3_BUCKET as string,
     },
     paypal: {
       mode: process.env.PAYPAL_MODE as string,
@@ -117,6 +118,7 @@ export interface AwsS3 {
   secretAccessKey: string;
   accessKeyId: string;
   region: string;
+  s3Bucket: string;
 }
 
 export interface PaypalConfig {

@@ -58,6 +58,7 @@ describe('config helper', () => {
         secretAccessKey: '',
         accessKeyId: '',
         region: '',
+        s3Bucket: '',
       },
     });
   });

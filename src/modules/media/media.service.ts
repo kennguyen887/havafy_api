@@ -2,8 +2,9 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MediaEntity, TaskEntity, CommentEntity } from 'src/global/entities';
-import { CreateMediaReqDto } from './dto';
+import { CreateMediaDto } from './dto';
 import { MediaStatus, FeatureType } from 'src/global/models';
+import { getFileExtension } from 'src/global/utils';
 import { ConfigService } from '@nestjs/config';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { CaptchaService } from 'src/global/services/mail/captcha.service';
@@ -28,8 +29,8 @@ export class MediaService {
     this.awsS3 = this.configService.get<AwsS3>('awsS3') as AwsS3;
   }
 
-  async createMedia(data: CreateMediaReqDto): Promise<void> {
-    const { featureType, featureId, content } = data;
+  async createMedia(data: CreateMediaDto): Promise<void> {
+    const { featureType, featureId, fileName, userId, content } = data;
     let feature = null;
 
     if (featureType === FeatureType.TASK) {
@@ -43,8 +44,8 @@ export class MediaService {
     if (!feature) {
       throw new HttpException('Feature is not found', HttpStatus.BAD_REQUEST);
     }
-    const s3Bucket = 'havafycom';
-    const filePath = `media/${uuidV4()}`;
+    const s3Bucket = this.awsS3.s3Bucket;
+    const filePath = `media/${uuidV4()}.${getFileExtension(fileName)}`;
     const fileUrl = `https://${s3Bucket}.s3.${this.awsS3.region}.amazonaws.com/${filePath}`;
 
     // create a file on S3
@@ -63,14 +64,14 @@ export class MediaService {
         new PutObjectCommand({
           Bucket: s3Bucket,
           Key: filePath,
-          Body: content,
+          Body: Buffer.from(content, 'base64'),
           ACL: 'public-read',
         }),
       );
     } catch (err) {
       console.error('Cannot put file to AWS S3', err);
       throw new HttpException(
-        'Cannot create media file.',
+        'Cannot create the media file.',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -80,6 +81,7 @@ export class MediaService {
       status: MediaStatus.ACTIVE,
       featureId: feature.id,
       url: fileUrl,
+      userId,
     });
   }
 

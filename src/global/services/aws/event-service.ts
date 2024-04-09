@@ -26,6 +26,7 @@ export class AwsEventService {
         secretAccessKey: process.env.SERVICE_AWS_SECRET_ACCESS_KEY || '',
       },
       region: process.env.SERVICE_AWS_REGION,
+      s3Bucket: process.env.SERVICE_AWS_S3_BUCKET,
     };
 
     this.sns = new SNS({
