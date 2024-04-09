@@ -1,6 +1,7 @@
 import { Entity, Index, Column, ManyToOne } from 'typeorm';
 import { CommentStatus, FeatureType } from '../models';
 import { IdentityEntity } from './base.entity';
+import { Nullable } from 'src/global/utils';
 import { UserEntity } from './user.entity';
 
 @Entity({
@@ -17,7 +18,7 @@ export class CommentEntity extends IdentityEntity {
   userId!: string;
 
   @Column({ type: 'varchar', length: 300, nullable: true })
-  title!: string;
+  title!: Nullable<string>;
 
   @Column({ type: 'varchar', length: 50 })
   status!: CommentStatus;
@@ -30,6 +31,9 @@ export class CommentEntity extends IdentityEntity {
 
   @Column({ type: 'uuid' })
   featureId!: string;
+
+  @Column({ type: 'json', nullable: true })
+  attributes!: Nullable<any>;
 
   @ManyToOne(() => UserEntity, (user) => user.orders)
   user!: UserEntity;

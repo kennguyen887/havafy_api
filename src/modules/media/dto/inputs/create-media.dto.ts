@@ -4,25 +4,23 @@ import {
   IsEnum,
   IsOptional,
   MinLength,
-  MaxLength,
+  IsBase64,
 } from 'class-validator';
 import { FeatureType } from 'src/global/models/feature';
 
-export class CreateCommentReqDto {
+export class CreateMediaReqDto {
   @IsNotEmpty()
   @IsString()
   userId!: string;
 
   @IsOptional()
   @IsString()
-  @MinLength(30)
+  @MinLength(10)
   title?: string;
 
   @IsNotEmpty()
-  @IsString()
-  @MinLength(50)
-  @MaxLength(1000)
-  description!: string;
+  @IsBase64()
+  content!: string;
 
   @IsNotEmpty()
   @IsEnum(FeatureType)

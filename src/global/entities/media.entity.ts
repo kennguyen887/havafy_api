@@ -17,7 +17,10 @@ export class MediaEntity extends IdentityEntity {
   @Column({ type: 'uuid' })
   userId!: string;
 
-  @Column({ type: 'varchar', length: 300 })
+  @Column({ type: 'varchar', length: 300, nullable: true })
+  title!: Nullable<string>;
+
+  @Column({ type: 'varchar', length: 500 })
   url!: string;
 
   @Column({ type: 'varchar', length: 50 })

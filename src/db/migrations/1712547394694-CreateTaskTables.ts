@@ -108,9 +108,15 @@ export class CreateTaskTables1712547394694 implements MigrationInterface {
             type: 'uuid',
           },
           {
-            name: 'url',
+            name: 'title',
             type: 'varchar',
             length: '300',
+            isNullable: true,
+          },
+          {
+            name: 'url',
+            type: 'varchar',
+            length: '500',
           },
           {
             name: 'featureType', // linking to tables: products, tasks, orders
@@ -121,7 +127,6 @@ export class CreateTaskTables1712547394694 implements MigrationInterface {
             name: 'featureId',
             type: 'varchar',
             length: '36',
-            isNullable: true,
           },
           {
             name: 'status',
@@ -189,6 +194,11 @@ export class CreateTaskTables1712547394694 implements MigrationInterface {
             length: '50',
           },
           {
+            name: 'attributes',
+            type: 'json',
+            isNullable: true,
+          },
+          {
             name: 'createdAt',
             type: 'timestamp with time zone',
             default: 'CURRENT_TIMESTAMP',
@@ -214,7 +224,7 @@ export class CreateTaskTables1712547394694 implements MigrationInterface {
       'media',
       new TableIndex({
         name: 'IDX_MEDIA_FEATURE_ID',
-        columnNames: ['featureId', 'type'],
+        columnNames: ['featureId', 'featureType'],
       }),
     );
 

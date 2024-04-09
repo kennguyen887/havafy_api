@@ -1,7 +1,7 @@
 import { HttpStatus, HttpException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { CommandHandler, CommandBus, ICommandHandler } from '@nestjs/cqrs';
-import { GCloud, AwsS3 } from '../../../services/app-config/configuration';
+import { GCloud, AwsS3 } from 'src/services/app-config/configuration';
 import { v4 as uuidV4 } from 'uuid';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 
