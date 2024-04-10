@@ -6,7 +6,11 @@ import { CreateMediaDto } from './dto';
 import { MediaStatus, FeatureType } from 'src/global/models';
 import { getFileExtension } from 'src/global/utils';
 import { ConfigService } from '@nestjs/config';
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import {
+  PutObjectCommand,
+  S3Client,
+  DeleteObjectCommand,
+} from '@aws-sdk/client-s3';
 import { CaptchaService } from 'src/global/services/mail/captcha.service';
 import { GCloud, AwsS3 } from 'src/services/app-config/configuration';
 import { v4 as uuidV4 } from 'uuid';
@@ -15,6 +19,9 @@ import { v4 as uuidV4 } from 'uuid';
 export class MediaService {
   private readonly gcloud: GCloud;
   private readonly awsS3: AwsS3;
+  private readonly awsS3Folder: string;
+  private readonly s3Client: S3Client;
+  private readonly s3RootUrl: string;
   constructor(
     @InjectRepository(MediaEntity)
     private mediaRepository: Repository<MediaEntity>,
@@ -27,6 +34,9 @@ export class MediaService {
   ) {
     this.gcloud = this.configService.get<GCloud>('gcloud') as GCloud;
     this.awsS3 = this.configService.get<AwsS3>('awsS3') as AwsS3;
+    this.awsS3Folder = 'media';
+    this.s3Client = this.getS3Client();
+    this.s3RootUrl = this.getS3RootUrl();
   }
 
   async createMedia(data: CreateMediaDto): Promise<void> {
@@ -44,25 +54,15 @@ export class MediaService {
     if (!feature) {
       throw new HttpException('Feature is not found', HttpStatus.BAD_REQUEST);
     }
-    const s3Bucket = this.awsS3.s3Bucket;
-    const filePath = `media/${uuidV4()}.${getFileExtension(fileName)}`;
-    const fileUrl = `https://${s3Bucket}.s3.${this.awsS3.region}.amazonaws.com/${filePath}`;
-
-    // create a file on S3
-    const credentials = {
-      accessKeyId: this.awsS3.accessKeyId,
-      secretAccessKey: this.awsS3.secretAccessKey,
-    };
-
-    const client = new S3Client({
-      region: this.awsS3.region,
-      credentials,
-    });
+    const filePath = `${this.awsS3Folder}/${uuidV4()}.${getFileExtension(
+      fileName,
+    )}`;
+    const fileUrl = `${this.s3RootUrl}/${filePath}`;
 
     try {
-      await client.send(
+      await this.s3Client.send(
         new PutObjectCommand({
-          Bucket: s3Bucket,
+          Bucket: this.awsS3.s3Bucket,
           Key: filePath,
           Body: Buffer.from(content, 'base64'),
           ACL: 'public-read',
@@ -85,7 +85,43 @@ export class MediaService {
     });
   }
 
+  private getS3RootUrl(): string {
+    return `https://${this.awsS3.s3Bucket}.s3.${this.awsS3.region}.amazonaws.com`;
+  }
+
+  private getS3Client(): S3Client {
+    // create a file on S3
+    const credentials = {
+      accessKeyId: this.awsS3.accessKeyId,
+      secretAccessKey: this.awsS3.secretAccessKey,
+    };
+
+    const client = new S3Client({
+      region: this.awsS3.region,
+      credentials,
+    });
+    return client;
+  }
+
   async deleteMedia(userId: string, mediaId: string): Promise<void> {
+    const media = await this.mediaRepository.findOneBy({
+      id: mediaId,
+      userId,
+    });
+
+    if (!media) {
+      return;
+    }
+
+    try {
+      const fileKey = media.url.replace(`${this.s3RootUrl}/`, '');
+      const deleteObjectParams = { Bucket: this.awsS3.s3Bucket, Key: fileKey };
+      console.log(`AWS S3: Deletìng file ${fileKey}`, deleteObjectParams);
+      await this.s3Client.send(new DeleteObjectCommand(deleteObjectParams));
+    } catch (error) {
+      console.error('Error on the AWS S3 Remover:', error);
+    }
+
     await this.mediaRepository.delete({
       id: mediaId,
       userId,

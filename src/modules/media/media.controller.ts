@@ -13,6 +13,8 @@ import {
   MaxFileSizeValidator,
   FileTypeValidator,
   ParseFilePipe,
+  Param,
+  Delete,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -20,7 +22,8 @@ import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { GetMediaListQueryDto, CreateMediaReqDto } from './dto';
 import { GetJwtUserPayloadDto } from '../user/dto';
 import { GetMediaListQuery } from './queries';
-import { CreateMediaCommand } from './commands';
+import { CreateMediaCommand, DeleteMediaCommand } from './commands';
+import { IdUUIDParams } from 'src/global/utils';
 import { JwtAuthGuard } from '../user/guards/jwt-auth/jwt-auth.guard';
 
 @ApiTags('media')
@@ -32,8 +35,19 @@ export class MediaController {
   ) {}
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   async list(@Query() query: GetMediaListQueryDto) {
     return this.queryBus.execute(new GetMediaListQuery(query));
+  }
+
+  @Delete(':id')
+  @UseGuards(JwtAuthGuard)
+  async delete(
+    @Request() req: GetJwtUserPayloadDto,
+    @Param() params: IdUUIDParams,
+  ) {
+    const { user } = req;
+    return this.commandBus.execute(new DeleteMediaCommand(user.id, params.id));
   }
 
   @Post()

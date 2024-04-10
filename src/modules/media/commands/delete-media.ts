@@ -10,7 +10,7 @@ export class DeleteMediaCommand {
 }
 
 @CommandHandler(DeleteMediaCommand)
-export class CreateCommentCommandHandler
+export class DeleteMediaCommandHandler
   implements ICommandHandler<DeleteMediaCommand>
 {
   constructor(private readonly mediaService: MediaService) {}

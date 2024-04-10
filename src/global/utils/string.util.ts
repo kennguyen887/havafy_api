@@ -1,4 +1,4 @@
-import { IsUUID } from 'class-validator';
+import { IsUUID, IsNumberString } from 'class-validator';
 import { Nullable } from './types';
 
 export function removeLineBreaks(text: Nullable<string> | undefined): string {
@@ -20,4 +20,9 @@ export class IdUUIDParams {
 
 export function getFileExtension(fileName: string): string {
   return fileName.slice(((fileName.lastIndexOf('.') - 1) >>> 0) + 2);
+}
+
+export class IdNumberParams {
+  @IsNumberString()
+  id!: number;
 }
