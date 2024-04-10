@@ -1,5 +1,5 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MediaEntity, TaskEntity, CommentEntity } from 'src/global/entities';
 import { CreateMediaDto } from './dto';
@@ -14,6 +14,13 @@ import {
 import { CaptchaService } from 'src/global/services/mail/captcha.service';
 import { GCloud, AwsS3 } from 'src/services/app-config/configuration';
 import { v4 as uuidV4 } from 'uuid';
+import {
+  GetMediaListQueryDto,
+  GetMediaListResponseDto,
+  GetMediaResponseDto,
+} from './dto';
+import { plainToInstance } from 'class-transformer';
+import { title } from 'process';
 
 @Injectable()
 export class MediaService {
@@ -126,5 +133,41 @@ export class MediaService {
       id: mediaId,
       userId,
     });
+  }
+
+  async getMediaList(
+    userId: string,
+    query: GetMediaListQueryDto,
+  ): Promise<GetMediaListResponseDto> {
+    const { featureIds, featureType, offset, limit, pageIndex, pageSize } =
+      query;
+    const [items, total] = await this.mediaRepository.find({
+      select: ['id'],
+      where: { featureId: In(featureIds || []) },
+    });
+    // .createQueryBuilder('media')
+    // .andWhere('media.userId = :userId', { userId })
+    // .andWhere('media.featureId IN (:...featureIds)', { featureIds })
+    // .andWhere('media.featureType = :featureType ', { featureType })
+    // // .select([
+    // //   'media.id',
+    // //   'media.title',
+    // //   'media.url',
+    // //   'media.status',
+    // //   'media.featureId',
+    // //   'media.featureType',
+    // //   'media.createdAt',
+    // // ])
+    // .orderBy('media.createdAt', 'DESC')
+    // .offset(offset)
+    // .limit(limit)
+    // .getManyAndCount();
+
+    return {
+      total,
+      pageIndex,
+      pageSize,
+      data: items.map((item) => plainToInstance(GetMediaResponseDto, item)),
+    };
   }
 }

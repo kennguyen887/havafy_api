@@ -11,3 +11,5 @@ export * from './media';
 export * from './comment';
 export * from './feature';
 export * from './queue-jobs';
+export * from './pagination-response.dto';
+export * from './base-query.dto';

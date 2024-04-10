@@ -1,36 +1,36 @@
 import { Exclude, Expose, Type } from 'class-transformer';
+import { Nullable } from 'src/global/utils';
+import { PaginationResponse } from 'src/global/models';
 
-export class GetMediaListItemDto {
+@Exclude()
+export class GetMediaResponseDto {
   @Expose()
-  id!: string;
-
-  @Expose()
-  name!: string;
-
-  @Expose()
-  sku!: string;
+  title!: Nullable<string>;
 
   @Expose()
-  @Type(() => Number)
-  price!: number;
+  url!: string;
 
   @Expose()
-  @Type(() => Number)
-  basePrice!: number;
+  featureId!: string;
 
   @Expose()
-  @Type(() => Number)
-  quantity!: number;
+  featureType!: string;
 
   @Expose()
-  description!: string;
+  status!: string;
 
   @Expose()
-  thumbnail!: string;
+  createdAt!: string;
 }
 
 @Exclude()
-export class GetMediaListResponseDto {
+export class GetMediaListResponseDto extends PaginationResponse {
+  constructor(data: GetMediaResponseDto[], pagination: PaginationResponse) {
+    super(pagination);
+    this.data = data;
+  }
+
   @Expose()
-  data!: GetMediaListItemDto[];
+  @Type(() => GetMediaResponseDto)
+  public data: GetMediaResponseDto[] = [];
 }

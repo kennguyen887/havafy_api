@@ -36,8 +36,11 @@ export class MediaController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  async list(@Query() query: GetMediaListQueryDto) {
-    return this.queryBus.execute(new GetMediaListQuery(query));
+  async list(
+    @Request() req: GetJwtUserPayloadDto,
+    @Query() query: GetMediaListQueryDto,
+  ) {
+    return this.queryBus.execute(new GetMediaListQuery(req.user.id, query));
   }
 
   @Delete(':id')

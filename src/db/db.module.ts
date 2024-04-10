@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { getConfig } from '../services/app-config/configuration';
 
+// import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
@@ -18,6 +20,7 @@ import { getConfig } from '../services/app-config/configuration';
           password,
           database: dbName,
           autoLoadEntities: true,
+          // namingStrategy: new SnakeNamingStrategy(),
         };
       },
     }),
