@@ -10,6 +10,9 @@ import {
   HttpCode,
   UploadedFile,
   UseInterceptors,
+  MaxFileSizeValidator,
+  FileTypeValidator,
+  ParseFilePipe,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -52,7 +55,18 @@ export class MediaController {
   async createMedia(
     @Request() req: GetJwtUserPayloadDto,
     @Body() data: CreateMediaReqDto,
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 2 * 1000000 }), // 2 MB
+          new FileTypeValidator({
+            fileType:
+              /image\/(jpg|woff|svg+xml|jpeg|png)|audio\/mpeg|application\/(msword|pdf|zip)|video\/mp4/g,
+          }),
+        ],
+      }),
+    )
+    file: Express.Multer.File,
   ) {
     const { user } = req;
     const fileName = file.originalname;
