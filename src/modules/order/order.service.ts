@@ -68,7 +68,6 @@ export class OrderService {
     let promoDiscount: Nullable<number> = null;
     if (promoCode) {
       const promo = await this.getPromoDiscount(promoCode);
-      console.log('----promo', promo);
       if (promo.dicountAmount > 0) {
         promoDiscount = promo.dicountAmount;
         discountTotal = promoDiscount;

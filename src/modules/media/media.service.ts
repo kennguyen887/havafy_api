@@ -109,10 +109,22 @@ export class MediaService {
     return client;
   }
 
-  async deleteMedia(userId: string, mediaId: string): Promise<void> {
+  async deleteMedia({
+    userId,
+    mediaId,
+    featureId,
+    featureType,
+  }: {
+    userId?: string;
+    mediaId?: string;
+    featureId?: string;
+    featureType?: FeatureType;
+  }): Promise<void> {
     const media = await this.mediaRepository.findOneBy({
       id: mediaId,
       userId,
+      featureId,
+      featureType,
     });
 
     if (!media) {

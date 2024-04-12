@@ -7,7 +7,7 @@ export class DeleteTaskCommand {
 }
 
 @CommandHandler(DeleteTaskCommand)
-export class CreateTaskCommandHandler
+export class DeleteTaskCommandHandler
   implements ICommandHandler<DeleteTaskCommand>
 {
   constructor(private readonly taskService: TaskService) {}

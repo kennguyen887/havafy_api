@@ -1,5 +1,4 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { plainToInstance } from 'class-transformer';
 import { GetCommentListResponseDto, GetCommentListQueryDto } from '../dto';
 import { CommentService } from '../comment.service';
 

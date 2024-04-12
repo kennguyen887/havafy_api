@@ -3,11 +3,14 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { CommentService } from '../comment.service';
 
 export class DeleteCommentCommand {
-  constructor(public readonly userId: string, public readonly commentId: string) {}
+  constructor(
+    public readonly userId: string,
+    public readonly commentId: string,
+  ) {}
 }
 
 @CommandHandler(DeleteCommentCommand)
-export class CreateCommentCommandHandler
+export class DeleteCommentCommandHandler
   implements ICommandHandler<DeleteCommentCommand>
 {
   constructor(private readonly commentService: CommentService) {}

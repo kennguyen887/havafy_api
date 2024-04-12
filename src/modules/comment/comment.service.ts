@@ -49,6 +49,7 @@ export class CommentService {
       userId,
     });
   }
+
   async getList(
     userId: string,
     query: GetCommentListQueryDto,

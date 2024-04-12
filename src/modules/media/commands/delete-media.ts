@@ -18,6 +18,6 @@ export class DeleteMediaCommandHandler
   async execute(command: DeleteMediaCommand): Promise<void> {
     const { mediaId, userId } = command;
 
-    return this.mediaService.deleteMedia(userId, mediaId);
+    return this.mediaService.deleteMedia({ userId, mediaId });
   }
 }
