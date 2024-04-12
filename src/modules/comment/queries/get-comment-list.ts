@@ -4,19 +4,21 @@ import { GetCommentListResponseDto, GetCommentListQueryDto } from '../dto';
 import { CommentService } from '../comment.service';
 
 export class GetCommentListQuery {
-  constructor(public readonly parameters: GetCommentListQueryDto) {}
+  constructor(
+    public readonly userId: string,
+    public readonly parameters: GetCommentListQueryDto,
+  ) {}
 }
 
 @QueryHandler(GetCommentListQuery)
 export class GetCommentListQueryHandler
   implements IQueryHandler<GetCommentListQuery>
 {
-  constructor(private readonly productService: CommentService) {}
+  constructor(private readonly commentService: CommentService) {}
 
   async execute(
     query: GetCommentListQuery,
   ): Promise<GetCommentListResponseDto> {
-    const { parameters } = query;
-    return plainToInstance(GetCommentListResponseDto, parameters);
+    return this.commentService.getList(query.userId, query.parameters);
   }
 }

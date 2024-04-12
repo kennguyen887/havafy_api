@@ -9,7 +9,11 @@ import {
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ApiTags } from '@nestjs/swagger';
-import { GetCommentListQueryDto, CreateCommentReqDto } from './dto';
+import {
+  GetCommentListQueryDto,
+  CreateCommentReqDto,
+  GetCommentListResponseDto,
+} from './dto';
 import { GetJwtUserPayloadDto } from '../user/dto';
 import { GetCommentListQuery } from './queries';
 import { CreateCommentCommand } from './commands';
@@ -24,8 +28,12 @@ export class CommentController {
   ) {}
 
   @Get()
-  async list(@Query() query: GetCommentListQueryDto) {
-    return this.queryBus.execute(new GetCommentListQuery(query));
+  @UseGuards(JwtAuthGuard)
+  async list(
+    @Request() req: GetJwtUserPayloadDto,
+    @Query() query: GetCommentListQueryDto,
+  ) {
+    return this.queryBus.execute(new GetCommentListQuery(req.user.id, query));
   }
 
   @Post()
@@ -33,7 +41,7 @@ export class CommentController {
   async createComment(
     @Request() req: GetJwtUserPayloadDto,
     @Body() data: CreateCommentReqDto,
-  ) {
+  ): Promise<GetCommentListResponseDto> {
     const { user } = req;
     return this.commandBus.execute(new CreateCommentCommand(user.id, data));
   }

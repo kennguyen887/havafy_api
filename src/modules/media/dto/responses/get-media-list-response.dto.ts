@@ -5,6 +5,9 @@ import { PaginationResponse } from 'src/global/models';
 @Exclude()
 export class GetMediaResponseDto {
   @Expose()
+  id!: string;
+
+  @Expose()
   title!: Nullable<string>;
 
   @Expose()

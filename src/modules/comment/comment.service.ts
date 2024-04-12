@@ -1,9 +1,15 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CommentEntity, TaskEntity } from 'src/global/entities';
-import { CreateCommentReqDto } from './dto';
+import {
+  CreateCommentReqDto,
+  GetCommentListQueryDto,
+  GetCommentListResponseDto,
+  GetCommentResponseDto,
+} from './dto';
 import { CommentStatus, FeatureType } from 'src/global/models';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class CommentService {
@@ -42,5 +48,40 @@ export class CommentService {
       id: commentId,
       userId,
     });
+  }
+  async getList(
+    userId: string,
+    query: GetCommentListQueryDto,
+  ): Promise<GetCommentListResponseDto> {
+    const { featureIds, featureTypes, offset, limit, pageIndex, pageSize } =
+      query;
+    const [items, total] = await this.commentRepository.findAndCount({
+      select: {
+        title: true,
+        description: true,
+        status: true,
+        id: true,
+        featureId: true,
+        featureType: true,
+        attributes: true,
+        createdAt: true,
+      },
+      where: { featureId: In(featureIds), featureType: In(featureTypes) },
+      order: {
+        createdAt: 'DESC',
+      },
+      skip: offset,
+      take: limit,
+      cache: true,
+    });
+
+    return {
+      total,
+      pageIndex,
+      pageSize,
+      data: items.map((item: CommentEntity) =>
+        plainToInstance(GetCommentResponseDto, item),
+      ),
+    };
   }
 }

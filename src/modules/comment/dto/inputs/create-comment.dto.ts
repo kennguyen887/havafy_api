@@ -9,10 +9,6 @@ import {
 import { FeatureType } from 'src/global/models/feature';
 
 export class CreateCommentReqDto {
-  @IsNotEmpty()
-  @IsString()
-  userId!: string;
-
   @IsOptional()
   @IsString()
   @MinLength(30)

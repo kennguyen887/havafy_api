@@ -20,6 +20,7 @@ import { getConfig } from '../services/app-config/configuration';
           password,
           database: dbName,
           autoLoadEntities: true,
+          logging: 'all',
           // namingStrategy: new SnakeNamingStrategy(),
         };
       },

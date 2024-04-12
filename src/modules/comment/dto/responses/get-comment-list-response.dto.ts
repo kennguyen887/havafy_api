@@ -1,36 +1,45 @@
 import { Exclude, Expose, Type } from 'class-transformer';
+import { Nullable } from 'src/global/utils';
+import { PaginationResponse } from 'src/global/models';
 
-export class GetCommentListItemDto {
+@Exclude()
+export class GetCommentResponseDto {
   @Expose()
   id!: string;
 
   @Expose()
-  name!: string;
+  userId!: string;
 
   @Expose()
-  sku!: string;
-
-  @Expose()
-  @Type(() => Number)
-  price!: number;
-
-  @Expose()
-  @Type(() => Number)
-  basePrice!: number;
-
-  @Expose()
-  @Type(() => Number)
-  quantity!: number;
+  title!: Nullable<string>;
 
   @Expose()
   description!: string;
 
   @Expose()
-  thumbnail!: string;
+  url!: string;
+
+  @Expose()
+  featureId!: string;
+
+  @Expose()
+  featureType!: string;
+
+  @Expose()
+  status!: string;
+
+  @Expose()
+  createdAt!: string;
 }
 
 @Exclude()
-export class GetCommentListResponseDto {
+export class GetCommentListResponseDto extends PaginationResponse {
+  constructor(data: GetCommentResponseDto[], pagination: PaginationResponse) {
+    super(pagination);
+    this.data = data;
+  }
+
   @Expose()
-  data!: GetCommentListItemDto[];
+  @Type(() => GetCommentResponseDto)
+  public data: GetCommentResponseDto[] = [];
 }
