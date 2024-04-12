@@ -1,14 +1,14 @@
 import { Entity, Index, Column, ManyToOne } from 'typeorm';
 import { ProductAttribute } from '../models';
 import { OrderEntity } from './order.entity';
-import { IdentityEntity } from './base.entity';
+import { BaseEntity } from './base.entity';
 
 import { Nullable } from 'src/global/utils';
 
 @Entity({
   name: 'order_items',
 })
-export class OrderItemEntity extends IdentityEntity {
+export class OrderItemEntity extends BaseEntity {
   constructor(partial: Partial<OrderItemEntity>) {
     super();
     Object.assign(this, partial);

@@ -7,14 +7,14 @@ import {
   PaymentStatus,
   ShippingMethod,
 } from '../models';
-import { IdentityEntity } from './base.entity';
+import { BaseEntity } from './base.entity';
 
 import { Nullable } from 'src/global/utils';
 
 @Entity({
   name: 'orders',
 })
-export class OrderEntity extends IdentityEntity {
+export class OrderEntity extends BaseEntity {
   constructor(partial: Partial<OrderEntity>) {
     super();
     Object.assign(this, partial);

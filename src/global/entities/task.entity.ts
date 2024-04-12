@@ -1,13 +1,13 @@
 import { Entity, Index, Column, ManyToOne } from 'typeorm';
 import { TaskStatus, DoneType, TaskCurrency } from '../models';
 import { Nullable } from 'src/global/utils/types';
-import { IdentityEntity } from './base.entity';
+import { BaseEntity } from './base.entity';
 import { UserEntity } from './user.entity';
 
 @Entity({
   name: 'tasks',
 })
-export class TaskEntity extends IdentityEntity {
+export class TaskEntity extends BaseEntity {
   constructor(partial: Partial<TaskEntity>) {
     super();
     Object.assign(this, partial);

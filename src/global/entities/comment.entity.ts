@@ -1,13 +1,13 @@
 import { Entity, Index, Column, ManyToOne } from 'typeorm';
 import { CommentStatus, FeatureType } from '../models';
-import { IdentityEntity } from './base.entity';
+import { BaseEntity } from './base.entity';
 import { Nullable } from 'src/global/utils';
 import { UserEntity } from './user.entity';
 
 @Entity({
   name: 'comments',
 })
-export class CommentEntity extends IdentityEntity {
+export class CommentEntity extends BaseEntity {
   constructor(partial: Partial<CommentEntity>) {
     super();
     Object.assign(this, partial);

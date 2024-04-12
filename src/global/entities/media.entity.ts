@@ -1,13 +1,13 @@
 import { Entity, Index, Column, ManyToOne } from 'typeorm';
 import { MediaStatus, FeatureType } from '../models';
-import { IdentityEntity } from './base.entity';
+import { BaseEntity } from './base.entity';
 import { Nullable } from 'src/global/utils/types';
 import { UserEntity } from './user.entity';
 
 @Entity({
   name: 'media',
 })
-export class MediaEntity extends IdentityEntity {
+export class MediaEntity extends BaseEntity {
   constructor(partial: Partial<MediaEntity>) {
     super();
     Object.assign(this, partial);

@@ -20,7 +20,6 @@ import {
   GetMediaResponseDto,
 } from './dto';
 import { plainToInstance } from 'class-transformer';
-import { title } from 'process';
 
 @Injectable()
 export class MediaService {
@@ -139,35 +138,34 @@ export class MediaService {
     userId: string,
     query: GetMediaListQueryDto,
   ): Promise<GetMediaListResponseDto> {
-    const { featureIds, featureType, offset, limit, pageIndex, pageSize } =
+    const { featureIds, featureTypes, offset, limit, pageIndex, pageSize } =
       query;
-    const [items, total] = await this.mediaRepository.find({
-      select: ['id'],
-      where: { featureId: In(featureIds || []) },
+    const [items, total] = await this.mediaRepository.findAndCount({
+      select: {
+        title: true,
+        url: true,
+        status: true,
+        id: true,
+        featureId: true,
+        featureType: true,
+        createdAt: true,
+      },
+      where: { featureId: In(featureIds), featureType: In(featureTypes) },
+      order: {
+        createdAt: 'DESC',
+      },
+      skip: offset,
+      take: limit,
+      cache: true,
     });
-    // .createQueryBuilder('media')
-    // .andWhere('media.userId = :userId', { userId })
-    // .andWhere('media.featureId IN (:...featureIds)', { featureIds })
-    // .andWhere('media.featureType = :featureType ', { featureType })
-    // // .select([
-    // //   'media.id',
-    // //   'media.title',
-    // //   'media.url',
-    // //   'media.status',
-    // //   'media.featureId',
-    // //   'media.featureType',
-    // //   'media.createdAt',
-    // // ])
-    // .orderBy('media.createdAt', 'DESC')
-    // .offset(offset)
-    // .limit(limit)
-    // .getManyAndCount();
 
     return {
       total,
       pageIndex,
       pageSize,
-      data: items.map((item) => plainToInstance(GetMediaResponseDto, item)),
+      data: items.map((item: MediaEntity) =>
+        plainToInstance(GetMediaResponseDto, item),
+      ),
     };
   }
 }

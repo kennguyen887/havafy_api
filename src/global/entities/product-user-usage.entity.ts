@@ -8,13 +8,13 @@ import {
 } from 'typeorm';
 import { ProductType, ProductUsageType } from '../models';
 import { UserEntity } from './user.entity';
-import { IdentityEntity } from './base.entity';
+import { BaseEntity } from './base.entity';
 import { Nullable } from 'src/global/utils/types';
 
 @Entity({
   name: 'product_user_usage',
 })
-export class ProductUserUsageEntity extends IdentityEntity {
+export class ProductUserUsageEntity extends BaseEntity {
   constructor(partial: Partial<ProductUserUsageEntity>) {
     super();
     Object.assign(this, partial);

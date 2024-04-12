@@ -1,12 +1,12 @@
 import { Entity, Index, Column } from 'typeorm';
 import { ProductStatus, ProductType, ProductAttribute } from '../models';
 import { Nullable } from 'src/global/utils/types';
-import { IdentityEntity } from './base.entity';
+import { BaseEntity } from './base.entity';
 
 @Entity({
   name: 'products',
 })
-export class ProductEntity extends IdentityEntity {
+export class ProductEntity extends BaseEntity {
   constructor(partial: Partial<ProductEntity>) {
     super();
     Object.assign(this, partial);

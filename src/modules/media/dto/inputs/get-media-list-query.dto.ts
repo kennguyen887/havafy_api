@@ -17,9 +17,14 @@ export class GetMediaListQueryDto extends BaseQueryDto {
   @Transform(({ value }) =>
     typeof value === 'string' ? value.split(',') : value || [],
   )
-  featureIds?: string[];
+  featureIds!: string[];
 
   @IsNotEmpty()
-  @IsEnum(FeatureType)
-  featureType!: FeatureType;
+  @IsArray()
+  @IsEnum(FeatureType, { each: true })
+  @MaxLength(36, { each: true })
+  @Transform(({ value }) =>
+    typeof value === 'string' ? value.split(',') : value || [],
+  )
+  featureTypes!: FeatureType[];
 }

@@ -1,12 +1,12 @@
 import { Entity, Index, Column, ManyToOne } from 'typeorm';
 import { ProductType, ProductUsageType } from '../models';
 import { UserEntity } from './user.entity';
-import { IdentityEntity } from './base.entity';
+import { BaseEntity } from './base.entity';
 
 @Entity({
   name: 'product_user_remain',
 })
-export class ProductUserRemainEntity extends IdentityEntity {
+export class ProductUserRemainEntity extends BaseEntity {
   constructor(partial: Partial<ProductUserRemainEntity>) {
     super();
     Object.assign(this, partial);
