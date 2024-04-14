@@ -31,12 +31,8 @@ export class CommentController {
   ) {}
 
   @Get()
-  @UseGuards(JwtAuthGuard)
-  async list(
-    @Request() req: GetJwtUserPayloadDto,
-    @Query() query: GetCommentListQueryDto,
-  ) {
-    return this.queryBus.execute(new GetCommentListQuery(req.user.id, query));
+  async list(@Query() query: GetCommentListQueryDto) {
+    return this.queryBus.execute(new GetCommentListQuery(query));
   }
 
   @Post()

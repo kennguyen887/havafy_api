@@ -3,10 +3,7 @@ import { GetCommentListResponseDto, GetCommentListQueryDto } from '../dto';
 import { CommentService } from '../comment.service';
 
 export class GetCommentListQuery {
-  constructor(
-    public readonly userId: string,
-    public readonly parameters: GetCommentListQueryDto,
-  ) {}
+  constructor(public readonly parameters: GetCommentListQueryDto) {}
 }
 
 @QueryHandler(GetCommentListQuery)
@@ -18,6 +15,6 @@ export class GetCommentListQueryHandler
   async execute(
     query: GetCommentListQuery,
   ): Promise<GetCommentListResponseDto> {
-    return this.commentService.getList(query.userId, query.parameters);
+    return this.commentService.getList(query.parameters);
   }
 }

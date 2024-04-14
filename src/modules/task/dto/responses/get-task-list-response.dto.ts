@@ -1,4 +1,6 @@
 import { Exclude, Expose, Type } from 'class-transformer';
+import { TaskAttributes } from 'src/global/models';
+import { PaginationResponse } from 'src/global/models';
 
 export class GetTaskListItemDto {
   @Expose()
@@ -26,11 +28,19 @@ export class GetTaskListItemDto {
   description!: string;
 
   @Expose()
+  attributes!: TaskAttributes;
+
+  @Expose()
   thumbnail!: string;
 }
 
 @Exclude()
-export class GetTaskListResponseDto {
+export class GetTaskListResponseDto extends PaginationResponse {
+  constructor(data: GetTaskListItemDto[], pagination: PaginationResponse) {
+    super(pagination);
+    this.data = data;
+  }
+
   @Expose()
   data!: GetTaskListItemDto[];
 }

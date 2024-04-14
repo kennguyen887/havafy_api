@@ -6,7 +6,7 @@ import {
   MinLength,
   MaxLength,
 } from 'class-validator';
-import { FeatureType } from 'src/global/models/feature';
+import { FeatureType } from 'src/global/models';
 
 export class CreateCommentReqDto {
   @IsOptional()

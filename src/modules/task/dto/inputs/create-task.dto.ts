@@ -7,7 +7,7 @@ import {
   IsOptional,
   MinLength,
 } from 'class-validator';
-import { DoneType, TaskCurrency } from 'src/global/models';
+import { DoneType, TaskCurrency, TaskAttributes } from 'src/global/models';
 
 export class CreateTaskReqDto {
   @IsNotEmpty()
@@ -24,7 +24,7 @@ export class CreateTaskReqDto {
   @IsInt()
   budget!: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   location!: string;
 
@@ -39,6 +39,10 @@ export class CreateTaskReqDto {
   @IsOptional()
   @IsISO8601({ strict: true })
   publishedAt?: string;
+
+  @IsOptional()
+  @IsEnum(TaskAttributes)
+  attributies?: TaskAttributes;
 
   @IsOptional()
   @IsEnum(DoneType)

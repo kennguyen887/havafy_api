@@ -2,8 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TaskEntity } from 'src/global/entities/task.entity';
-import { CreateTaskReqDto } from './dto';
+import {
+  CreateTaskReqDto,
+  GetTaskListResponseDto,
+  GetTaskListQueryDto,
+  GetTaskListItemDto,
+} from './dto';
 import { MediaService } from '../media/media.service';
+import { plainToInstance } from 'class-transformer';
 import { TaskStatus, TaskCurrency, FeatureType } from 'src/global/models';
 @Injectable()
 export class TaskService {
@@ -33,5 +39,36 @@ export class TaskService {
       featureId: taskId,
       featureType: FeatureType.TASK,
     });
+  }
+
+  async getList(query: GetTaskListQueryDto): Promise<GetTaskListResponseDto> {
+    const { workplaceTypes, jobTypes, offset, limit, pageIndex, pageSize } =
+      query;
+    const [items, total] = await this.taskRepository.findAndCount({
+      select: {
+        title: true,
+        description: true,
+        status: true,
+        id: true,
+        attributes: true,
+        createdAt: true,
+      },
+      where: {},
+      order: {
+        createdAt: 'DESC',
+      },
+      skip: offset,
+      take: limit,
+      cache: true,
+    });
+
+    return {
+      total,
+      pageIndex,
+      pageSize,
+      data: items.map((item: TaskEntity) =>
+        plainToInstance(GetTaskListItemDto, item),
+      ),
+    };
   }
 }

@@ -51,7 +51,6 @@ export class CommentService {
   }
 
   async getList(
-    userId: string,
     query: GetCommentListQueryDto,
   ): Promise<GetCommentListResponseDto> {
     const { featureIds, featureTypes, offset, limit, pageIndex, pageSize } =
