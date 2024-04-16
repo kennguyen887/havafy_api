@@ -41,7 +41,7 @@ export class OrderItemEntity extends BaseEntity {
   @Column({ type: 'text', nullable: true })
   description!: Nullable<string>;
 
-  @Column({ type: 'json', nullable: true })
+  @Column({ type: 'jsonb', nullable: true })
   attributes!: Nullable<ProductAttribute>;
 
   @ManyToOne(() => OrderEntity, (order) => order.items)

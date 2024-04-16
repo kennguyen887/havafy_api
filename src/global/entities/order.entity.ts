@@ -94,10 +94,10 @@ export class OrderEntity extends BaseEntity {
   })
   paymentStatus!: PaymentStatus;
 
-  @Column({ type: 'json', nullable: true })
+  @Column({ type: 'jsonb', nullable: true })
   shippingAddress!: Record<string, any>;
 
-  @Column({ type: 'json', nullable: true })
+  @Column({ type: 'jsonb', nullable: true })
   paymentAddress!: Record<string, any>;
 
   @Column({
@@ -123,7 +123,7 @@ export class OrderEntity extends BaseEntity {
   @OneToMany(() => OrderItemEntity, (orderItem) => orderItem.order)
   items!: OrderItemEntity[];
 
-  @Column({ type: 'json', nullable: true })
+  @Column({ type: 'jsonb', nullable: true })
   attributes!: Record<string, any>;
 
   @ManyToOne(() => UserEntity, (user) => user.orders)

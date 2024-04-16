@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { Repository, In, JsonContains } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TaskEntity } from 'src/global/entities/task.entity';
 import {
@@ -10,7 +10,12 @@ import {
 } from './dto';
 import { MediaService } from '../media/media.service';
 import { plainToInstance } from 'class-transformer';
-import { TaskStatus, TaskCurrency, FeatureType } from 'src/global/models';
+import {
+  TaskStatus,
+  TaskCurrency,
+  FeatureType,
+  DoneType,
+} from 'src/global/models';
 @Injectable()
 export class TaskService {
   constructor(
@@ -21,12 +26,18 @@ export class TaskService {
 
   async createTask(userId: string, data: CreateTaskReqDto): Promise<void> {
     const { currency = TaskCurrency.VND } = data;
-    await this.taskRepository.save({
-      ...data,
-      status: TaskStatus.FOR_REVIEW,
-      currency,
-      userId,
-    });
+    await this.taskRepository.insert(
+      new TaskEntity({
+        ...data,
+        status: TaskStatus.ACTIVE,
+        doneType: DoneType.FLEXIABLE,
+        doneAt: null,
+        publishedAt: null,
+        attributes: data.attributies,
+        currency,
+        userId,
+      }),
+    );
   }
 
   async deleteTask(userId: string, taskId: string): Promise<void> {
@@ -42,18 +53,52 @@ export class TaskService {
   }
 
   async getList(query: GetTaskListQueryDto): Promise<GetTaskListResponseDto> {
-    const { workplaceTypes, jobTypes, offset, limit, pageIndex, pageSize } =
-      query;
+    const {
+      locations,
+      workplaceType,
+      skills,
+      tags,
+      jobType,
+      offset,
+      limit,
+      pageIndex,
+      pageSize,
+    } = query;
+    let attributes = null;
+
+    if (jobType) {
+      attributes = { jobType };
+    }
+
+    if (workplaceType) {
+      attributes = { ...attributes, workplaceType };
+    }
+
+    if (tags?.length) {
+      attributes = { ...attributes, tags };
+    }
+
+    if (skills?.length) {
+      attributes = { ...attributes, skills };
+    }
+
     const [items, total] = await this.taskRepository.findAndCount({
-      select: {
-        title: true,
-        description: true,
-        status: true,
-        id: true,
-        attributes: true,
-        createdAt: true,
+      select: [
+        'id',
+        'userId',
+        'title',
+        'description',
+        'createdAt',
+        'budget',
+        'currency',
+        'status',
+        'attributes',
+      ],
+      where: {
+        status: TaskStatus.ACTIVE,
+        location: locations ? In(locations) : undefined,
+        attributes: attributes ? JsonContains(attributes) : undefined,
       },
-      where: {},
       order: {
         createdAt: 'DESC',
       },

@@ -32,7 +32,7 @@ export class CommentEntity extends BaseEntity {
   @Column({ type: 'uuid' })
   featureId!: string;
 
-  @Column({ type: 'json', nullable: true })
+  @Column({ type: 'jsonb', nullable: true })
   attributes!: Nullable<any>;
 
   @ManyToOne(() => UserEntity, (user) => user.orders)

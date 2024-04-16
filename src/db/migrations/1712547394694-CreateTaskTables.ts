@@ -63,7 +63,7 @@ export class CreateTaskTables1712547394694 implements MigrationInterface {
           },
           {
             name: 'attributes',
-            type: 'json',
+            type: 'jsonb',
             isNullable: true,
           },
           {
@@ -135,7 +135,7 @@ export class CreateTaskTables1712547394694 implements MigrationInterface {
           },
           {
             name: 'attributes',
-            type: 'json',
+            type: 'jsonb',
             isNullable: true,
           },
           {
@@ -195,7 +195,7 @@ export class CreateTaskTables1712547394694 implements MigrationInterface {
           },
           {
             name: 'attributes',
-            type: 'json',
+            type: 'jsonb',
             isNullable: true,
           },
           {

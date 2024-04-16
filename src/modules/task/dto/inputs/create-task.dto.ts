@@ -6,7 +6,10 @@ import {
   IsISO8601,
   IsOptional,
   MinLength,
+  IsObject,
+  ValidateNested,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 import { DoneType, TaskCurrency, TaskAttributes } from 'src/global/models';
 
 export class CreateTaskReqDto {
@@ -41,7 +44,9 @@ export class CreateTaskReqDto {
   publishedAt?: string;
 
   @IsOptional()
-  @IsEnum(TaskAttributes)
+  @IsObject()
+  @ValidateNested()
+  @Type(() => TaskAttributes)
   attributies?: TaskAttributes;
 
   @IsOptional()

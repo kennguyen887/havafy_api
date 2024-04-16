@@ -44,10 +44,10 @@ export class ProductUserUsageEntity extends BaseEntity {
   @Column({ default: 0, type: 'int' })
   usageAmount!: number;
 
-  @Column({ type: 'json', nullable: true })
+  @Column({ type: 'jsonb', nullable: true })
   payloadRequest!: Nullable<object>;
 
-  @Column({ type: 'json', nullable: true })
+  @Column({ type: 'jsonb', nullable: true })
   outputResult!: Nullable<object>;
 
   @CreateDateColumn({

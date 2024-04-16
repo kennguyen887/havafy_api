@@ -1,5 +1,5 @@
 import { Exclude, Expose, Type } from 'class-transformer';
-import { TaskAttributes } from 'src/global/models';
+import { TaskAttributes, TaskStatus } from 'src/global/models';
 import { PaginationResponse } from 'src/global/models';
 
 export class GetTaskListItemDto {
@@ -7,10 +7,13 @@ export class GetTaskListItemDto {
   id!: string;
 
   @Expose()
-  name!: string;
+  userId!: string;
 
   @Expose()
-  sku!: string;
+  title!: string;
+
+  @Expose()
+  description!: string;
 
   @Expose()
   @Type(() => Number)
@@ -18,20 +21,16 @@ export class GetTaskListItemDto {
 
   @Expose()
   @Type(() => Number)
-  basePrice!: number;
+  budget!: number;
 
   @Expose()
-  @Type(() => Number)
-  quantity!: number;
+  status!: TaskStatus;
 
   @Expose()
-  description!: string;
+  currency!: string;
 
   @Expose()
   attributes!: TaskAttributes;
-
-  @Expose()
-  thumbnail!: string;
 }
 
 @Exclude()

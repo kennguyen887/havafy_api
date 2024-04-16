@@ -44,7 +44,7 @@ export class TaskEntity extends BaseEntity {
   @Column({ type: 'timestamp', nullable: true })
   publishedAt!: Nullable<Date>;
 
-  @Column({ type: 'json', nullable: true })
+  @Column({ type: 'jsonb', nullable: true })
   attributes!: Nullable<any>;
 
   @ManyToOne(() => UserEntity, (user) => user.orders)

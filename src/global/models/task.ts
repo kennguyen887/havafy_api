@@ -1,3 +1,11 @@
+import {
+  IsString,
+  IsEnum,
+  IsOptional,
+  IsArray,
+  MaxLength,
+} from 'class-validator';
+
 export enum TaskStatus {
   DRAFT = 'draft',
   FOR_REVIEW = 'for_review',
@@ -40,15 +48,32 @@ export enum TaskWorkingShedule {
 }
 
 export class TaskAttributes {
+  @IsOptional()
+  @IsEnum(TaskWorkingShedule)
   workingShedule?: TaskWorkingShedule;
 
+  @IsOptional()
+  @IsString()
+  @MaxLength(50)
   companyName?: string;
 
+  @IsOptional()
+  @IsEnum(TaskJobType)
   jobType?: TaskJobType;
 
+  @IsOptional()
+  @IsEnum(TaskWorkplaceType)
   workplaceType?: TaskWorkplaceType;
 
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  @MaxLength(32, { each: true })
   tags?: string[];
 
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  @MaxLength(32, { each: true })
   skills?: string[];
 }

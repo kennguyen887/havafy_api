@@ -11,10 +11,10 @@ export class GetTaskListQuery {
 export class GetTaskListQueryHandler
   implements IQueryHandler<GetTaskListQuery>
 {
-  constructor(private readonly productService: TaskService) {}
+  constructor(private readonly taskService: TaskService) {}
 
   async execute(query: GetTaskListQuery): Promise<GetTaskListResponseDto> {
     const { parameters } = query;
-    return plainToInstance(GetTaskListResponseDto, parameters);
+    return this.taskService.getList(parameters);
   }
 }

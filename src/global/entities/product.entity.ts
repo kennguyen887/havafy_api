@@ -62,6 +62,6 @@ export class ProductEntity extends BaseEntity {
   @Column({ type: 'boolean', default: false })
   isHidden!: boolean;
 
-  @Column({ type: 'json', nullable: true })
+  @Column({ type: 'jsonb', nullable: true })
   attributes!: Nullable<ProductAttribute>;
 }

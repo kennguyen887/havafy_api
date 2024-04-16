@@ -32,7 +32,7 @@ export class MediaEntity extends BaseEntity {
   @Column({ type: 'varchar', length: 50, default: MediaStatus.DRAFT })
   status!: MediaStatus;
 
-  @Column({ type: 'json', nullable: true })
+  @Column({ type: 'jsonb', nullable: true })
   attributes!: Nullable<any>;
 
   @ManyToOne(() => UserEntity, (user) => user.orders)
