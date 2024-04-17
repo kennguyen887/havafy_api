@@ -92,6 +92,9 @@ export class TaskService {
         'budget',
         'currency',
         'status',
+        'doneAt',
+        'doneType',
+        'location',
         'attributes',
       ],
       where: {
@@ -104,7 +107,7 @@ export class TaskService {
       },
       skip: offset,
       take: limit,
-      cache: true,
+      // cache: true,
     });
 
     return {

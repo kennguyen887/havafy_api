@@ -1,6 +1,7 @@
 import { Exclude, Expose, Type } from 'class-transformer';
-import { TaskAttributes, TaskStatus } from 'src/global/models';
+import { TaskAttributes, TaskStatus, DoneType } from 'src/global/models';
 import { PaginationResponse } from 'src/global/models';
+import { Nullable } from 'src/global/utils';
 
 export class GetTaskListItemDto {
   @Expose()
@@ -25,6 +26,15 @@ export class GetTaskListItemDto {
 
   @Expose()
   status!: TaskStatus;
+
+  @Expose()
+  doneAt!: Nullable<Date>;
+
+  @Expose()
+  doneType!: Nullable<DoneType>;
+
+  @Expose()
+  location!: Nullable<string>;
 
   @Expose()
   currency!: string;
