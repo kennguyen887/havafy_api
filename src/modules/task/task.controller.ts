@@ -13,7 +13,7 @@ import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ApiTags } from '@nestjs/swagger';
 import { GetTaskListQueryDto, CreateTaskReqDto } from './dto';
 import { GetJwtUserPayloadDto } from '../user/dto';
-import { GetTaskListQuery } from './queries';
+import { GetTaskListQuery, GetTaskDetailQuery } from './queries';
 import { CreateTaskCommand, DeleteTaskCommand } from './commands';
 import { JwtAuthGuard } from '../user/guards/jwt-auth/jwt-auth.guard';
 import { IdUUIDParams } from 'src/global/utils';
@@ -29,6 +29,11 @@ export class TaskController {
   @Get()
   async list(@Query() query: GetTaskListQueryDto) {
     return this.queryBus.execute(new GetTaskListQuery(query));
+  }
+
+  @Get(':id')
+  async getDetail(@Param() params: IdUUIDParams) {
+    return this.queryBus.execute(new GetTaskDetailQuery(params.id));
   }
 
   @Post()

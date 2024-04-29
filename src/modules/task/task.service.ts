@@ -52,6 +52,16 @@ export class TaskService {
     });
   }
 
+  async getTask(id: string): Promise<GetTaskListItemDto> {
+    const task = await this.taskRepository.findOne({
+      where: {
+        status: TaskStatus.ACTIVE,
+        id,
+      },
+    });
+    return plainToInstance(GetTaskListItemDto, task);
+  }
+
   async getList(query: GetTaskListQueryDto): Promise<GetTaskListResponseDto> {
     const {
       locations,

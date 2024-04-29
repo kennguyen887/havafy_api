@@ -1,5 +1,4 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { plainToInstance } from 'class-transformer';
 import { GetTaskListResponseDto, GetTaskListQueryDto } from '../dto';
 import { TaskService } from '../task.service';
 
