@@ -13,3 +13,4 @@ export * from './feature';
 export * from './queue-jobs';
 export * from './pagination-response.dto';
 export * from './base-query.dto';
+export * from './item';

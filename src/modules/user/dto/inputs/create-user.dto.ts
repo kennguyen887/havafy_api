@@ -12,11 +12,11 @@ import { IsValidPassword } from 'src/global/decorators';
 export class CreateUserDto {
   @IsString()
   @IsOptional()
-  firstName!: string;
+  firstName?: string;
 
   @IsString()
   @IsOptional()
-  lastName!: string;
+  lastName?: string;
 
   @IsEmail()
   email!: string;

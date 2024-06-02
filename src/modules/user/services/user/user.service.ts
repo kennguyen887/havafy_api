@@ -37,8 +37,8 @@ export class UserService {
   async createUser(userDto: CreateUserDto): Promise<UserEntity> {
     const userPayload = {
       email: userDto.email.toLowerCase(),
-      firstName: userDto.firstName,
-      lastName: userDto.lastName,
+      firstName: userDto.firstName ?? null,
+      lastName: userDto.lastName ?? null,
       passwordHash: await this.passwordService.generate(userDto.password),
     };
 

@@ -19,6 +19,7 @@ import { ProductUsageModule } from './modules/product-usage/product-usage.module
 import { TaskModule } from './modules/task/task.module';
 import { CommentModule } from './modules/comment/comment.module';
 import { MediaModule } from './modules/media/media.module';
+import { ItemModule } from './modules/item/item.module';
 
 @Module({
   imports: [
@@ -58,6 +59,7 @@ import { MediaModule } from './modules/media/media.module';
     TaskModule,
     CommentModule,
     MediaModule,
+    ItemModule,
   ],
 })
 export class AppModule {

@@ -3,4 +3,5 @@ export enum FeatureType {
   TASK = 'task',
   ORDER = 'order',
   COMMENT = 'comment',
+  ITEM = 'item',
 }

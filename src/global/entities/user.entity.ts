@@ -5,6 +5,7 @@ import { CommentEntity } from './comment.entity';
 import { ProductUserRemainEntity } from './product-user-remain.entity';
 import { ProductUserUsageEntity } from './product-user-usage.entity';
 import { IdentityEntity } from './base.entity';
+import { Nullable } from 'src/global/utils/types';
 
 @Entity({
   name: 'users',
@@ -22,13 +23,15 @@ export class UserEntity extends IdentityEntity {
 
   @Column({
     type: 'varchar',
+    nullable: true,
   })
-  firstName!: string;
+  firstName!: Nullable<string>;
 
   @Column({
     type: 'varchar',
+    nullable: true,
   })
-  lastName!: string;
+  lastName!: Nullable<string>;
 
   @Column({
     type: 'varchar',
