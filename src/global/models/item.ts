@@ -17,6 +17,7 @@ export enum ItemType {
 }
 
 export class ItemAttributes {
+  @IsOptional()
   @IsArray()
   @IsString({ each: true })
   @MaxLength(32, { each: true })

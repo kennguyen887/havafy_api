@@ -1,6 +1,6 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-import { CreateItemReqDto } from '../dto';
+import { CreateItemReqDto, CreateItemResponseDto } from '../dto';
 import { ItemService } from '../item.service';
 import { Nullable } from 'src/global/utils/types';
 
@@ -17,9 +17,8 @@ export class CreateItemCommandHandler
 {
   constructor(private readonly itemService: ItemService) {}
 
-  async execute(command: CreateItemCommand): Promise<void> {
+  async execute(command: CreateItemCommand): Promise<CreateItemResponseDto> {
     const { data, userId } = command;
-
     return this.itemService.createItem(userId, data);
   }
 }

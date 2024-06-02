@@ -1,12 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { Repository, JsonContains } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { v4 as uuid } from 'uuid';
 import { ItemEntity } from 'src/global/entities';
 import {
   CreateItemReqDto,
   GetItemListResponseDto,
   GetItemListQueryDto,
   GetItemListItemDto,
+  CreateItemResponseDto,
 } from './dto';
 import { MediaService } from '../media/media.service';
 import { plainToInstance } from 'class-transformer';
@@ -24,15 +26,18 @@ export class ItemService {
   async createItem(
     userId: Nullable<string>,
     data: CreateItemReqDto,
-  ): Promise<void> {
+  ): Promise<CreateItemResponseDto> {
+    const id = uuid();
     await this.itemRepository.insert(
       new ItemEntity({
         ...data,
         status: ItemStatus.ACTIVE,
         attributes: data.attributies,
         userId,
+        id,
       }),
     );
+    return { id };
   }
 
   async deleteItem(userId: string, itemId: string): Promise<void> {
