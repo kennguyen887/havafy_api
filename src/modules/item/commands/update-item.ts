@@ -1,24 +1,24 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-import { CreateItemReqDto, CreateItemResponseDto } from '../dto';
+import { UpdateItemReqDto, CreateItemResponseDto } from '../dto';
 import { ItemService } from '../item.service';
-import { Nullable } from 'src/global/utils/types';
 
-export class CreateItemCommand {
+export class UpdateItemCommand {
   constructor(
-    public readonly userId: Nullable<string>,
-    public readonly data: CreateItemReqDto,
+    public readonly id: string,
+    public readonly data: UpdateItemReqDto,
   ) {}
 }
 
-@CommandHandler(CreateItemCommand)
-export class CreateItemCommandHandler
-  implements ICommandHandler<CreateItemCommand>
+@CommandHandler(UpdateItemCommand)
+export class UpdateItemCommandHandler
+  implements ICommandHandler<UpdateItemCommand>
 {
   constructor(private readonly itemService: ItemService) {}
 
-  async execute(command: CreateItemCommand): Promise<CreateItemResponseDto> {
-    const { data, userId } = command;
-    return this.itemService.createItem(userId, data);
+  async execute(command: UpdateItemCommand): Promise<CreateItemResponseDto> {
+    const { id, data } = command;
+
+    return this.itemService.updateItem(id, data);
   }
 }

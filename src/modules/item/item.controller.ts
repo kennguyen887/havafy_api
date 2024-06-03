@@ -14,10 +14,15 @@ import {
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ApiTags } from '@nestjs/swagger';
-import { GetItemListQueryDto, CreateItemReqDto } from './dto';
+import { GetItemListQueryDto, CreateItemReqDto, UpdateItemReqDto } from './dto';
 import { GetJwtUserPayloadDto } from '../user/dto';
 import { GetItemListQuery, GetItemDetailQuery } from './queries';
-import { CreateItemCommand, DeleteItemCommand } from './commands';
+import {
+  CreateItemCommand,
+  DeleteItemCommand,
+  UpdateItemCommand,
+  LinkItemCommand,
+} from './commands';
 import { JwtAuthGuard } from '../user/guards/jwt-auth/jwt-auth.guard';
 import { CaptchaService } from '../../global/services/mail/captcha.service';
 import { IdUUIDParams } from 'src/global/utils';
@@ -32,8 +37,12 @@ export class ItemController {
   ) {}
 
   @Get()
-  async list(@Query() query: GetItemListQueryDto) {
-    return this.queryBus.execute(new GetItemListQuery(query));
+  @UseGuards(JwtAuthGuard)
+  async list(
+    @Query() query: GetItemListQueryDto,
+    @Request() { user }: GetJwtUserPayloadDto,
+  ) {
+    return this.queryBus.execute(new GetItemListQuery(user.id, query));
   }
 
   @Get(':id')
@@ -42,8 +51,26 @@ export class ItemController {
   }
 
   @Put(':id')
-  async linkItem(@Body() data: UpdateItemReqDto) {
-    return this.commandBus.execute(new GetItemDetailQuery(data));
+  @UseGuards(JwtAuthGuard)
+  async updateItem(
+    @Param() params: IdUUIDParams,
+    @Request() req: GetJwtUserPayloadDto,
+    @Body() data: UpdateItemReqDto,
+  ) {
+    const { user } = req;
+    return this.commandBus.execute(
+      new UpdateItemCommand(params.id, { ...data, userId: user.id }),
+    );
+  }
+
+  @Put(':id/link')
+  @UseGuards(JwtAuthGuard)
+  async linkItem(
+    @Param() params: IdUUIDParams,
+    @Request() req: GetJwtUserPayloadDto,
+  ) {
+    const { user } = req;
+    return this.commandBus.execute(new LinkItemCommand(params.id, user.id));
   }
 
   @Post()

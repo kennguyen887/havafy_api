@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Repository, JsonContains } from 'typeorm';
+import { Repository, JsonContains, IsNull } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { v4 as uuid } from 'uuid';
 import { ItemEntity } from 'src/global/entities';
@@ -9,6 +9,7 @@ import {
   GetItemListQueryDto,
   GetItemListItemDto,
   CreateItemResponseDto,
+  UpdateItemReqDto,
 } from './dto';
 import { MediaService } from '../media/media.service';
 import { plainToInstance } from 'class-transformer';
@@ -42,9 +43,22 @@ export class ItemService {
 
   async updateItem(
     id: string,
-    data: CreateItemReqDto,
+    data: UpdateItemReqDto,
   ): Promise<CreateItemResponseDto> {
     await this.itemRepository.update(id, new ItemEntity({ ...data }));
+    return { id };
+  }
+
+  async linkItem(id: string, userId: string): Promise<CreateItemResponseDto> {
+    const item = await this.itemRepository.findOne({
+      where: {
+        userId: IsNull(),
+        id,
+      },
+    });
+    if (item) {
+      await this.itemRepository.update(id, { userId });
+    }
     return { id };
   }
 
@@ -70,7 +84,10 @@ export class ItemService {
     return plainToInstance(GetItemListItemDto, item);
   }
 
-  async getList(query: GetItemListQueryDto): Promise<GetItemListResponseDto> {
+  async getList(
+    userId: string,
+    query: GetItemListQueryDto,
+  ): Promise<GetItemListResponseDto> {
     const { skills, tags, offset, limit, pageIndex, pageSize } = query;
     let attributes = {};
 
@@ -95,6 +112,7 @@ export class ItemService {
       ],
       where: {
         status: ItemStatus.ACTIVE,
+        userId,
         attributes: attributes ? JsonContains(attributes) : undefined,
       },
       order: {

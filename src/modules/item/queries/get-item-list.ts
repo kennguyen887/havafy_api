@@ -3,7 +3,10 @@ import { GetItemListResponseDto, GetItemListQueryDto } from '../dto';
 import { ItemService } from '../item.service';
 
 export class GetItemListQuery {
-  constructor(public readonly parameters: GetItemListQueryDto) {}
+  constructor(
+    public readonly userId: string,
+    public readonly parameters: GetItemListQueryDto,
+  ) {}
 }
 
 @QueryHandler(GetItemListQuery)
@@ -13,7 +16,7 @@ export class GetItemListQueryHandler
   constructor(private readonly itemService: ItemService) {}
 
   async execute(query: GetItemListQuery): Promise<GetItemListResponseDto> {
-    const { parameters } = query;
-    return this.itemService.getList(parameters);
+    const { userId, parameters } = query;
+    return this.itemService.getList(userId, parameters);
   }
 }
