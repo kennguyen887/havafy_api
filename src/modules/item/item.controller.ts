@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Post,
+  Put,
   Body,
   Request,
   UseGuards,
@@ -38,6 +39,11 @@ export class ItemController {
   @Get(':id')
   async getDetail(@Param() params: IdUUIDParams) {
     return this.queryBus.execute(new GetItemDetailQuery(params.id));
+  }
+
+  @Put(':id')
+  async linkItem(@Body() data: UpdateItemReqDto) {
+    return this.commandBus.execute(new GetItemDetailQuery(data));
   }
 
   @Post()

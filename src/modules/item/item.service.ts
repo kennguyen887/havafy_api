@@ -40,6 +40,14 @@ export class ItemService {
     return { id };
   }
 
+  async updateItem(
+    id: string,
+    data: CreateItemReqDto,
+  ): Promise<CreateItemResponseDto> {
+    await this.itemRepository.update(id, new ItemEntity({ ...data }));
+    return { id };
+  }
+
   async deleteItem(userId: string, itemId: string): Promise<void> {
     await this.itemRepository.delete({
       id: itemId,
