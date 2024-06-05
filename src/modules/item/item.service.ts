@@ -74,10 +74,10 @@ export class ItemService {
     });
   }
 
-  async getItem(id: string): Promise<GetItemListItemDto> {
+  async getItem(userId: string, id: string): Promise<GetItemListItemDto> {
     const item = await this.itemRepository.findOne({
       where: {
-        status: ItemStatus.ACTIVE,
+        userId,
         id,
       },
     });

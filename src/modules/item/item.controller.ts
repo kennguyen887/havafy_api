@@ -46,8 +46,12 @@ export class ItemController {
   }
 
   @Get(':id')
-  async getDetail(@Param() params: IdUUIDParams) {
-    return this.queryBus.execute(new GetItemDetailQuery(params.id));
+  @UseGuards(JwtAuthGuard)
+  async getDetail(
+    @Param() params: IdUUIDParams,
+    @Request() { user }: GetJwtUserPayloadDto,
+  ) {
+    return this.queryBus.execute(new GetItemDetailQuery(user.id, params.id));
   }
 
   @Put(':id')
