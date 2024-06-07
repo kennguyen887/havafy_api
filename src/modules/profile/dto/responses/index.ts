@@ -1,2 +1,2 @@
-export * from './get-profile-list-response.dto';
+export * from './get-profile-detail.dto';
 export * from './create-profile-response.dto';

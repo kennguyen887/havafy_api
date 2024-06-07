@@ -1,7 +1,10 @@
-import { GetProfileListQueryHandler } from './get-profile-list';
+import { GetProfileDetailByHirerQueryHandler } from './get-profile-detail-by-hirer';
 import { GetProfileDetailHandler } from './get-profile-detail';
 
-export * from './get-profile-list';
 export * from './get-profile-detail';
+export * from './get-profile-detail-by-hirer';
 
-export const QueryHandlers = [GetProfileListQueryHandler, GetProfileDetailHandler];
+export const QueryHandlers = [
+  GetProfileDetailHandler,
+  GetProfileDetailByHirerQueryHandler,
+];

@@ -1,5 +1,5 @@
 import { Module, forwardRef } from '@nestjs/common';
-import { ItemController } from './profile.controller';
+import { ItemController } from './item.controller';
 import { ItemService } from './item.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CqrsModule } from '@nestjs/cqrs';

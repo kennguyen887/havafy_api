@@ -1,12 +1,12 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { HttpStatus, HttpException } from '@nestjs/common';
 
 import { CreateProfileReqDto, CreateProfileResponseDto } from '../dto';
 import { ProfileService } from '../profile.service';
-import { Nullable } from 'src/global/utils/types';
 
 export class CreateProfileCommand {
   constructor(
-    public readonly userId: Nullable<string>,
+    public readonly userId: string,
     public readonly data: CreateProfileReqDto,
   ) {}
 }
@@ -17,8 +17,19 @@ export class CreateProfileCommandHandler
 {
   constructor(private readonly profileService: ProfileService) {}
 
-  async execute(command: CreateProfileCommand): Promise<CreateProfileResponseDto> {
+  async execute(
+    command: CreateProfileCommand,
+  ): Promise<CreateProfileResponseDto> {
     const { data, userId } = command;
+    const profile = await this.profileService.getProfileByUser(userId);
+
+    if (profile) {
+      throw new HttpException(
+        'Have an profile already.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     return this.profileService.createProfile(userId, data);
   }
 }

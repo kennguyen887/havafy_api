@@ -59,19 +59,19 @@ export class ProfileEntity extends BaseEntity {
   expectedRatePer!: Nullable<ExpectedRatePer>;
 
   @Column({ type: 'jsonb', nullable: true })
-  experience!: Nullable<string>;
+  experience!: Nullable<any>;
 
   @Column({ type: 'jsonb', nullable: true })
-  certifications!: Nullable<string>;
+  certifications!: Nullable<any>;
 
   @Column({ type: 'jsonb', nullable: true })
-  projects!: Nullable<string>;
+  projects!: Nullable<any>;
 
   @Column({ type: 'jsonb', nullable: true })
-  skills!: Nullable<string>;
+  skills!: Nullable<any>;
 
   @Column({ type: 'jsonb', nullable: true })
-  languages!: Nullable<string>;
+  languages!: Nullable<any>;
 
   @Column({ type: 'varchar', length: 50, default: ProfileStatus.DRAFT })
   status!: ProfileStatus;
@@ -80,10 +80,10 @@ export class ProfileEntity extends BaseEntity {
   type!: ProfileType;
 
   @Column({ type: 'jsonb', nullable: true })
-  contact!: Nullable<string>;
+  contact!: Nullable<any>;
 
   @Column({ type: 'jsonb', nullable: true })
-  attributes!: Nullable<string>;
+  attributes!: Nullable<any>;
 
   @ManyToOne(() => UserEntity, (user) => user.profiles)
   user!: UserEntity;

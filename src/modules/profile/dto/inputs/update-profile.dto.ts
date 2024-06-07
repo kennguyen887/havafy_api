@@ -8,6 +8,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+
 import { ProfileAttributes } from 'src/global/models';
 
 export class UpdateProfileReqDto {
@@ -20,7 +21,7 @@ export class UpdateProfileReqDto {
   @IsString()
   @MinLength(3)
   @MaxLength(3000)
-  description?: string;
+  about?: string;
 
   @IsOptional()
   @IsObject()

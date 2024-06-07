@@ -18,11 +18,11 @@ export class CreateProfileReqDto {
   @MaxLength(300)
   title?: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
   @MinLength(3)
   @MaxLength(3000)
-  description?: string;
+  about?: string;
 
   @IsNotEmpty()
   @IsEnum(ProfileType)

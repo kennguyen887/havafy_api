@@ -3,7 +3,10 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ProfileService } from '../profile.service';
 
 export class DeleteProfileCommand {
-  constructor(public readonly userId: string, public readonly profileId: string) {}
+  constructor(
+    public readonly userId: string,
+    public readonly profileId: string,
+  ) {}
 }
 
 @CommandHandler(DeleteProfileCommand)

@@ -1,5 +1,4 @@
 import {
-  Query,
   Controller,
   Get,
   Post,
@@ -14,14 +13,13 @@ import {
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ApiTags } from '@nestjs/swagger';
-import { GetProfileListQueryDto, CreateProfileReqDto, UpdateProfileReqDto } from './dto';
+import { CreateProfileReqDto, UpdateProfileReqDto } from './dto';
 import { GetJwtUserPayloadDto } from '../user/dto';
-import { GetProfileListQuery, GetProfileDetailQuery } from './queries';
+import { GetProfileDetailQuery, GetProfileDetailByHirerQuery } from './queries';
 import {
   CreateProfileCommand,
   DeleteProfileCommand,
   UpdateProfileCommand,
-  LinkProfileCommand,
 } from './commands';
 import { JwtAuthGuard } from '../user/guards/jwt-auth/jwt-auth.guard';
 import { CaptchaService } from '../../global/services/mail/captcha.service';
@@ -38,20 +36,16 @@ export class ProfileController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  async list(
-    @Query() query: GetProfileListQueryDto,
-    @Request() { user }: GetJwtUserPayloadDto,
-  ) {
-    return this.queryBus.execute(new GetProfileListQuery(user.id, query));
+  async getDetail(@Request() { user }: GetJwtUserPayloadDto) {
+    return this.queryBus.execute(new GetProfileDetailQuery(user.id));
   }
 
   @Get(':id')
   @UseGuards(JwtAuthGuard)
-  async getDetail(
-    @Param() params: IdUUIDParams,
-    @Request() { user }: GetJwtUserPayloadDto,
-  ) {
-    return this.queryBus.execute(new GetProfileDetailQuery(user.id, params.id));
+  async getDetailByHirer(@Request() { user }: GetJwtUserPayloadDto) {
+    return this.queryBus.execute(
+      new GetProfileDetailByHirerQuery(user.id, user.id),
+    );
   }
 
   @Put(':id')
@@ -67,25 +61,19 @@ export class ProfileController {
     );
   }
 
-  @Put(':id/link')
-  @UseGuards(JwtAuthGuard)
-  async linkProfile(
-    @Param() params: IdUUIDParams,
-    @Request() req: GetJwtUserPayloadDto,
-  ) {
-    const { user } = req;
-    return this.commandBus.execute(new LinkProfileCommand(params.id, user.id));
-  }
-
   @Post()
-  async createProfile(@Body() data: CreateProfileReqDto) {
+  @UseGuards(JwtAuthGuard)
+  async createProfile(
+    @Body() data: CreateProfileReqDto,
+    @Request() { user }: GetJwtUserPayloadDto,
+  ) {
     const response = await this.captchaService.verifyRecaptcha(data.token);
 
     if (!response.data.success && response.data.score < 0.5) {
       throw new HttpException('Token is invalid.', HttpStatus.UNAUTHORIZED);
     }
 
-    return this.commandBus.execute(new CreateProfileCommand(null, data));
+    return this.commandBus.execute(new CreateProfileCommand(user.id, data));
   }
 
   @Delete(':id')
@@ -95,6 +83,8 @@ export class ProfileController {
     @Param() params: IdUUIDParams,
   ) {
     const { user } = req;
-    return this.commandBus.execute(new DeleteProfileCommand(user.id, params.id));
+    return this.commandBus.execute(
+      new DeleteProfileCommand(user.id, params.id),
+    );
   }
 }

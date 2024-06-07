@@ -6,6 +6,8 @@ import {
   MaxLength,
 } from 'class-validator';
 
+import { WorkplaceType, JobType, WorkingShedule } from './job';
+
 export enum TaskStatus {
   DRAFT = 'draft',
   FOR_REVIEW = 'for_review',
@@ -25,32 +27,10 @@ export enum TaskCurrency {
   SGD = 'SGD',
 }
 
-export enum TaskJobType {
-  FULL_TIME = 'full-time',
-  PART_TIME = 'part-time',
-  CONTRACT = 'contract',
-  TEMPORARY = 'temporary',
-  OTHER = 'other',
-  VOLUNTEER = 'volunteer',
-  INTERNSHIP = 'internship',
-}
-
-export enum TaskWorkplaceType {
-  ON_SITE = 'on-site',
-  HYBRID = 'hybrid',
-  REMOTE = 'remote',
-}
-
-export enum TaskWorkingShedule {
-  MON_TO_FRI = 'mon-to-fri',
-  MON_TO_SAT = 'mon-to-sat',
-  FULL_WEEK = 'full-week',
-}
-
 export class TaskAttributes {
   @IsOptional()
-  @IsEnum(TaskWorkingShedule)
-  workingShedule?: TaskWorkingShedule;
+  @IsEnum(WorkingShedule)
+  workingShedule?: WorkingShedule;
 
   @IsOptional()
   @IsString()
@@ -58,12 +38,12 @@ export class TaskAttributes {
   companyName?: string;
 
   @IsOptional()
-  @IsEnum(TaskJobType)
-  jobType?: TaskJobType;
+  @IsEnum(JobType)
+  jobType?: JobType;
 
   @IsOptional()
-  @IsEnum(TaskWorkplaceType)
-  workplaceType?: TaskWorkplaceType;
+  @IsEnum(WorkplaceType)
+  workplaceType?: WorkplaceType;
 
   @IsOptional()
   @IsArray()

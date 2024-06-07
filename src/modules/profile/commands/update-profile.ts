@@ -1,5 +1,5 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-
+import { HttpStatus, HttpException } from '@nestjs/common';
 import { UpdateProfileReqDto, CreateProfileResponseDto } from '../dto';
 import { ProfileService } from '../profile.service';
 
@@ -16,9 +16,15 @@ export class UpdateProfileCommandHandler
 {
   constructor(private readonly profileService: ProfileService) {}
 
-  async execute(command: UpdateProfileCommand): Promise<CreateProfileResponseDto> {
+  async execute(
+    command: UpdateProfileCommand,
+  ): Promise<CreateProfileResponseDto> {
     const { id, data } = command;
+    const profile = await this.profileService.getProfile(id);
 
+    if (!profile || profile.userId !== data.userId) {
+      throw new HttpException('Profile not found.', HttpStatus.BAD_REQUEST);
+    }
     return this.profileService.updateProfile(id, data);
   }
 }

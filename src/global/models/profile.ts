@@ -1,4 +1,17 @@
-import { IsString, IsOptional, IsArray, MaxLength, IsNotEmpty } from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  IsArray,
+  MaxLength,
+  IsNotEmpty,
+  IsISO8601,
+  ValidateIf,
+  Validate,
+  IsEnum,
+} from 'class-validator';
+import { IsAfterOrTheSameConstraint } from '../decorators/is-after-or-the-same.decorator';
+
+import { JobType } from './job';
 
 export enum ProfileStatus {
   DRAFT = 'draft',
@@ -34,14 +47,30 @@ export class ProfileExperienceItem {
   title!: string;
 
   @IsNotEmpty()
+  @IsEnum(JobType)
+  employmentType!: JobType;
+
+  @IsNotEmpty()
   @IsString()
-  employmentType!: string;
+  description!: string;
+
+  @IsNotEmpty()
+  @IsISO8601(
+    { strict: true },
+    { message: 'startDate must be in YYYY-MM-DD format' },
+  )
+  @MaxLength(10)
+  startDate!: Date;
 
   @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  @MaxLength(32, { each: true })
-  skills?: string[];
+  @IsISO8601(
+    { strict: true },
+    { message: 'endDate must be in YYYY-MM-DD format' },
+  )
+  @MaxLength(10)
+  @ValidateIf((obj) => obj.startDate)
+  @Validate(IsAfterOrTheSameConstraint, ['startDate'])
+  endDate?: Date;
 }
 
 export class ProfileAttributes {
