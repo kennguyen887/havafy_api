@@ -32,6 +32,6 @@ export class ItemEntity extends BaseEntity {
   @Column({ type: 'jsonb', nullable: true })
   attributes!: Nullable<any>;
 
-  @ManyToOne(() => UserEntity, (user) => user.orders)
+  @ManyToOne(() => UserEntity, (user) => user.items)
   user!: UserEntity;
 }

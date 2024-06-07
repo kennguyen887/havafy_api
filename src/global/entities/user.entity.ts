@@ -4,6 +4,8 @@ import { TaskEntity } from './task.entity';
 import { CommentEntity } from './comment.entity';
 import { ProductUserRemainEntity } from './product-user-remain.entity';
 import { ProductUserUsageEntity } from './product-user-usage.entity';
+import { ProfileEntity } from './profile.entity';
+import { ItemEntity } from './item.entity';
 import { IdentityEntity } from './base.entity';
 import { Nullable } from 'src/global/utils/types';
 
@@ -107,4 +109,10 @@ export class UserEntity extends IdentityEntity {
     (productUserUsage) => productUserUsage.user,
   )
   productUserUsage!: ProductUserUsageEntity[];
+
+  @OneToMany(() => ItemEntity, (item) => item.user)
+  items!: ItemEntity[];
+
+  @OneToMany(() => ProfileEntity, (profile) => profile.user)
+  profiles!: ProfileEntity[];
 }

@@ -20,6 +20,7 @@ import { TaskModule } from './modules/task/task.module';
 import { CommentModule } from './modules/comment/comment.module';
 import { MediaModule } from './modules/media/media.module';
 import { ItemModule } from './modules/item/item.module';
+import { ProfileModule } from './modules/profile/profile.module';
 
 @Module({
   imports: [
@@ -60,6 +61,7 @@ import { ItemModule } from './modules/item/item.module';
     CommentModule,
     MediaModule,
     ItemModule,
+    ProfileModule,
   ],
 })
 export class AppModule {

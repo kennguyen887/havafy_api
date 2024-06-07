@@ -1,9 +1,9 @@
 import { Module, forwardRef } from '@nestjs/common';
-import { ItemController } from './profile.controller';
-import { ItemService } from './item.service';
+import { ProfileController } from './profile.controller';
+import { ProfileService } from './profile.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CqrsModule } from '@nestjs/cqrs';
-import { ItemEntity } from 'src/global/entities';
+import { ProfileEntity } from 'src/global/entities';
 import { ConfigModule } from '@nestjs/config';
 import { QueryHandlers } from './queries';
 import { CommandHandlers } from './commands';
@@ -12,14 +12,14 @@ import { MediaModule } from '../media/media.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([ItemEntity]),
+    TypeOrmModule.forFeature([ProfileEntity]),
     forwardRef(() => ProductModule),
     forwardRef(() => MediaModule),
     ConfigModule,
     CqrsModule,
   ],
-  controllers: [ItemController],
-  providers: [ItemService, ...QueryHandlers, ...CommandHandlers],
-  exports: [ItemService],
+  controllers: [ProfileController],
+  providers: [ProfileService, ...QueryHandlers, ...CommandHandlers],
+  exports: [ProfileService],
 })
-export class ItemModule {}
+export class ProfileModule {}

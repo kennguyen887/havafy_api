@@ -6,3 +6,4 @@ export * from './task.entity';
 export * from './media.entity';
 export * from './comment.entity';
 export * from './item.entity';
+export * from './profile.entity';
