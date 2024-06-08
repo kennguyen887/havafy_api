@@ -17,6 +17,15 @@ export class ProfileEntity extends BaseEntity {
   @Column({ type: 'uuid' })
   userId!: string;
 
+  @Column({ type: 'varchar', length: 100 })
+  type!: ProfileType;
+
+  @Column({ type: 'varchar', length: 300 })
+  workplaceTypes!: string;
+
+  @Column({ type: 'varchar', length: 300 })
+  jobTypes!: string;
+
   @Column({ type: 'varchar', length: 300 })
   title!: string;
 
@@ -75,9 +84,6 @@ export class ProfileEntity extends BaseEntity {
 
   @Column({ type: 'varchar', length: 50, default: ProfileStatus.DRAFT })
   status!: ProfileStatus;
-
-  @Column({ type: 'varchar', length: 100, default: ProfileType.OTHER })
-  type!: ProfileType;
 
   @Column({ type: 'jsonb', nullable: true })
   contact!: Nullable<any>;

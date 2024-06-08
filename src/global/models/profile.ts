@@ -8,7 +8,13 @@ import {
   ValidateIf,
   Validate,
   IsEnum,
+  Max,
+  IsInt,
+  ArrayMinSize,
+  ArrayMaxSize,
+  ValidateNested,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 import { IsAfterOrTheSameConstraint } from '../decorators/is-after-or-the-same.decorator';
 
 import { JobType } from './job';
@@ -44,6 +50,7 @@ export enum ExpectedRatePer {
 export class ProfileExperienceItem {
   @IsNotEmpty()
   @IsString()
+  @MaxLength(200)
   title!: string;
 
   @IsNotEmpty()
@@ -52,6 +59,7 @@ export class ProfileExperienceItem {
 
   @IsNotEmpty()
   @IsString()
+  @MaxLength(1000)
   description!: string;
 
   @IsNotEmpty()
@@ -73,16 +81,184 @@ export class ProfileExperienceItem {
   endDate?: Date;
 }
 
+export class ProfileCertificationItem {
+  @IsNotEmpty()
+  @IsString()
+  @MaxLength(200)
+  title!: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @MaxLength(1000)
+  description!: string;
+
+  @IsNotEmpty()
+  @IsISO8601(
+    { strict: true },
+    { message: 'startDate must be in YYYY-MM-DD format' },
+  )
+  @MaxLength(10)
+  startDate!: Date;
+
+  @IsOptional()
+  @IsISO8601(
+    { strict: true },
+    { message: 'endDate must be in YYYY-MM-DD format' },
+  )
+  @MaxLength(10)
+  @ValidateIf((obj) => obj.startDate)
+  @Validate(IsAfterOrTheSameConstraint, ['startDate'])
+  endDate?: Date;
+}
+
+export class ProfileProjectItem {
+  @IsNotEmpty()
+  @IsString()
+  @MaxLength(100)
+  title!: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @MaxLength(1000)
+  description!: string;
+
+  @IsNotEmpty()
+  @IsISO8601(
+    { strict: true },
+    { message: 'startDate must be in YYYY-MM-DD format' },
+  )
+  @MaxLength(10)
+  startDate!: Date;
+
+  @IsOptional()
+  @IsISO8601(
+    { strict: true },
+    { message: 'endDate must be in YYYY-MM-DD format' },
+  )
+  @MaxLength(10)
+  @ValidateIf((obj) => obj.startDate)
+  @Validate(IsAfterOrTheSameConstraint, ['startDate'])
+  endDate?: Date;
+}
+
+export class ProfileSkillItem {
+  @IsNotEmpty()
+  @IsString()
+  @MaxLength(50)
+  name!: string;
+
+  @IsOptional()
+  @IsInt()
+  @Max(5)
+  level?: number;
+}
+
+export class ProfileLanguageItem {
+  @IsNotEmpty()
+  @IsString()
+  @MaxLength(3)
+  languageCode!: string;
+
+  @IsNotEmpty()
+  @IsInt()
+  @Max(5)
+  level!: number;
+}
+
+export class ProfileExperience {
+  @IsNotEmpty()
+  @IsArray()
+  @ArrayMinSize(1)
+  @ArrayMaxSize(10)
+  @ValidateNested({ each: true })
+  @Type(() => ProfileExperienceItem)
+  data!: ProfileExperienceItem[];
+}
+
+export class ProfileCertifications {
+  @IsNotEmpty()
+  @IsArray()
+  @ArrayMinSize(1)
+  @ArrayMaxSize(10)
+  @ValidateNested({ each: true })
+  @Type(() => ProfileExperienceItem)
+  data!: ProfileCertificationItem[];
+}
+
+export class ProfileProjects {
+  @IsNotEmpty()
+  @IsArray()
+  @ArrayMinSize(1)
+  @ArrayMaxSize(10)
+  @ValidateNested({ each: true })
+  @Type(() => ProfileProjectItem)
+  data!: ProfileProjectItem[];
+}
+
+export class ProfileSkills {
+  @IsNotEmpty()
+  @IsArray()
+  @ArrayMinSize(1)
+  @ArrayMaxSize(10)
+  @ValidateNested({ each: true })
+  @Type(() => ProfileSkillItem)
+  data!: ProfileSkillItem[];
+}
+
+export class ProfileLanguages {
+  @IsNotEmpty()
+  @IsArray()
+  @ArrayMinSize(1)
+  @ArrayMaxSize(10)
+  @ValidateNested({ each: true })
+  @Type(() => ProfileLanguageItem)
+  data!: ProfileLanguageItem[];
+}
+
+export class ProfileContact {
+  @IsNotEmpty()
+  @IsString()
+  @MaxLength(200)
+  email!: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(200)
+  website?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(300)
+  linkedinUrl?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(300)
+  bookingUrl?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(50)
+  phoneNumber?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(100)
+  githubUrl?: string;
+}
+
 export class ProfileAttributes {
   @IsOptional()
   @IsArray()
+  @ArrayMinSize(1)
+  @ArrayMaxSize(10)
   @IsString({ each: true })
-  @MaxLength(32, { each: true })
   tags?: string[];
 
   @IsOptional()
   @IsArray()
+  @ArrayMinSize(1)
+  @ArrayMaxSize(10)
   @IsString({ each: true })
-  @MaxLength(32, { each: true })
   skills?: string[];
 }

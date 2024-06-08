@@ -28,8 +28,9 @@ export class ProfileService {
     await this.profileRepository.insert(
       new ProfileEntity({
         ...data,
+        jobTypes: data.jobTypes?.join(',') ?? '',
+        workplaceTypes: data.workplaceTypes?.join(',') ?? '',
         status: ProfileStatus.ACTIVE,
-        attributes: data.attributies,
         userId,
         id,
       }),

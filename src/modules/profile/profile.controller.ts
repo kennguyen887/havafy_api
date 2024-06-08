@@ -8,8 +8,6 @@ import {
   UseGuards,
   Delete,
   Param,
-  HttpException,
-  HttpStatus,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ApiTags } from '@nestjs/swagger';
@@ -67,12 +65,6 @@ export class ProfileController {
     @Body() data: CreateProfileReqDto,
     @Request() { user }: GetJwtUserPayloadDto,
   ) {
-    const response = await this.captchaService.verifyRecaptcha(data.token);
-
-    if (!response.data.success && response.data.score < 0.5) {
-      throw new HttpException('Token is invalid.', HttpStatus.UNAUTHORIZED);
-    }
-
     return this.commandBus.execute(new CreateProfileCommand(user.id, data));
   }
 

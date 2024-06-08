@@ -7,9 +7,27 @@ import {
   IsNotEmpty,
   IsObject,
   ValidateNested,
+  IsNumber,
+  IsArray,
+  ArrayMinSize,
+  ArrayMaxSize,
+  Max,
+  Min,
 } from 'class-validator';
-import { Type } from 'class-transformer';
-import { ProfileType, ProfileAttributes } from 'src/global/models';
+import { Transform, Type } from 'class-transformer';
+import {
+  ProfileType,
+  ProfileAttributes,
+  ExpectedRatePer,
+  ProfileExperience,
+  ProfileCertifications,
+  ProfileProjects,
+  ProfileSkills,
+  ProfileLanguages,
+  ProfileContact,
+  WorkplaceType,
+  JobType,
+} from 'src/global/models';
 
 export class CreateProfileReqDto {
   @IsOptional()
@@ -22,11 +40,25 @@ export class CreateProfileReqDto {
   @IsString()
   @MinLength(3)
   @MaxLength(3000)
-  about?: string;
+  about!: string;
 
   @IsNotEmpty()
   @IsEnum(ProfileType)
   type!: ProfileType;
+
+  @IsOptional()
+  @IsArray()
+  @ArrayMinSize(1)
+  @ArrayMaxSize(5)
+  @IsEnum(WorkplaceType, { each: true })
+  workplaceTypes?: WorkplaceType[];
+
+  @IsOptional()
+  @IsArray()
+  @ArrayMinSize(1)
+  @ArrayMaxSize(5)
+  @IsEnum(JobType, { each: true })
+  jobTypes?: JobType[];
 
   @IsOptional()
   @IsObject()
@@ -34,7 +66,75 @@ export class CreateProfileReqDto {
   @Type(() => ProfileAttributes)
   attributies?: ProfileAttributes;
 
-  @IsString()
+  @IsOptional()
+  @IsNumber()
+  experienceYear?: number;
+
   @IsNotEmpty()
-  token!: string;
+  @IsString()
+  @MaxLength(3)
+  countryCode?: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @MaxLength(30)
+  city?: string;
+
+  @IsNotEmpty()
+  @Min(0.01, {
+    message: 'The expected rate must not be less than $constraint1',
+  })
+  @Max(1000000, {
+    message: 'The expected rate must not be greater than $constraint1',
+  })
+  @IsNumber(undefined, {
+    message: 'The expected rate must be decimal or integer',
+  })
+  @Transform(({ value }: { value: string }) =>
+    ((value && typeof value === 'string') || typeof value === 'number') &&
+    !Number.isNaN(Number(value))
+      ? Number(value)
+      : value,
+  )
+  expectedRate!: number;
+
+  @IsNotEmpty()
+  @IsEnum(ExpectedRatePer)
+  expectedRatePer!: ExpectedRatePer;
+
+  @IsNotEmpty()
+  @IsObject()
+  @ValidateNested()
+  @Type(() => ProfileExperience)
+  experience!: ProfileExperience;
+
+  @IsOptional()
+  @IsObject()
+  @ValidateNested()
+  @Type(() => ProfileCertifications)
+  certifications?: ProfileCertifications;
+
+  @IsOptional()
+  @IsObject()
+  @ValidateNested()
+  @Type(() => ProfileProjects)
+  projects?: ProfileProjects;
+
+  @IsOptional()
+  @IsObject()
+  @ValidateNested()
+  @Type(() => ProfileSkills)
+  skills?: ProfileSkills;
+
+  @IsOptional()
+  @IsObject()
+  @ValidateNested()
+  @Type(() => ProfileLanguages)
+  languages?: ProfileLanguages;
+
+  @IsOptional()
+  @IsObject()
+  @ValidateNested()
+  @Type(() => ProfileContact)
+  contact?: ProfileContact;
 }
