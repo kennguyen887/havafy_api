@@ -4,7 +4,6 @@ import {
   IsEnum,
   IsOptional,
   MinLength,
-  IsNotEmpty,
   IsObject,
   ValidateNested,
   IsNumber,
@@ -36,15 +35,15 @@ export class CreateProfileReqDto {
   @MaxLength(300)
   title?: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @MinLength(3)
   @MaxLength(3000)
-  about!: string;
+  about?: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsEnum(ProfileType)
-  type!: ProfileType;
+  type?: ProfileType;
 
   @IsOptional()
   @IsArray()
@@ -70,17 +69,17 @@ export class CreateProfileReqDto {
   @IsNumber()
   experienceYear?: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @MaxLength(3)
   countryCode?: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @MaxLength(30)
   city?: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @Min(0.01, {
     message: 'The expected rate must not be less than $constraint1',
   })
@@ -96,17 +95,17 @@ export class CreateProfileReqDto {
       ? Number(value)
       : value,
   )
-  expectedRate!: number;
+  expectedRate?: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsEnum(ExpectedRatePer)
-  expectedRatePer!: ExpectedRatePer;
+  expectedRatePer?: ExpectedRatePer;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsObject()
   @ValidateNested()
   @Type(() => ProfileExperience)
-  experience!: ProfileExperience;
+  experience?: ProfileExperience;
 
   @IsOptional()
   @IsObject()

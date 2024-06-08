@@ -21,6 +21,7 @@ export class CreateProfileTable1717737301673 implements MigrationInterface {
             name: 'title',
             type: 'varchar',
             length: '300',
+            isNullable: true,
           },
           {
             name: 'jobTypes',
@@ -37,20 +38,24 @@ export class CreateProfileTable1717737301673 implements MigrationInterface {
           {
             name: 'about',
             type: 'text',
+            isNullable: true,
           },
           {
             name: 'experienceYear',
             type: 'int',
+            isNullable: true,
           },
           {
             name: 'countryCode',
             type: 'varchar',
             length: '5',
+            isNullable: true,
           },
           {
             name: 'city',
             type: 'varchar',
             length: '100',
+            isNullable: true,
           },
           {
             name: 'reviewRate',
@@ -70,6 +75,7 @@ export class CreateProfileTable1717737301673 implements MigrationInterface {
             name: 'expectedRatePer',
             type: 'varchar',
             length: '20',
+            isNullable: true,
           },
           {
             name: 'experience',
@@ -92,6 +98,11 @@ export class CreateProfileTable1717737301673 implements MigrationInterface {
             isNullable: true,
           },
           {
+            name: 'projects',
+            type: 'jsonb',
+            isNullable: true,
+          },
+          {
             name: 'contact',
             type: 'jsonb',
             isNullable: true,
@@ -100,12 +111,14 @@ export class CreateProfileTable1717737301673 implements MigrationInterface {
             name: 'status',
             type: 'varchar',
             length: '50',
+            isNullable: true,
           },
 
           {
             name: 'type',
             type: 'varchar',
             length: '100',
+            isNullable: true,
           },
           {
             name: 'attributes',

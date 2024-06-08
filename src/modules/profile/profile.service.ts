@@ -28,8 +28,8 @@ export class ProfileService {
     await this.profileRepository.insert(
       new ProfileEntity({
         ...data,
-        jobTypes: data.jobTypes?.join(',') ?? '',
-        workplaceTypes: data.workplaceTypes?.join(',') ?? '',
+        jobTypes: data.jobTypes?.join(',') ?? null,
+        workplaceTypes: data.workplaceTypes?.join(',') ?? null,
         status: ProfileStatus.ACTIVE,
         userId,
         id,
@@ -42,7 +42,23 @@ export class ProfileService {
     id: string,
     data: UpdateProfileReqDto,
   ): Promise<CreateProfileResponseDto> {
-    await this.profileRepository.update(id, new ProfileEntity({ ...data }));
+    const updateData = new ProfileEntity({});
+
+    if (data.jobTypes) {
+      updateData.jobTypes = data.jobTypes?.join(',');
+    }
+
+    if (data.workplaceTypes) {
+      updateData.workplaceTypes = data.workplaceTypes?.join(',');
+    }
+
+    await this.profileRepository.update(
+      id,
+      new ProfileEntity({
+        ...data,
+        ...updateData,
+      }),
+    );
     return { id };
   }
 

@@ -55,7 +55,7 @@ export class ProfileController {
   ) {
     const { user } = req;
     return this.commandBus.execute(
-      new UpdateProfileCommand(params.id, { ...data, userId: user.id }),
+      new UpdateProfileCommand(user.id, params.id, data),
     );
   }
 

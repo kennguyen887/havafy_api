@@ -5,6 +5,7 @@ import { ProfileService } from '../profile.service';
 
 export class UpdateProfileCommand {
   constructor(
+    public readonly userId: string,
     public readonly id: string,
     public readonly data: UpdateProfileReqDto,
   ) {}
@@ -19,12 +20,13 @@ export class UpdateProfileCommandHandler
   async execute(
     command: UpdateProfileCommand,
   ): Promise<CreateProfileResponseDto> {
-    const { id, data } = command;
+    const { userId, data, id } = command;
     const profile = await this.profileService.getProfile(id);
 
-    if (!profile || profile.userId !== data.userId) {
+    if (!profile || profile.userId !== userId) {
       throw new HttpException('Profile not found.', HttpStatus.BAD_REQUEST);
     }
+
     return this.profileService.updateProfile(id, data);
   }
 }

@@ -21,7 +21,6 @@ export class GetProfileDetailHandler
     if (!profile) {
       throw new HttpException('Profile not found.', HttpStatus.BAD_REQUEST);
     }
-
     return plainToInstance(GetProfileDetailDto, profile);
   }
 }

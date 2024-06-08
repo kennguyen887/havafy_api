@@ -17,26 +17,26 @@ export class ProfileEntity extends BaseEntity {
   @Column({ type: 'uuid' })
   userId!: string;
 
-  @Column({ type: 'varchar', length: 100 })
-  type!: ProfileType;
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  type!: Nullable<ProfileType>;
 
-  @Column({ type: 'varchar', length: 300 })
-  workplaceTypes!: string;
+  @Column({ type: 'varchar', length: 300, nullable: true })
+  workplaceTypes!: Nullable<string>;
 
-  @Column({ type: 'varchar', length: 300 })
-  jobTypes!: string;
+  @Column({ type: 'varchar', length: 300, nullable: true })
+  jobTypes!: Nullable<string>;
 
-  @Column({ type: 'varchar', length: 300 })
-  title!: string;
+  @Column({ type: 'varchar', length: 300, nullable: true })
+  title!: Nullable<string>;
 
-  @Column({ type: 'text' })
-  about!: string;
+  @Column({ type: 'text', nullable: true })
+  about!: Nullable<string>;
 
   @Column({ default: 0, nullable: true, type: 'int' })
-  experienceYear!: number;
+  experienceYear!: Nullable<number>;
 
   @Column({ type: 'varchar', length: 5, nullable: true })
-  countryCode!: string;
+  countryCode!: Nullable<string>;
 
   @Column({ type: 'varchar', length: 50, nullable: true })
   city!: string;
@@ -82,8 +82,13 @@ export class ProfileEntity extends BaseEntity {
   @Column({ type: 'jsonb', nullable: true })
   languages!: Nullable<any>;
 
-  @Column({ type: 'varchar', length: 50, default: ProfileStatus.DRAFT })
-  status!: ProfileStatus;
+  @Column({
+    type: 'varchar',
+    length: 50,
+    default: ProfileStatus.DRAFT,
+    nullable: true,
+  })
+  status!: Nullable<ProfileStatus>;
 
   @Column({ type: 'jsonb', nullable: true })
   contact!: Nullable<any>;

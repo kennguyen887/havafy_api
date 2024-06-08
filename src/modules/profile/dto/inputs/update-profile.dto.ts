@@ -1,37 +1,3 @@
-import {
-  IsString,
-  MaxLength,
-  IsOptional,
-  MinLength,
-  IsUUID,
-  IsObject,
-  ValidateNested,
-} from 'class-validator';
-import { Type } from 'class-transformer';
+import { CreateProfileReqDto } from './create-profile.dto';
 
-import { ProfileAttributes } from 'src/global/models';
-
-export class UpdateProfileReqDto {
-  @IsOptional()
-  @IsString()
-  @IsUUID()
-  userId?: string;
-
-  @IsOptional()
-  @IsString()
-  @MinLength(3)
-  @MaxLength(3000)
-  about?: string;
-
-  @IsOptional()
-  @IsObject()
-  @ValidateNested()
-  @Type(() => ProfileAttributes)
-  attributies?: ProfileAttributes;
-
-  @IsOptional()
-  @IsString()
-  @MinLength(2)
-  @MaxLength(300)
-  title!: string;
-}
+export class UpdateProfileReqDto extends CreateProfileReqDto {}
