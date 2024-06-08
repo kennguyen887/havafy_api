@@ -23,6 +23,9 @@ export class GetProfileDetailDto {
   userId!: string;
 
   @Expose()
+  verified!: boolean;
+
+  @Expose()
   title!: string;
 
   @Expose()
@@ -51,7 +54,12 @@ export class GetProfileDetailDto {
   attributies!: ProfileAttributes;
 
   @Expose()
-  experienceYear!: ProfileExperience;
+  @Type(() => Number)
+  reviewRate!: number;
+
+  @Expose()
+  @Type(() => Number)
+  experienceYear!: number;
 
   @Expose()
   countryCode!: string;
@@ -60,10 +68,11 @@ export class GetProfileDetailDto {
   city!: string;
 
   @Expose()
-  expectedRate!: string;
+  @Type(() => Number)
+  expectedRate!: number;
 
   @Expose()
-  experience!: string;
+  experience!: ProfileExperience;
 
   @Expose()
   certifications!: ProfileCertifications;

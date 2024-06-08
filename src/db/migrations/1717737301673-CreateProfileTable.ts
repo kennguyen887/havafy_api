@@ -14,6 +14,11 @@ export class CreateProfileTable1717737301673 implements MigrationInterface {
             isPrimary: true,
           },
           {
+            name: 'verified',
+            type: 'boolean',
+            default: false,
+          },
+          {
             name: 'userId',
             type: 'uuid',
           },

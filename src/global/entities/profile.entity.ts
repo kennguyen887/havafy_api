@@ -17,6 +17,9 @@ export class ProfileEntity extends BaseEntity {
   @Column({ type: 'uuid' })
   userId!: string;
 
+  @Column({ type: 'boolean', default: false })
+  verified!: boolean;
+
   @Column({ type: 'varchar', length: 100, nullable: true })
   type!: Nullable<ProfileType>;
 
