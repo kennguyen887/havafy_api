@@ -29,6 +29,12 @@ export class CreateProfileTable1717737301673 implements MigrationInterface {
             isNullable: true,
           },
           {
+            name: 'fullname',
+            type: 'varchar',
+            length: '300',
+            isNullable: true,
+          },
+          {
             name: 'jobTypes',
             type: 'varchar',
             length: '300',

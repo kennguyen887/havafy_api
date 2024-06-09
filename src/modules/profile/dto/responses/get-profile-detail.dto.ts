@@ -29,6 +29,9 @@ export class GetProfileDetailDto {
   title!: string;
 
   @Expose()
+  fullname!: string;
+
+  @Expose()
   about!: string;
 
   @Expose()

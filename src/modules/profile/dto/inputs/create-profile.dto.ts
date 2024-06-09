@@ -37,6 +37,12 @@ export class CreateProfileReqDto {
 
   @IsOptional()
   @IsString()
+  @MinLength(2)
+  @MaxLength(300)
+  fullname?: string;
+
+  @IsOptional()
+  @IsString()
   @MinLength(3)
   @MaxLength(3000)
   about?: string;

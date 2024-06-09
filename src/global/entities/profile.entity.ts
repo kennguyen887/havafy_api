@@ -32,6 +32,9 @@ export class ProfileEntity extends BaseEntity {
   @Column({ type: 'varchar', length: 300, nullable: true })
   title!: Nullable<string>;
 
+  @Column({ type: 'varchar', length: 300, nullable: true })
+  fullname!: Nullable<string>;
+
   @Column({ type: 'text', nullable: true })
   about!: Nullable<string>;
 
