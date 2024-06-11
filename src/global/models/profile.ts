@@ -59,6 +59,11 @@ export class ProfileExperienceItem {
 
   @IsNotEmpty()
   @IsString()
+  @MaxLength(200)
+  productName!: string;
+
+  @IsNotEmpty()
+  @IsString()
   @MaxLength(1000)
   description!: string;
 
