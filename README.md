@@ -3,7 +3,7 @@
 [![test](https://github.com/kennguyen887/nestjs-freelancer-example/workflows/Test/badge.svg)](https://github.com/kennguyen887/nestjs-freelancer-example/actions?query=workflow%3A%22Test%22) [![codecov](https://codecov.io/gh/kennguyen887/nestjs-freelancer-example/branch/main/graph/badge.svg?token=NGR0C23CMW)](https://codecov.io/gh/rodion-arr/nestjs-starter-kit)
 
 
-This is a Freelancer for typical Nest.js REST API project.
+This is a API service for typical Nest.js REST API project.
 
 ## Motivation
 
